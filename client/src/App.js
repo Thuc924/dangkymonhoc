@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
-import { pathRoutes } from './ultils/constant'
+import { pathRoutes } from './ultils/Common/constant'
 import { Fragment } from 'react'
 
 import DefaultLayout from './containers/layouts/DefaultLayout'

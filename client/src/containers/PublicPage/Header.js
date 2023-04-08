@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 
-import images from '../../assets/images'
+import banner from '../../assets/images/BANNER-STU.png'
 
 function Header() {
    return (
       <div className="text-[12px]">
-         <img className="w-full" src={images.banner} alt="Banner Stu" />
+         <img className="w-full" src={banner} alt="Banner Stu" />
          <div className="mt-2 text-right">
             <span className="mr-4 text-red-500">Chào bạn</span>
             <Link to="/login" className="mr-4 font-bold text-red-500">

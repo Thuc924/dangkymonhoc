@@ -1,9 +1,15 @@
 import authRouter from './auth'
 import sinhvienRouter from './sinhvien'
+import adminRouter from './admin'
+import khoaRouter from './khoa'
+import monhocRouter from './monhoc'
 
 const initRoutes = (app) => {
    app.use('/api/v1/auth', authRouter)
    app.use('/sinhviens', sinhvienRouter)
+   app.use('/monhocs', monhocRouter)
+   app.use('/khoas', khoaRouter)
+   app.use('/admin', adminRouter)
    return app.use('/', (req, res) => {
       res.send('Server on....')
    })

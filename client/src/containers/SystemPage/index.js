@@ -1,3 +1,7 @@
 export { default as Admin } from './Admin'
 export { default as Sinhvien } from './Sinhvien'
 export { default as AddSinhVien } from './AddSinhVien'
+export { default as Monhoc } from './Monhoc'
+export { default as AddMonHoc } from './AddMonHoc'
+export { default as Khoa } from './Khoa'
+export { default as AddKhoa } from './AddKhoa'

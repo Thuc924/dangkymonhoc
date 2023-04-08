@@ -1,9 +1,9 @@
 import { actionType } from '../actions/actionType'
-import { useNavigate } from 'react-router-dom'
 const initState = {
    isLoggedIn: false,
    token: null,
    msg: '',
+   admin: [],
 }
 
 const authReducer = (state = initState, action) => {
@@ -13,12 +13,14 @@ const authReducer = (state = initState, action) => {
             ...state,
             isLoggedIn: true,
             token: action.data,
+            msg: '',
+            admin: action.admin,
          }
       }
       case actionType.LOGIN_FAIL: {
          return {
             ...state,
-            isLoggedIn: true,
+            isLoggedIn: false,
             msg: action.data,
             token: null,
          }

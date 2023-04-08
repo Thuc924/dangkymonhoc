@@ -1,25 +1,29 @@
-import authReducer from "./authReducer";
-import userReducer from "./userReducer";
+import authReducer from './authReducer'
+import sinhvienReducer from './sinhvienReducer'
+import khoaReducer from './khoaReducer'
+import monhocReducer from './monhocReducer'
 
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 import storage from 'redux-persist/lib/storage' // giữ giá trị của reducer lại
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2'
-import {persistReducer} from 'redux-persist'
+import { persistReducer } from 'redux-persist'
 
 const commonConfig = {
-    storage,
-    stateReconciler: autoMergeLevel2
+   storage,
+   stateReconciler: autoMergeLevel2,
 }
 
-const authConfig={
-    ...commonConfig,
-    key: 'auth',
-    whitelist: ['isLoggedIn', 'token']
+const authConfig = {
+   ...commonConfig,
+   key: 'auth',
+   whitelist: ['isLoggedIn', 'token'],
 }
 
 const rootReducer = combineReducers({
-    auth: persistReducer(authConfig, authReducer),
-    user: userReducer
+   auth: persistReducer(authConfig, authReducer),
+   sinhvien: sinhvienReducer,
+   khoa: khoaReducer,
+   monhoc: monhocReducer,
 })
 
 export default rootReducer
