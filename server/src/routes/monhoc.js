@@ -4,7 +4,8 @@ const router = express.Router()
 
 router.post('/create', monhocController.create)
 router.get('/', monhocController.getAllMonhoc)
-// router.get('/limit', sinhvienController.getSinhviensLitmits)
-// router.delete('/delete', sinhvienController.deleteSinhvien)
+router.get('/limit', monhocController.getMonhocLitmits)
+router.delete('/remove', monhocController.deleteMonhoc)
+router.put('/edit', monhocController.updateMonhoc)
 
 export default router

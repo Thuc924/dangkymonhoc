@@ -1,9 +1,5 @@
 import { actionType } from './actionType'
-import {
-   apiGetAllKhoa,
-   apiCreateKhoa,
-   apiDeleteKhoa,
-} from '../../services/khoa'
+import { apiGetAllKhoa, apiCreateKhoa, apiDeleteKhoa } from '../../services/khoa'
 
 export const createKhoa = (payload) => async (dispatch) => {
    try {
@@ -51,7 +47,6 @@ export const getListKhoa = () => async (dispatch) => {
 export const deleteKhoaByMskhoa = (mskhoa) => async (dispatch) => {
    try {
       const response = await apiDeleteKhoa(mskhoa)
-      console.log(response)
       if (response?.data.err === 0) {
          dispatch({
             type: actionType.DELETE_SUCCESS,

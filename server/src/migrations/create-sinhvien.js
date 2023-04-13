@@ -11,6 +11,9 @@ module.exports = {
             primaryKey: true,
             type: Sequelize.STRING,
          },
+         mslop: {
+            type: Sequelize.STRING,
+         },
          tensv: {
             type: Sequelize.STRING,
          },

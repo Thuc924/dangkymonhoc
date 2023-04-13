@@ -16,16 +16,12 @@ export const createKhoa = ({ mskhoa, tenkhoa }) =>
          })
          const token =
             response[1] &&
-            jwt.sign(
-               { mssv: response[0].mssv, email: response[0].email },
-               process.env.SECRET_KEY,
-               { expiresIn: '2d' }
-            )
+            jwt.sign({ mskhoa: response[0].mskhoa, tenkhoa: response[0].tenkhoa }, process.env.SECRET_KEY, {
+               expiresIn: '2d',
+            })
          resolve({
             err: token ? 0 : 2,
-            msg: token
-               ? 'Create is successfully !'
-               : 'MSKHOA number has been aldready used !',
+            msg: token ? 'Create is successfully !' : 'MSKHOA number has been aldready used !',
             token: token || null,
          })
       } catch (error) {
@@ -54,11 +50,19 @@ export const KhoaDelete = (mskhoa) =>
             where: { mskhoa },
          })
          if (khoa) {
-            await khoa.destroy()
-            resolve({
-               err: 0,
-               msg: 'Delete success...!',
-            })
+            const mh = await db.Monhoc.findOne({ where: { mskhoa } })
+            if (!mh) {
+               await khoa.destroy()
+               resolve({
+                  err: 0,
+                  msg: 'Delete success...!',
+               })
+            } else {
+               resolve({
+                  err: 2,
+                  msg: 'KHOA already in model MONHOC...!',
+               })
+            }
          } else {
             resolve({
                err: 2,

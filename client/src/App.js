@@ -4,7 +4,8 @@ import { Fragment } from 'react'
 
 import DefaultLayout from './containers/layouts/DefaultLayout'
 import AdminLayout from './containers/layouts/AdminLayout'
-
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 function App() {
    return (
       <div className="p-0 m-0">
@@ -27,6 +28,7 @@ function App() {
                )
             })}
          </Routes>
+         <ToastContainer />
       </div>
    )
 }

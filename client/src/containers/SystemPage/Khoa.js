@@ -1,18 +1,32 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { linkRoute } from '../../ultils/Common/constant'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteKhoaByMskhoa, getListKhoa } from '../../store/actions/khoa'
 import { useEffect } from 'react'
+import { toast } from 'react-toastify'
+import { getListMonhoc } from '../../store/actions'
 
-function Monhoc() {
+function Khoa() {
+   const navigate = useNavigate()
+
    const dispatch = useDispatch()
    const { khoas, token, msg } = useSelector((state) => state.khoa)
+   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { monhocs } = useSelector((state) => state.monhoc)
+
    useEffect(() => {
+      isLoggedIn === false && navigate('/login')
+
       dispatch(getListKhoa())
-   }, [token, msg])
+      dispatch(getListMonhoc())
+   }, [isLoggedIn, token, msg])
+
    const handleRemoveKhoa = (khoa) => {
-      console.log(khoa)
-      dispatch(deleteKhoaByMskhoa(khoa.mskhoa))
+      const kq = monhocs.find((i) => i.mskhoa === khoa.mskhoa)
+      if (!kq) {
+         dispatch(deleteKhoaByMskhoa(khoa.mskhoa))
+         toast.success('Xoá thành công...!')
+      } else toast.error('Không thể xoá...!')
    }
    return (
       <div className="app sidebar-mini rtl">
@@ -33,22 +47,14 @@ function Monhoc() {
                      <div className="tile-body">
                         <div className="row element-button">
                            <div className="col-sm-2">
-                              <Link
-                                 className="btn btn-add btn-sm"
-                                 to={linkRoute.KHOA_ADD}
-                                 title="Thêm"
-                              >
+                              <Link className="btn btn-add btn-sm" to={linkRoute.KHOA_ADD} title="Thêm">
                                  <i className="fas fa-plus" />
                                  Thêm khoa
                               </Link>
                            </div>
 
                            <div className="col-sm-2">
-                              <a
-                                 className="btn btn-delete btn-sm"
-                                 type="button"
-                                 title="Xóa"
-                              >
+                              <a className="btn btn-delete btn-sm" type="button" title="Xóa">
                                  <i className="fas fa-trash-alt" /> Xóa tất cả{' '}
                               </a>
                            </div>
@@ -77,11 +83,7 @@ function Monhoc() {
                                     <tbody key={khoa.id}>
                                        <tr>
                                           <td width={10}>
-                                             <input
-                                                type="checkbox"
-                                                name="check1"
-                                                defaultValue={1}
-                                             />
+                                             <input type="checkbox" name="check1" defaultValue={1} />
                                           </td>
                                           <td>{khoa.mskhoa}</td>
                                           <td>{khoa.tenkhoa}</td>
@@ -90,9 +92,7 @@ function Monhoc() {
                                                 className="btn btn-primary btn-sm trash"
                                                 type="button"
                                                 title="Xóa"
-                                                onClick={() =>
-                                                   handleRemoveKhoa(khoa)
-                                                }
+                                                onClick={() => handleRemoveKhoa(khoa)}
                                              >
                                                 <i className="fas fa-trash-alt" />
                                              </button>
@@ -122,4 +122,4 @@ function Monhoc() {
    )
 }
 
-export default Monhoc
+export default Khoa

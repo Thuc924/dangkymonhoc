@@ -10,6 +10,7 @@ const corsOptions = {
    origin: '*',
    credentials: true, //access-control-allow-credentials:true
    optionSuccessStatus: 200,
+   methods: ['POST', 'PUT', 'GET', 'DELETE'],
 }
 
 const port = process.env.PORT || 8080

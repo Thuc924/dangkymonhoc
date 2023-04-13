@@ -1,9 +1,9 @@
 import * as monhocService from '../services/monhoc'
 
 export const create = async (req, res) => {
-   const { msmh, tenmh, sotinchi, mskhoa } = req.body
+   const { msmh, tenmh, sotinchi, mskhoa, mota, sotiet } = req.body
    try {
-      if (!msmh || !tenmh || !sotinchi || !mskhoa) {
+      if (!msmh || !tenmh || !sotinchi || !mskhoa || !mota || !sotiet) {
          return res.status(400).json({
             err: 1,
             msg: 'Missing input...!',
@@ -25,7 +25,51 @@ export const getAllMonhoc = async (req, res) => {
    } catch (error) {
       return res.status(500).json({
          err: -1,
-         msg: ' Fail of SV controller' + error,
+         msg: ' Fail of MONHOC controller' + error,
+      })
+   }
+}
+export const deleteMonhoc = async (req, res) => {
+   try {
+      const { msmh } = req.query
+      if (msmh) {
+         const response = await monhocService.MonhocDelete(msmh)
+         return res.status(200).json(response)
+      }
+   } catch (error) {
+      return res.status(500).json({
+         err: -1,
+         msg: 'Fail of MONHOC controller ' + error,
+      })
+   }
+}
+export const getMonhocLitmits = async (req, res) => {
+   const { page } = req.query
+   try {
+      const response = await monhocService.getLimitMonhoc(page)
+      return res.status(200).json(response)
+   } catch (error) {
+      return res.status(500).json({
+         err: -1,
+         msg: ' Fail of MONHOC controller' + error,
+      })
+   }
+}
+export const updateMonhoc = async (req, res) => {
+   try {
+      const { msmh, tenmh, sotinchi, mskhoa, mota, sotiet } = req.body
+      if (!msmh || !tenmh || !sotinchi || !mskhoa || !mota || !sotiet) {
+         return res.status(400).json({
+            err: 1,
+            msg: 'Missing input...!',
+         })
+      }
+      const response = await monhocService.MonhocUpdate(req.body)
+      return res.status(200).json(response)
+   } catch (error) {
+      return res.status(500).json({
+         err: -1,
+         msg: 'Fail of SV controller ' + error,
       })
    }
 }

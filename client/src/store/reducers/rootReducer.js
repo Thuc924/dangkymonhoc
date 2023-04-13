@@ -7,6 +7,9 @@ import { combineReducers } from 'redux'
 import storage from 'redux-persist/lib/storage' // giữ giá trị của reducer lại
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2'
 import { persistReducer } from 'redux-persist'
+import lopReducer from './lopReducer'
+import hockyReducer from './hockyReducer'
+import monhoctochucReducer from './monhoctochucReducer'
 
 const commonConfig = {
    storage,
@@ -23,7 +26,10 @@ const rootReducer = combineReducers({
    auth: persistReducer(authConfig, authReducer),
    sinhvien: sinhvienReducer,
    khoa: khoaReducer,
+   lop: lopReducer,
    monhoc: monhocReducer,
+   hocky: hockyReducer,
+   monhoctochuc: monhoctochucReducer,
 })
 
 export default rootReducer

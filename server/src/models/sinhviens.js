@@ -9,11 +9,17 @@ module.exports = (sequelize, DataTypes) => {
        */
       static associate(models) {
          // define association here
+         Sinhvien.belongsTo(models.Lophoc, {
+            foreignKey: 'mslop',
+            targetKey: 'mslop',
+            as: 'lop',
+         })
       }
    }
    Sinhvien.init(
       {
          mssv: DataTypes.STRING,
+         mslop: DataTypes.STRING,
          tensv: DataTypes.STRING,
          email: DataTypes.STRING,
          sodienthoai: DataTypes.STRING,

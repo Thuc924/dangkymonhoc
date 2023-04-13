@@ -4,6 +4,7 @@ import {
    apiDeleteSinhvien,
    apiGetSinhviens,
    apiGetSinhviensLimit,
+   apiUpdateSinhvien,
 } from '../../services/sinhvien'
 
 export const create = (payload) => async (dispatch) => {
@@ -92,6 +93,28 @@ export const deleteSinhvienByMSSV = (mssv) => async (dispatch) => {
       dispatch({
          type: actionType.DELETE_FAIL,
          sinhviens: null,
+      })
+   }
+}
+export const updateSinhvien = (payload) => async (dispatch) => {
+   try {
+      const response = await apiUpdateSinhvien(payload)
+      console.log(response)
+      if (response?.data.err === 0) {
+         dispatch({
+            type: actionType.UPDATE_SUCCESS,
+            data: response.data.msg,
+         })
+      } else {
+         dispatch({
+            type: actionType.UPDATE_FAIL,
+            data: response.data.msg,
+         })
+      }
+   } catch (error) {
+      dispatch({
+         type: actionType.UPDATE_FAIL,
+         data: null,
       })
    }
 }

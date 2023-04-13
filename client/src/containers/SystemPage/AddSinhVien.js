@@ -1,17 +1,22 @@
 import { Link, useNavigate } from 'react-router-dom'
 
 import InputForm from '../../components/InputForm'
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import * as actions from '../../store/actions'
 import { linkRoute } from '../../ultils/Common/constant'
+import { getListLop } from '../../store/actions/lop'
+import { toast } from 'react-toastify'
 
 function AddSinhVien() {
    const navigate = useNavigate()
    const dispatch = useDispatch()
+   const { lops } = useSelector((state) => state.lop)
+   console.log(lops)
    const [sinhviens, setSinhvien] = useState({
       mssv: '',
+      mslop: '',
       tensv: '',
       email: '',
       matkhau: '',
@@ -22,12 +27,16 @@ function AddSinhVien() {
       gioitinh: '',
       avatar: '',
    })
+   useEffect(() => {
+      dispatch(getListLop())
+   }, [])
    const [invalidField, setInvalidField] = useState([])
    const handleAddSinhViens = () => {
       let invalids = validate(sinhviens)
       if (invalids === 0) {
          dispatch(actions.create(sinhviens))
-         alert('Add successfully')
+         toast.success('Thêm thành công...!')
+
          navigate('/admin/sinhviens')
       }
    }
@@ -83,23 +92,23 @@ function AddSinhVien() {
          <main className="app-content">
             <div className="app-title">
                <ul className="app-breadcrumb breadcrumb">
-                  <li className="breadcrumb-item">Danh sách nhân viên</li>
+                  <li className="breadcrumb-item">Danh sách sinh viên</li>
                   <li className="breadcrumb-item">
-                     <a href="#">Thêm nhân viên</a>
+                     <a href="#">Thêm sinh viên</a>
                   </li>
                </ul>
             </div>
             <div className="row">
                <div className="col-md-12">
                   <div className="tile">
-                     <h3 className="tile-title">Tạo mới nhân viên</h3>
+                     <h3 className="tile-title">Tạo mới sinh viên</h3>
                      <div className="tile-body">
                         <form className="row">
                            <InputForm
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="text"
-                              label={'Mã số sinh viên'}
+                              labelInput={'Mã số sinh viên'}
                               value={sinhviens.mssv}
                               setValue={setSinhvien}
                               name={'mssv'}
@@ -108,7 +117,7 @@ function AddSinhVien() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="text"
-                              label={'Họ và tên'}
+                              labelInput={'Họ và tên'}
                               value={sinhviens.tensv}
                               setValue={setSinhvien}
                               name={'tensv'}
@@ -117,7 +126,7 @@ function AddSinhVien() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="text"
-                              label={'Địa chỉ email'}
+                              labelInput={'Địa chỉ email'}
                               value={sinhviens.email}
                               setValue={setSinhvien}
                               name={'email'}
@@ -126,7 +135,7 @@ function AddSinhVien() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="password"
-                              label={'Mật khẩu'}
+                              labelInput={'Mật khẩu'}
                               value={sinhviens.matkhau}
                               setValue={setSinhvien}
                               name={'matkhau'}
@@ -135,7 +144,7 @@ function AddSinhVien() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="text"
-                              label={'Địa chỉ thường trú'}
+                              labelInput={'Địa chỉ thường trú'}
                               value={sinhviens.diachi}
                               setValue={setSinhvien}
                               name={'diachi'}
@@ -144,7 +153,7 @@ function AddSinhVien() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="number"
-                              label={'Số điện thoại'}
+                              labelInput={'Số điện thoại'}
                               value={sinhviens.sodienthoai}
                               setValue={setSinhvien}
                               name={'sodienthoai'}
@@ -153,7 +162,7 @@ function AddSinhVien() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="date"
-                              label={'Ngày sinh'}
+                              labelInput={'Ngày sinh'}
                               value={sinhviens.ngaysinh}
                               setValue={setSinhvien}
                               name={'ngaysinh'}
@@ -162,11 +171,36 @@ function AddSinhVien() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="text"
-                              label={'Nơi sinh'}
+                              labelInput={'Nơi sinh'}
                               value={sinhviens.noisinh}
                               setValue={setSinhvien}
                               name={'noisinh'}
                            />
+                           <div className="form-group col-md-3">
+                              <label className="control-label">Lớp</label>
+                              <select
+                                 className="form-control"
+                                 id="mslop"
+                                 required
+                                 onChange={(e) =>
+                                    setSinhvien({
+                                       ...sinhviens,
+                                       mslop: e.target.value,
+                                    })
+                                 }
+                              >
+                                 <option value={''}>-- Chọn lớp --</option>
+                                 {lops &&
+                                    lops.length > 0 &&
+                                    lops.map((item) => {
+                                       return (
+                                          <>
+                                             <option value={item.mslop}>{item.mslop}</option>
+                                          </>
+                                       )
+                                    })}
+                              </select>
+                           </div>
                            <div className="form-group col-md-3">
                               <label className="control-label">Giới tính</label>
                               <select
@@ -176,24 +210,17 @@ function AddSinhVien() {
                                  onChange={(e) =>
                                     setSinhvien({
                                        ...sinhviens,
-                                       gioitinh:
-                                          e.target.selectedIndex == 1
-                                             ? 'Nam'
-                                             : 'Nữ',
+                                       gioitinh: e.target.selectedIndex == 1 ? 'Nam' : 'Nữ',
                                     })
                                  }
                               >
-                                 <option value={''}>
-                                    -- Chọn giới tính --
-                                 </option>
+                                 <option value={''}>-- Chọn giới tính --</option>
                                  <option value={'Nam'}>Nam</option>
                                  <option value={'Nam'}>Nữ</option>
                               </select>
                            </div>
                            <div className="form-group col-md-12">
-                              <label className="control-label">
-                                 Ảnh 3x4 nhân viên
-                              </label>
+                              <label className="control-label">Ảnh 3x4 nhân viên</label>
                               &nbsp;
                               <input
                                  type="file"
@@ -209,11 +236,7 @@ function AddSinhVien() {
                            </div>
                         </form>
                      </div>
-                     <button
-                        className="btn btn-save"
-                        type="button"
-                        onClick={handleAddSinhViens}
-                     >
+                     <button className="btn btn-save" type="button" onClick={handleAddSinhViens}>
                         Lưu lại
                      </button>
                      <button
@@ -235,10 +258,7 @@ function AddSinhVien() {
                      >
                         Hủy bỏ
                      </button>
-                     <Link
-                        className="btn btn-dangerous"
-                        to={linkRoute.SINHVIEN}
-                     >
+                     <Link className="btn btn-dangerous" to={linkRoute.SINHVIEN}>
                         Thoát
                      </Link>
                   </div>

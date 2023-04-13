@@ -4,8 +4,9 @@ import InputForm from '../../components/InputForm'
 import { linkRoute } from '../../ultils/Common/constant'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getListKhoa } from '../../store/actions'
-import { createMonhoc } from '../../store/actions/monhoc'
+import { create, getListKhoa } from '../../store/actions'
+import { createMonhoc, getListMonhoc } from '../../store/actions/monhoc'
+import { toast } from 'react-toastify'
 
 function AddMonHoc() {
    const navigate = useNavigate()
@@ -13,65 +14,26 @@ function AddMonHoc() {
    const [monhoc, setMonHoc] = useState({
       msmh: '',
       tenmh: '',
-      sotinchi: 0,
+      sotinchi: '',
       mskhoa: '',
+      mota: '',
+      sotiet: '',
    })
    const { khoas } = useSelector((state) => state.khoa)
+   const { monhocs } = useSelector((state) => state.monhoc)
    useEffect(() => {
       dispatch(getListKhoa())
+      dispatch(getListMonhoc())
    }, [])
    const handleCreateMonhoc = () => {
-      dispatch(createMonhoc(monhoc))
-      navigate('/admin/monhocs')
+      const kq = monhocs.find((i) => i.msmh === monhoc.msmh)
+      if (!kq) {
+         dispatch(createMonhoc(monhoc))
+         toast.success('Thêm thành công...!')
+         navigate('/admin/monhocs')
+      } else toast.error('Đã tồn tại mã môn học...!')
    }
-   const [invalidField, setInvalidField] = useState([])
-   const validate = (sv) => {
-      let invalids = 0
-      let fields = Object.entries(sv)
-      fields.forEach((item) => {
-         if (item[1] === '') {
-            setInvalidField((prev) => [
-               ...prev,
-               {
-                  name: item[0],
-                  message: `Bạn không được bỏ trống trường ${item[0]} này...!`,
-               },
-            ])
-            invalids++
-         }
-      })
-      fields.forEach((item) => {
-         switch (item[0]) {
-            case 'matkhau':
-               if (item[1].length < 6) {
-                  setInvalidField((prev) => [
-                     ...prev,
-                     {
-                        name: item[0],
-                        message: 'Mật khẩu phải có tối thiểu 6 ký tự...!',
-                     },
-                  ])
-                  invalids++
-               }
-               break
-            case 'sodienthoai':
-               if (!+item[1]) {
-                  setInvalidField((prev) => [
-                     ...prev,
-                     {
-                        name: item[0],
-                        message: 'Số điện thoại không được chứa ký tự chữ...!',
-                     },
-                  ])
-                  invalids++
-               }
-               break
-            default:
-               break
-         }
-      })
-      return invalids
-   }
+   console.log(monhoc)
    return (
       <div className="app sidebar-mini rtl">
          <main className="app-content">
@@ -90,30 +52,52 @@ function AddMonHoc() {
                      <div className="tile-body">
                         <form className="row">
                            <InputForm
-                              setInvalidField={setInvalidField}
                               type="text"
-                              label={'Mã số môn học'}
+                              labelInput={'Mã số môn học'}
                               name={'msmh'}
                               value={monhoc.msmh}
                               setValue={setMonHoc}
                            />
                            <InputForm
-                              setInvalidField={setInvalidField}
                               type="text"
-                              label={'Tên môn học'}
+                              labelInput={'Tên môn học'}
                               name={'tenmh'}
                               value={monhoc.tenmh}
                               setValue={setMonHoc}
                            />
                            <InputForm
-                              setInvalidField={setInvalidField}
-                              type="text"
-                              label={'Số tín chỉ'}
+                              type="number"
+                              labelInput={'Số tín chỉ'}
                               name={'sotinchi'}
                               value={monhoc.sotinchi}
                               setValue={setMonHoc}
                            />
-
+                           <InputForm
+                              type="number"
+                              labelInput={'Số tiết'}
+                              name={'sotiet'}
+                              value={monhoc.sotiet}
+                              setValue={setMonHoc}
+                           />
+                           <div className="form-group col-md-3">
+                              <label className="control-label">Mô tả</label>
+                              <select
+                                 className="form-control"
+                                 id="mskhoa"
+                                 required
+                                 onChange={(e) =>
+                                    setMonHoc({
+                                       ...monhoc,
+                                       mota: e.target.value,
+                                    })
+                                 }
+                              >
+                                 <option value={''}>-- Chọn khoa --</option>
+                                 <option value="BB">Bắc buộc</option>
+                                 <option value="TC">Tự chọn</option>
+                                 <option value="TN">Tốt nghiệp</option>
+                              </select>
+                           </div>
                            <div className="form-group col-md-3">
                               <label className="control-label">Mã khoa</label>
                               <select
@@ -133,9 +117,7 @@ function AddMonHoc() {
                                     khoas.map((item) => {
                                        return (
                                           <>
-                                             <option value={item.tenkhoa}>
-                                                {item.tenkhoa}
-                                             </option>
+                                             <option value={item.mskhoa}>{item.mskhoa}</option>
                                           </>
                                        )
                                     })}
@@ -143,18 +125,11 @@ function AddMonHoc() {
                            </div>
                         </form>
                      </div>
-                     <button
-                        className="btn btn-save"
-                        type="button"
-                        onClick={handleCreateMonhoc}
-                     >
+                     <button className="btn btn-save" type="button" onClick={handleCreateMonhoc}>
                         Lưu lại
                      </button>
                      <button className="btn btn-cancel">Hủy bỏ</button>
-                     <Link
-                        className="btn btn-dangerous"
-                        to={linkRoute.MONHOC_ADMIN}
-                     >
+                     <Link className="btn btn-dangerous" to={linkRoute.MONHOC_ADMIN}>
                         Thoát
                      </Link>
                   </div>

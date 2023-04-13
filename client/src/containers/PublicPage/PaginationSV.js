@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux'
-import { PageNumbers } from '../../components'
+import { PageNumbersSV } from '../../components'
 import { useEffect, useState } from 'react'
 
-function Pagination({ number }) {
+function PaginationSV({ number }) {
    const { count, sinhviens } = useSelector((state) => state.sinhvien)
    const [arrPage, setArrPage] = useState([])
    const [currentPage, setcurrentPage] = useState(+number)
@@ -36,18 +36,18 @@ function Pagination({ number }) {
    return (
       <div className="flex items-center justify-center gap-2">
          {!isHideStart && (
-            <PageNumbers
+            <PageNumbersSV
                icon={'< <'}
                text={1}
                setcurrentPage={setcurrentPage}
                type="start"
             />
          )}
-         {!isHideStart && <PageNumbers text={'...'} />}
+         {!isHideStart && <PageNumbersSV text={'...'} />}
          {arrPage.length > 0 &&
             arrPage.map((p) => {
                return (
-                  <PageNumbers
+                  <PageNumbersSV
                      key={p}
                      text={p}
                      setcurrentPage={setcurrentPage}
@@ -55,9 +55,9 @@ function Pagination({ number }) {
                   />
                )
             })}
-         {!isHideEnd && <PageNumbers text={'...'} />}
+         {!isHideEnd && <PageNumbersSV text={'...'} />}
          {!isHideEnd && (
-            <PageNumbers
+            <PageNumbersSV
                icon={'> >'}
                type="end"
                text={Math.floor(+count / +sinhviens.length)}
@@ -67,4 +67,4 @@ function Pagination({ number }) {
       </div>
    )
 }
-export default Pagination
+export default PaginationSV

@@ -50,3 +50,16 @@ export const apiDeleteSinhvien = (mssv) =>
          reject(error)
       }
    })
+export const apiUpdateSinhvien = (payload) =>
+   new Promise(async (resolve, reject) => {
+      try {
+         const response = await axiosConfig({
+            method: 'put',
+            url: '/sinhviens/edit',
+            data: payload,
+         })
+         resolve(response)
+      } catch (error) {
+         reject(error)
+      }
+   })

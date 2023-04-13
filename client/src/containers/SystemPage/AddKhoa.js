@@ -5,6 +5,7 @@ import { linkRoute } from '../../ultils/Common/constant'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import * as actions from '../../store/actions'
+import { toast } from 'react-toastify'
 
 function AddKhoa() {
    const dispatch = useDispatch()
@@ -18,6 +19,7 @@ function AddKhoa() {
       let invalids = validate(khoa)
       if (invalids === 0) {
          dispatch(actions.createKhoa(khoa))
+         toast.success('Thêm thành công...!')
          navigate('/admin/khoas')
       }
    }
@@ -60,7 +62,7 @@ function AddKhoa() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="text"
-                              label={'Mã khoa'}
+                              labelInput={'Mã khoa'}
                               name={'mskhoa'}
                               value={khoa.mskhoa}
                               setValue={setKhoa}
@@ -69,25 +71,18 @@ function AddKhoa() {
                               setInvalidField={setInvalidField}
                               invalidFields={invalidField}
                               type="text"
-                              label={'Tên khoa'}
+                              labelInput={'Tên khoa'}
                               name={'tenkhoa'}
                               value={khoa.tenkhoa}
                               setValue={setKhoa}
                            />
                         </form>
                      </div>
-                     <button
-                        className="btn btn-save"
-                        type="button"
-                        onClick={handleCreateKhoa}
-                     >
+                     <button className="btn btn-save" type="button" onClick={handleCreateKhoa}>
                         Lưu lại
                      </button>
                      <button className="btn btn-cancel">Hủy bỏ</button>
-                     <Link
-                        className="btn btn-dangerous"
-                        to={linkRoute.KHOA_ADMIN}
-                     >
+                     <Link className="btn btn-dangerous" to={linkRoute.KHOA_ADMIN}>
                         Thoát
                      </Link>
                   </div>

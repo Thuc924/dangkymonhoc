@@ -4,8 +4,7 @@ import jwt from 'jsonwebtoken'
 import { v4 } from 'uuid'
 require('dotenv').config()
 
-const hashPassword = (matkhau) =>
-   bcrytp.hashSync(matkhau, bcrytp.genSaltSync(12))
+const hashPassword = (matkhau) => bcrytp.hashSync(matkhau, bcrytp.genSaltSync(12))
 
 export const getAllSinhviens = () =>
    new Promise(async (resolve, reject) => {
@@ -15,9 +14,23 @@ export const getAllSinhviens = () =>
          })
          resolve({
             err: response ? 0 : 1,
-            msg: response
-               ? 'Get list Sinhvien ok...!'
-               : 'Get list Sinhvien fail...!',
+            msg: response ? 'Get list Sinhvien ok...!' : 'Get list Sinhvien fail...!',
+            response,
+         })
+      } catch (error) {
+         reject(error)
+      }
+   })
+export const getSinhvienMSSV = (mssv) =>
+   new Promise(async (resolve, reject) => {
+      try {
+         const response = await db.Sinhvien.findOne({
+            raw: true,
+            where: { mssv },
+         })
+         resolve({
+            err: response ? 0 : 1,
+            msg: response ? 'Get Sinhvien ok...!' : 'Get Sinhvien fail...!',
             response,
          })
       } catch (error) {
@@ -30,14 +43,19 @@ export const getLimitSinhvien = (offset) =>
          const response = await db.Sinhvien.findAndCountAll({
             raw: true,
             nest: true,
+            include: [
+               {
+                  model: db.Lophoc,
+                  as: 'lop',
+                  attributes: ['tenlop'],
+               },
+            ],
             offset: offset * +process.env.LIMIT || 0,
             limit: +process.env.LIMIT,
          })
          resolve({
             err: response ? 0 : 1,
-            msg: response
-               ? 'Get list Sinhvien ok...!'
-               : 'Get list Sinhvien fail...!',
+            msg: response ? 'Get list Sinhvien ok...!' : 'Get list Sinhvien fail...!',
             response,
          })
       } catch (error) {
@@ -47,6 +65,7 @@ export const getLimitSinhvien = (offset) =>
 
 export const createSinhvien = ({
    mssv,
+   mslop,
    tensv,
    email,
    matkhau,
@@ -64,6 +83,7 @@ export const createSinhvien = ({
             defaults: {
                id: v4(),
                mssv,
+               mslop,
                tensv,
                email,
                matkhau: hashPassword(matkhau),
@@ -77,18 +97,56 @@ export const createSinhvien = ({
          })
          const token =
             response[1] &&
-            jwt.sign(
-               { mssv: response[0].mssv, email: response[0].email },
-               process.env.SECRET_KEY,
-               { expiresIn: '2d' }
-            )
+            jwt.sign({ mssv: response[0].mssv, email: response[0].email }, process.env.SECRET_KEY, { expiresIn: '2d' })
          resolve({
             err: token ? 0 : 2,
-            msg: token
-               ? 'Create is successfully !'
-               : 'MSSV number has been aldready used !',
+            msg: token ? 'Create is successfully !' : 'MSSV number has been aldready used !',
             token: token || null,
          })
+      } catch (error) {
+         reject(error)
+      }
+   })
+export const SinhvienUpdate = ({
+   mssv,
+   tensv,
+   email,
+   matkhau,
+   diachi,
+   sodienthoai,
+   ngaysinh,
+   noisinh,
+   gioitinh,
+   mslop,
+}) =>
+   new Promise(async (resolve, reject) => {
+      try {
+         const sv = getSinhvienMSSV(mssv)
+         if (sv) {
+            db.Sinhvien.update(
+               {
+                  tensv: tensv ? tensv : sv.tensv,
+                  email: email ? email : sv.email,
+                  matkhau: matkhau ? hashPassword(matkhau) : sv.matkhau,
+                  diachi: diachi ? diachi : sv.diachi,
+                  sodienthoai: sodienthoai ? sodienthoai : sv.sodienthoai,
+                  ngaysinh: ngaysinh ? ngaysinh : sv.ngaysinh,
+                  noisinh: noisinh ? noisinh : sv.noisinh,
+                  gioitinh: gioitinh ? gioitinh : sv.gioitinh,
+                  mslop: mslop ? mslop : sv.mslop,
+               },
+               { where: { mssv } }
+            )
+            resolve({
+               err: 0,
+               msg: 'Updata success...!',
+            })
+         } else {
+            resolve({
+               err: 2,
+               msg: 'SV not found...!',
+            })
+         }
       } catch (error) {
          reject(error)
       }
@@ -101,7 +159,7 @@ export const SinhvienDelete = (mssv) =>
             where: { mssv },
          })
          if (sv) {
-            const response = await sv.destroy()
+            await sv.destroy()
             resolve({
                err: 0,
                msg: 'Delete success...!',
@@ -112,10 +170,6 @@ export const SinhvienDelete = (mssv) =>
                msg: 'MSSV not found...!',
             })
          }
-         // resolve({
-         //    err: response ? 0 : 2,
-         //    msg: response ? 'Delete success...!' : 'MSSV not found...!',
-         // })
       } catch (error) {
          reject(error)
       }

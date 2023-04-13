@@ -39,6 +39,13 @@ const sinhvienReducer = (state = initState, action) => {
             msg: action.msg || '',
          }
       }
+      case actionType.UPDATE_SUCCESS:
+      case actionType.UPDATE_FAIL: {
+         return {
+            ...state,
+            msg: action.data.msg,
+         }
+      }
 
       default:
          return state

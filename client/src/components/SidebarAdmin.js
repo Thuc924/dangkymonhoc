@@ -22,12 +22,7 @@ function SidebarAdmin() {
          {/* Navbar*/}
          <header className="app-header">
             {/* Sidebar toggle button*/}
-            <a
-               className="app-sidebar__toggle"
-               href="#"
-               data-toggle="sidebar"
-               aria-label="Hide Sidebar"
-            />
+            <a className="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar" />
             {/* Navbar Right Menu*/}
             <ul className="app-nav">
                {/* User Menu*/}
@@ -51,9 +46,7 @@ function SidebarAdmin() {
                   <p className="app-sidebar__user-name"></p>
                   <p className="app-sidebar__user-designation text-white">
                      Chào mừng {' - '}
-                     <span className="text-red-500 font-bold">
-                        {admins.tenqtv}
-                     </span>
+                     <span className="text-red-500 font-bold">{admins.tenqtv}</span>
                   </p>
                </div>
             </div>
@@ -84,19 +77,27 @@ function SidebarAdmin() {
                   </Link>
                </li>
                <li>
-                  <Link className="app-menu__item" to={linkRoute.HOME_ADMIN}>
+                  <Link className="app-menu__item" to={linkRoute.LOP_ADMIN}>
                      <i className="app-menu__icon bx bx-task" />
-                     <span className="app-menu__label">
-                        Quản lý môn học tổ chức
-                     </span>
+                     <span className="app-menu__label">Quản lý lớp</span>
+                  </Link>
+               </li>
+               <li>
+                  <Link className="app-menu__item" to={linkRoute.MHTC_ADMIN}>
+                     <i className="app-menu__icon bx bx-task" />
+                     <span className="app-menu__label">Quản lý môn học tổ chức</span>
+                  </Link>
+               </li>
+               <li>
+                  <Link className="app-menu__item" to={linkRoute.HOCKY_ADMIN}>
+                     <i className="app-menu__icon bx bx-task" />
+                     <span className="app-menu__label">Quản lý học kỳ</span>
                   </Link>
                </li>
                <li>
                   <Link className="app-menu__item" to={linkRoute.HOME_ADMIN}>
                      <i className="app-menu__icon bx bx-task" />
-                     <span className="app-menu__label">
-                        DSSV đăng ký môn học
-                     </span>
+                     <span className="app-menu__label">DSSV đăng ký môn học</span>
                   </Link>
                </li>
             </ul>

@@ -1,32 +1,43 @@
-import { Link } from 'react-router-dom'
-
-import '../../assets/css/main2.css'
-import * as acions from '../../store/actions'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useRef, useState } from 'react'
-import { Pagination } from '../PublicPage'
-import { linkRoute } from '../../ultils/Common/constant'
-import { useSearchParams } from 'react-router-dom'
 
+import * as acions from '../../store/actions'
+import '../../assets/css/main2.css'
+import { PaginationSV } from '../PublicPage'
+import { linkRoute } from '../../ultils/Common/constant'
+import Modal from '../../components/Modal'
+import { imgs } from '../../assets/images'
+import { toast } from 'react-toastify'
 function Sinhvien() {
+   const navigate = useNavigate()
    const listRef = useRef()
    const dispatch = useDispatch()
    const [params] = useSearchParams()
    const { token, sinhviens, msg } = useSelector((state) => state.sinhvien)
+   const { isLoggedIn } = useSelector((state) => state.auth)
+
+   const [showSV, setShowSV] = useState(false)
+   const [sinhvien, setSinhvien] = useState([])
+
    useEffect(() => {
-      let offset = params.get('page') ? +params.get('page') - 1 : 0
+      let offset = params.get('pageSV') ? +params.get('pageSV') - 1 : 0
       dispatch(acions.getListSinhvienLimit(offset))
       listRef.current.scrollIntoView({
          behavior: 'smooth',
          block: 'start',
       })
-   }, [params.get('page'), msg, token])
+   }, [isLoggedIn, params.get('pageSV'), msg, token])
+
    const handleRemoveSinhvien = (sv) => {
-      console.log(sv.mssv)
       dispatch(acions.deleteSinhvienByMSSV(sv.mssv))
-      alert('Delete succes...!')
+      toast.success('Xoá thành công...!')
    }
-   console.log(sinhviens.map((a) => a.avatar))
+   const handleShowModal = (sv) => {
+      setSinhvien(sv)
+      setShowSV(true)
+   }
+
    return (
       <div ref={listRef} className="app sidebar-mini rtl">
          <main className="app-content">
@@ -34,7 +45,7 @@ function Sinhvien() {
                <ul className="app-breadcrumb breadcrumb side">
                   <li className="breadcrumb-item active">
                      <a href="#">
-                        <b>Danh sách nhân viên</b>
+                        <b>Danh sách sinh viên</b>
                      </a>
                   </li>
                </ul>
@@ -46,22 +57,14 @@ function Sinhvien() {
                      <div className="tile-body">
                         <div className="row element-button">
                            <div className="col-sm-2">
-                              <Link
-                                 className="btn btn-add btn-sm"
-                                 to={linkRoute.SINHVIEN_ADD}
-                                 title="Thêm"
-                              >
+                              <Link className="btn btn-add btn-sm" to={linkRoute.SINHVIEN_ADD} title="Thêm">
                                  <i className="fas fa-plus" />
-                                 Tạo mới nhân viên
+                                 Tạo mới sinh viên
                               </Link>
                            </div>
 
                            <div className="col-sm-2">
-                              <a
-                                 className="btn btn-delete btn-sm"
-                                 type="button"
-                                 title="Xóa"
-                              >
+                              <a className="btn btn-delete btn-sm" type="button" title="Xóa">
                                  <i className="fas fa-trash-alt" /> Xóa tất cả{' '}
                               </a>
                            </div>
@@ -87,49 +90,45 @@ function Sinhvien() {
                                  <th width={150}>Giới tính</th>
                                  <th>SĐT</th>
                                  <th width={150}>Nơi sinh</th>
+                                 <th width={100}>Lớp</th>
                                  <th width={100}>Tính năng</th>
                               </tr>
                            </thead>
                            {sinhviens &&
                               sinhviens.length > 0 &&
-                              sinhviens.map((sinhvien) => {
+                              sinhviens.map((item) => {
                                  return (
-                                    <tbody key={sinhvien.id}>
+                                    <tbody key={item.id}>
                                        <tr>
                                           <td width={10}>
-                                             <input
-                                                type="checkbox"
-                                                name="check1"
-                                                defaultValue={1}
-                                             />
+                                             <input type="checkbox" name="check1" defaultValue={1} />
                                           </td>
-                                          <td>{sinhvien.mssv}</td>
-                                          <td>{sinhvien.tensv}</td>
+                                          <td>{item.mssv}</td>
+                                          <td>{item.tensv}</td>
                                           <td>
-                                             <img
+                                             {/* <img
                                                 className="img-card-person"
-                                                src={`../../assets/images/${sinhviens.avatar}`}
+                                                src={imgs.item.avatar.slice(
+                                                   0,
+                                                   item.avatar.length - 4
+                                                )}
                                                 alt="Avatar"
-                                             />
+                                             /> */}
+                                             {item.avatar.slice(0, item.avatar.length - 4)}
                                           </td>
-                                          <td>{sinhvien.diachi} </td>
-                                          <td>{sinhvien.email}</td>
-                                          <td width={150}>
-                                             {sinhvien.ngaysinh}
-                                          </td>
-                                          <td>{sinhvien.gioitinh}</td>
-                                          <td>{sinhvien.sodienthoai}</td>
-                                          <td>{sinhvien.noisinh}</td>
+                                          <td>{item.diachi} </td>
+                                          <td>{item.email}</td>
+                                          <td width={150}>{item.ngaysinh}</td>
+                                          <td>{item.gioitinh}</td>
+                                          <td>{item.sodienthoai}</td>
+                                          <td>{item.noisinh}</td>
+                                          <td>{`${item.mssv.slice(0, 1)}${item.mssv.slice(3, 5)}_${item.mslop}`}</td>
                                           <td className="table-td-center">
                                              <button
                                                 className="btn btn-primary btn-sm trash"
                                                 type="button"
                                                 title="Xóa"
-                                                onClick={() =>
-                                                   handleRemoveSinhvien(
-                                                      sinhvien
-                                                   )
-                                                }
+                                                onClick={() => handleRemoveSinhvien(item)}
                                              >
                                                 <i className="fas fa-trash-alt" />
                                              </button>
@@ -137,9 +136,9 @@ function Sinhvien() {
                                                 className="btn btn-primary btn-sm edit"
                                                 type="button"
                                                 title="Sửa"
-                                                id="show-emp"
-                                                data-toggle="modal"
-                                                data-target="#ModalUP"
+                                                onClick={() => {
+                                                   handleShowModal(item)
+                                                }}
                                              >
                                                 <i className="fas fa-edit" />
                                              </button>
@@ -151,10 +150,11 @@ function Sinhvien() {
                         </table>
                      </div>
                   </div>
-                  <Pagination number={params.get('page')} />
+                  <PaginationSV number={params.get('page')} />
                </div>
             </div>
          </main>
+         {showSV && <Modal title={'Chỉnh sửa thông tin sinh viên'} setShow={setShowSV} sinhvien={sinhvien} />}
       </div>
    )
 }
