@@ -4,6 +4,7 @@ const initState = {
    token: null,
    msg: '',
    admin: [],
+   sinhvien: [],
 }
 
 const authReducer = (state = initState, action) => {
@@ -14,7 +15,8 @@ const authReducer = (state = initState, action) => {
             isLoggedIn: true,
             token: action.data,
             msg: '',
-            admin: action.admin,
+            admin: action.admin || [],
+            sinhvien: action.sinhvien || [],
          }
       }
       case actionType.LOGIN_FAIL: {
@@ -31,6 +33,8 @@ const authReducer = (state = initState, action) => {
             isLoggedIn: false,
             token: null,
             msg: '',
+            admin: [],
+            sinhvien: [],
          }
       }
 

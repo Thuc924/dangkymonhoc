@@ -39,7 +39,7 @@ export const getAll = () =>
                {
                   model: db.Monhoc,
                   as: 'monhoc',
-                  attributes: ['tenmh', 'mskhoa'],
+                  attributes: ['tenmh', 'mskhoa', 'sotinchi'],
                },
                {
                   model: db.Hocky,
@@ -65,9 +65,15 @@ export const monhoctochucDelete = (msmh) =>
          })
          if (mh) {
             await mh.destroy()
+            const token =
+               mh.destroy() &&
+               jwt.sign({ msmh: mh.destroy().msmh, mshocky: mh.destroy().mshocky }, process.env.SECRET_KEY, {
+                  expiresIn: '2d',
+               })
             resolve({
                err: 0,
                msg: 'Delete success...!',
+               token: token || null,
             })
          } else {
             resolve({

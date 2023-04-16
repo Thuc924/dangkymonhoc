@@ -7,9 +7,14 @@ module.exports = {
             type: Sequelize.STRING,
          },
          msmh: {
+            primaryKey: true,
             type: Sequelize.STRING,
          },
          mssv: {
+            primaryKey: true,
+            type: Sequelize.STRING,
+         },
+         hocphi: {
             type: Sequelize.STRING,
          },
          createdAt: {

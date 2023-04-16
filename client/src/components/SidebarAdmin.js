@@ -16,7 +16,6 @@ function SidebarAdmin() {
       }
       getAdmin()
    }, [])
-
    return (
       <div>
          {/* Navbar*/}
@@ -95,7 +94,7 @@ function SidebarAdmin() {
                   </Link>
                </li>
                <li>
-                  <Link className="app-menu__item" to={linkRoute.HOME_ADMIN}>
+                  <Link className="app-menu__item" to={linkRoute.DS_SV}>
                      <i className="app-menu__icon bx bx-task" />
                      <span className="app-menu__label">DSSV đăng ký môn học</span>
                   </Link>

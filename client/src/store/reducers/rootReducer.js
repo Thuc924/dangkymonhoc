@@ -10,6 +10,7 @@ import { persistReducer } from 'redux-persist'
 import lopReducer from './lopReducer'
 import hockyReducer from './hockyReducer'
 import monhoctochucReducer from './monhoctochucReducer'
+import dangKyMonhoc from './dangkymonhocReducer'
 
 const commonConfig = {
    storage,
@@ -19,7 +20,7 @@ const commonConfig = {
 const authConfig = {
    ...commonConfig,
    key: 'auth',
-   whitelist: ['isLoggedIn', 'token'],
+   whitelist: ['isLoggedIn', 'token', 'sinhvien', 'admin'],
 }
 
 const rootReducer = combineReducers({
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
    monhoc: monhocReducer,
    hocky: hockyReducer,
    monhoctochuc: monhoctochucReducer,
+   dangkymonhoc: dangKyMonhoc,
 })
 
 export default rootReducer

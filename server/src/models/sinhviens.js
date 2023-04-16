@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             targetKey: 'mslop',
             as: 'lop',
          })
+         Sinhvien.hasMany(models.PhieuDKMH, { foreignKey: 'mssv', as: 'Sinhvien' })
       }
    }
    Sinhvien.init(

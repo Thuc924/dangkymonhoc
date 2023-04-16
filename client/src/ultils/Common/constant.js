@@ -1,4 +1,4 @@
-import { Home, Login, Contact } from '../../containers/PublicPage'
+import { Home, Contact, Chitietgioithieu, LoginAdmin, Dangkymonhoc } from '../../containers/PublicPage'
 import {
    AddSinhVien,
    Admin,
@@ -12,6 +12,7 @@ import {
    Hocky,
    AddHocky,
    AddMonhoctochuc,
+   DanhsachSVDKMH,
 } from '../../containers/SystemPage'
 import AddLophoc from '../../containers/SystemPage/AddLophoc'
 
@@ -25,8 +26,16 @@ export const pathRoutes = [
       component: Contact,
    },
    {
+      path: '/dangkymonhoc',
+      component: Dangkymonhoc,
+   },
+   {
+      path: '/gioithieu',
+      component: Chitietgioithieu,
+   },
+   {
       path: '/login',
-      component: Login,
+      component: LoginAdmin,
       layout: null,
    },
    {
@@ -129,6 +138,11 @@ export const pathRoutes = [
       component: Hocky,
       layout: 'Admin',
    },
+   {
+      path: '/admin/danhsachsvdangky',
+      component: DanhsachSVDKMH,
+      layout: 'Admin',
+   },
 ]
 export const linkRoute = {
    HOME_ADMIN: '/admin',
@@ -144,4 +158,5 @@ export const linkRoute = {
    MHTC_ADD: '/admin/monhoctochucs/add',
    HOCKY_ADMIN: '/admin/hockies',
    HOCKY_ADD: '/admin/hockies/add',
+   DS_SV: '/admin/danhsachsvdangky',
 }

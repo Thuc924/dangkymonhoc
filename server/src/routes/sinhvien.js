@@ -1,5 +1,6 @@
 import express from 'express'
 import * as sinhvienController from '../controllers/SinhvienController'
+import veriftToken from '../middlewares/verifyToken'
 const router = express.Router()
 
 router.post('/create', sinhvienController.create)

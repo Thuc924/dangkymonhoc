@@ -50,7 +50,7 @@ export const deleteMonhoctochucByMSMH = (msmh) => async (dispatch) => {
       if (response?.data.err === 0) {
          dispatch({
             type: actionType.DELETE_SUCCESS,
-            msg: response.data.msg,
+            token: response.data.token,
          })
       } else {
          dispatch({

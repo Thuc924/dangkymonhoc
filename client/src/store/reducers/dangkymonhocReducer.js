@@ -1,16 +1,23 @@
 import { actionType } from '../actions/actionType'
 const initState = {
-   monhoctochucs: [],
+   danhsachsvdk: [],
+   danhsachs: [],
    token: null,
    msg: '',
 }
 
-const monhoctochucReducer = (state = initState, action) => {
+const dangKyMonhoc = (state = initState, action) => {
    switch (action.type) {
-      case actionType.GET_ALL_MONHOCTOCHUC: {
+      case actionType.GET_SV_DSDKMH: {
          return {
             ...state,
-            monhoctochucs: action.data,
+            danhsachsvdk: action.data || [],
+         }
+      }
+      case actionType.GET_ALL_DSDKMH: {
+         return {
+            ...state,
+            danhsachs: action.data || [],
          }
       }
       case actionType.ADD_SUCCESS: {
@@ -25,12 +32,7 @@ const monhoctochucReducer = (state = initState, action) => {
             msg: action.data,
          }
       }
-      case actionType.DELETE_SUCCESS: {
-         return {
-            ...state,
-            token: action.token || null,
-         }
-      }
+      case actionType.DELETE_SUCCESS:
       case actionType.DELETE_FAIL: {
          return {
             ...state,
@@ -42,4 +44,4 @@ const monhoctochucReducer = (state = initState, action) => {
    }
 }
 
-export default monhoctochucReducer
+export default dangKyMonhoc

@@ -1,4 +1,4 @@
-import { Header, Nav } from '../PublicPage'
+import { Footer, Header, Nav } from '../PublicPage'
 
 function DefaultLayout({ children }) {
    return (
@@ -6,6 +6,7 @@ function DefaultLayout({ children }) {
          <Header />
          <Nav />
          <div>{children}</div>
+         <Footer />
       </div>
    )
 }

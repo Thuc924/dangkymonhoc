@@ -6,7 +6,7 @@ import * as action from '../../store/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-function Login() {
+function LoginAdmin() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const [userLogin, setUserLogin] = useState({
@@ -98,12 +98,7 @@ function Login() {
                   </div>
                   {/*=====ĐĂNG NHẬP======*/}
                   <div className="container-login100-form-btn">
-                     <input
-                        type="button"
-                        defaultValue="Đăng nhập"
-                        id="submit"
-                        onClick={handleLogin}
-                     />
+                     <input type="button" defaultValue="Đăng nhập" id="submit" onClick={handleLogin} />
                   </div>
                   {/*=====LINK TÌM MẬT KHẨU======*/}
                   <div className="text-right p-t-12">
@@ -114,12 +109,8 @@ function Login() {
                </form>
                {/*=====FOOTER======*/}
                <div className="text-center p-t-70 txt2">
-                  Phần mềm quản lý bán hàng{' '}
-                  <i className="far fa-copyright" aria-hidden="true" />
-                  <a
-                     className="txt2"
-                     href="https://www.facebook.com/truongvo.vd1503/"
-                  >
+                  Phần mềm quản lý bán hàng <i className="far fa-copyright" aria-hidden="true" />
+                  <a className="txt2" href="https://www.facebook.com/truongvo.vd1503/">
                      {' '}
                      Code bởi Trường{' '}
                   </a>
@@ -130,4 +121,4 @@ function Login() {
    )
 }
 
-export default Login
+export default LoginAdmin

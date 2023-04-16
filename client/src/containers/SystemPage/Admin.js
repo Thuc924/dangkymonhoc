@@ -21,7 +21,6 @@ function Admin() {
       dispatch(getListMonhoc())
       dispatch(getListLop())
    }, [isLoggedIn])
-   console.log('Khoa: ', khoas)
    return (
       <div className="app sidebar-mini rtl">
          <main className="app-content">

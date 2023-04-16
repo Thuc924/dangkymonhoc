@@ -6,6 +6,7 @@ import monhocRouter from './monhoc'
 import lopRouter from './lop'
 import hockyRouter from './hocky'
 import monhoctochucRouter from './monhoctochuc'
+import dangkymonhocRouter from './dangkymonhoc'
 
 const initRoutes = (app) => {
    app.use('/api/v1/auth', authRouter)
@@ -16,6 +17,7 @@ const initRoutes = (app) => {
    app.use('/lops', lopRouter)
    app.use('/hockies', hockyRouter)
    app.use('/monhoctochucs', monhoctochucRouter)
+   app.use('/dangkymonhocs', dangkymonhocRouter)
    return app.use('/', (req, res) => {
       res.send('Server on....')
    })

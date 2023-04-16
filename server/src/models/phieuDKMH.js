@@ -9,12 +9,15 @@ module.exports = (sequelize, DataTypes) => {
        */
       static associate(models) {
          // define association here
+         PhieuDKMH.belongsTo(models.Monhoc, { foreignKey: 'msmh', targetKey: 'msmh', as: 'monhocDK' })
+         PhieuDKMH.belongsTo(models.Sinhvien, { foreignKey: 'mssv', targetKey: 'mssv', as: 'Sinhvien' })
       }
    }
    PhieuDKMH.init(
       {
          msmh: DataTypes.STRING,
          mssv: DataTypes.STRING,
+         hocphi: DataTypes.STRING,
       },
       {
          sequelize,

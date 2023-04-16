@@ -62,7 +62,7 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
                      labelInput={'Mã số sinh viên'}
                      type={'text'}
                      value={editSV.mssv}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      disable
                      name={'mssv'}
                   />
@@ -70,56 +70,56 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
                      labelInput={'Tên sinh viên'}
                      type={'text'}
                      value={editSV.tensv}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'tensv'}
                   />
                   <InputForm
                      labelInput={'Địa chỉ'}
                      type={'text'}
                      value={editSV.diachi}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'diachi'}
                   />
                   <InputForm
                      labelInput={'Địa chỉ email'}
                      type={'text'}
                      value={editSV.email}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'email'}
                   />
                   <InputForm
                      labelInput={'Số điện thoại'}
                      type={'number'}
                      value={editSV.sodienthoai}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'sodienthoai'}
                   />
                   <InputForm
                      labelInput={'Mật khẩu'}
                      type={'password'}
                      value={editSV.matkhau}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'matkhau'}
                   />
                   <InputForm
                      labelInput={'Ngày sinh'}
                      type={'date'}
                      value={editSV.ngaysinh}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'ngaysinh'}
                   />
                   <InputForm
                      labelInput={'Nơi sinh'}
                      type={'text'}
                      value={editSV.noisinh}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'noisinh'}
                   />
                   <InputForm
                      labelInput={'Giới tính'}
                      type={'text'}
                      value={editSV.gioitinh}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'gioitinh'}
                   />
 
