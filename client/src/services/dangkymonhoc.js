@@ -14,24 +14,24 @@ export const apiAddMonhocInDSDKMH = (payload) =>
       }
    })
 
-export const apiGetAllDSDKMH = (mssv) =>
+export const apiGetAllBySV = (mssv) =>
    new Promise(async (resolve, reject) => {
       try {
          const response = await axiosConfig({
             method: 'get',
-            url: `/dangkymonhocs?mssv=${mssv}`,
+            url: `/dangkymonhocs/all?mssv=${mssv}`,
          })
          resolve(response)
       } catch (error) {
          reject(error)
       }
    })
-export const apiGetAll = (mssv) =>
+export const apiGetAll = () =>
    new Promise(async (resolve, reject) => {
       try {
          const response = await axiosConfig({
             method: 'get',
-            url: '/dangkymonhocs/all',
+            url: '/dangkymonhocs',
          })
          resolve(response)
       } catch (error) {

@@ -1,8 +1,11 @@
 import { actionType } from '../actions/actionType'
 const initState = {
-   isLoggedIn: false,
-   token: null,
-   msg: '',
+   isLoggedInAdmin: false,
+   isLoggedInSinhvien: false,
+   tokenAdmin: null,
+   tokenSinhvien: null,
+   msgAdmin: '',
+   msgSinhvien: '',
    admin: [],
    sinhvien: [],
 }
@@ -12,28 +15,52 @@ const authReducer = (state = initState, action) => {
       case actionType.LOGIN_SUCCESS: {
          return {
             ...state,
-            isLoggedIn: true,
-            token: action.data,
-            msg: '',
+            isLoggedInAdmin: true,
+            tokenAdmin: action.data,
+            msgAdmin: action.msg || '',
             admin: action.admin || [],
+         }
+      }
+      case actionType.LOGIN_SV_SUCCESS: {
+         return {
+            ...state,
+            isLoggedInSinhvien: true,
+            tokenSinhvien: action.data,
+            msgSinhvien: '',
             sinhvien: action.sinhvien || [],
          }
       }
-      case actionType.LOGIN_FAIL: {
+      case actionType.LOGIN_ADMIN_FAIL: {
          return {
             ...state,
-            isLoggedIn: false,
-            msg: action.data,
-            token: null,
+            isLoggedInAdmin: false,
+            msgAdmin: action.data,
+            tokenAdmin: null,
          }
       }
-      case actionType.LOGOUT: {
+      case actionType.LOGIN_SINHVIEN_FAIL: {
          return {
             ...state,
-            isLoggedIn: false,
-            token: null,
-            msg: '',
-            admin: [],
+            isLoggedInSinhvien: false,
+            msgSinhvien: action.data,
+            tokenSinhvien: null,
+         }
+      }
+      case actionType.LOGOUT_ADMIN: {
+         return {
+            ...state,
+            isLoggedInAdmin: false,
+            tokenAdmin: null,
+            msgAdmin: '',
+            Admin: [],
+         }
+      }
+      case actionType.LOGOUT_SINHVIEN: {
+         return {
+            ...state,
+            isLoggedInSinhvien: false,
+            tokenSinhvien: null,
+            msgSinhvien: '',
             sinhvien: [],
          }
       }

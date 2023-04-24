@@ -29,7 +29,13 @@ const monhocReducer = (state = initState, action) => {
             count: action.count || 0,
          }
       }
-      case actionType.DELETE_SUCCESS:
+      case actionType.DELETE_SUCCESS: {
+         return {
+            ...state,
+            msg: action.msg || '',
+            token: action.token,
+         }
+      }
       case actionType.DELETE_FAIL: {
          return {
             ...state,

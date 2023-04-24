@@ -10,6 +10,14 @@ function InputForm({ type, labelInput, name, value, setValue, invalidFields, set
                onChange={(e) => setValue((prev) => ({ ...prev, [name]: e.target.value }))}
                onFocus={() => setInvalidField([])}
             />
+         ) : name === 'msqtv' ? (
+            <input
+               disabled
+               className="form-control border-[1px]"
+               value={value}
+               type={type}
+               onChange={(e) => setValue((prev) => ({ ...prev, [name]: e.target.value }))}
+            />
          ) : (
             <input
                className="form-control border-[1px]"

@@ -76,11 +76,11 @@ export const getListSinhvienLimit = (page) => async (dispatch) => {
 export const deleteSinhvienByMSSV = (mssv) => async (dispatch) => {
    try {
       const response = await apiDeleteSinhvien(mssv)
-      console.log(response)
       if (response?.data.err === 0) {
          dispatch({
             type: actionType.DELETE_SUCCESS,
             msg: response.data.msg,
+            token: response.data.token,
          })
       } else {
          dispatch({

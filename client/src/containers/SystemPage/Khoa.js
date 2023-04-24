@@ -11,15 +11,15 @@ function Khoa() {
 
    const dispatch = useDispatch()
    const { khoas, token, msg } = useSelector((state) => state.khoa)
-   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
    const { monhocs } = useSelector((state) => state.monhoc)
 
    useEffect(() => {
-      isLoggedIn === false && navigate('/login')
+      !isLoggedInAdmin && navigate('/login')
 
       dispatch(getListKhoa())
       dispatch(getListMonhoc())
-   }, [isLoggedIn, token, msg])
+   }, [isLoggedInAdmin, token, msg])
 
    const handleRemoveKhoa = (khoa) => {
       const kq = monhocs.find((i) => i.mskhoa === khoa.mskhoa)

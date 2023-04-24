@@ -1,21 +1,30 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginSinhvien } from '../../store/actions'
+import { getListSinhvien, loginSinhvien } from '../../store/actions'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
-
+import bcryptjs from 'bcryptjs'
 function LoginUser() {
-   const navigate = useNavigate()
    const dispatch = useDispatch()
-   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { sinhviens } = useSelector((state) => state.sinhvien)
    const [loginSV, setLoginSV] = useState({
       mssv: '',
       matkhau: '',
    })
+   useEffect(() => {
+      dispatch(getListSinhvien())
+   }, [])
    const handleLoginSV = () => {
-      dispatch(loginSinhvien(loginSV))
+      if (!loginSV.mssv || !loginSV.matkhau) {
+         toast.error('Vui lòng nhập đầy đủ tài khoản và mật khẩu...!')
+      } else {
+         const findSV = sinhviens.find((i) => i.mssv === loginSV.mssv)
+         if (!findSV) {
+            toast.error('Không tìm thấy sinh viên...!')
+         } else if (bcryptjs.compareSync(loginSV.matkhau, findSV.matkhau)) {
+            dispatch(loginSinhvien(loginSV))
+         } else toast.error('Mật khẩu không khớp...!')
+      }
    }
-   console.log(loginSV)
    return (
       <div className="bg-[#dbdbdb] flex items-center h-[34px] p-[10px] justify-end">
          <label htmlFor="mssv" className="m-0 text-[10px] bg-[#efefef] px-[8px] py-[5px] ">
@@ -25,7 +34,7 @@ function LoginUser() {
             type="text"
             className="border-[1px] rounded-r-sm mr-[24px] p-[2px]"
             id="mssv"
-            onChange={(e) => setLoginSV({ mssv: e.target.value })}
+            onChange={(e) => setLoginSV({ ...loginSV, mssv: e.target.value })}
          />
          <label htmlFor="pass" className="m-0 text-[10px] bg-[#efefef] px-[8px] py-[5px] ">
             Mật khẩu

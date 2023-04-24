@@ -1,4 +1,4 @@
-import { apiAddMonhocInDSDKMH, apiDeleteMonHocInDSDKMH, apiGetAll, apiGetAllDSDKMH } from '../../services/dangkymonhoc'
+import { apiAddMonhocInDSDKMH, apiDeleteMonHocInDSDKMH, apiGetAll, apiGetAllBySV } from '../../services/dangkymonhoc'
 import { actionType } from './actionType'
 
 export const addMonhoc = (payload) => async (dispatch) => {
@@ -22,10 +22,9 @@ export const addMonhoc = (payload) => async (dispatch) => {
       })
    }
 }
-export const getListMonhocInDSDKMH = (mssv) => async (dispatch) => {
+export const getListMonhocByMSSV = (mssv) => async (dispatch) => {
    try {
-      const response = await apiGetAllDSDKMH(mssv)
-      // console.log(response)
+      const response = await apiGetAllBySV(mssv)
       if (response?.data.err === 0) {
          dispatch({
             type: actionType.GET_SV_DSDKMH,

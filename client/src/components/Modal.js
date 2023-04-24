@@ -39,8 +39,8 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
       setShow(false)
    }
    const handleSaveChange = () => {
-      dispatch(updateSinhvien(editSV))
-      dispatch(updateMonhoc(editMH))
+      editSV && dispatch(updateSinhvien(editSV))
+      editMH && dispatch(updateMonhoc(editMH))
       toast.success('Cập nhật thành công...!')
       setShow(false)
    }
@@ -157,29 +157,28 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
                      labelInput={'Mã số môn học'}
                      type={'text'}
                      value={editMH.msmh}
-                     setEdit={setEditMH}
-                     disable
+                     setValue={setEditMH}
                      name={'msmh'}
                   />
                   <InputForm
                      labelInput={'Tên môn học'}
                      type={'text'}
                      value={editMH.tenmh}
-                     setEdit={setEditMH}
+                     setValue={setEditMH}
                      name={'tenmh'}
                   />
                   <InputForm
                      labelInput={'Số tín chỉ'}
                      type={'text'}
                      value={editMH.sotinchi}
-                     setEdit={setEditMH}
+                     setValue={setEditMH}
                      name={'sotinchi'}
                   />
                   <InputForm
                      labelInput={'Số tiết'}
                      type={'number'}
                      value={editMH.sotiet}
-                     setEdit={setEditSV}
+                     setValue={setEditSV}
                      name={'sotiet'}
                   />
                   <div className="form-group col-md-3">

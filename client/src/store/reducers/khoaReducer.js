@@ -25,7 +25,13 @@ const khoaReducer = (state = initState, action) => {
             msg: action.data,
          }
       }
-      case actionType.DELETE_SUCCESS:
+      case actionType.DELETE_SUCCESS: {
+         return {
+            ...state,
+            msg: action.msg || '',
+            token: action.token,
+         }
+      }
       case actionType.DELETE_FAIL: {
          return {
             ...state,

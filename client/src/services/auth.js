@@ -1,6 +1,6 @@
 import axiosConfig from '../axiosConfig'
 
-export const apiLogin = (payload) =>
+export const apiLoginAdmin = (payload) =>
    new Promise(async (resolve, reject) => {
       try {
          const response = await axiosConfig({

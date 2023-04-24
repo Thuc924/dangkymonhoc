@@ -160,9 +160,15 @@ export const SinhvienDelete = (mssv) =>
          })
          if (sv) {
             await sv.destroy()
+            const token =
+               sv.destroy() &&
+               jwt.sign({ mssv: sv.destroy().mssv, tensv: sv.destroy().tensv }, process.env.SECRET_KEY, {
+                  expiresIn: '2d',
+               })
             resolve({
                err: 0,
                msg: 'Delete success...!',
+               token: token || null,
             })
          } else {
             resolve({

@@ -9,18 +9,18 @@ import { linkRoute } from '../../ultils/Common/constant'
 function Admin() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
-   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
    const { sinhviens } = useSelector((state) => state.sinhvien)
    const { khoas } = useSelector((state) => state.khoa)
    const { monhocs } = useSelector((state) => state.monhoc)
    const { lops } = useSelector((state) => state.lop)
    useEffect(() => {
-      isLoggedIn === false && navigate('/login')
+      !isLoggedInAdmin && navigate('/login')
       dispatch(getListSinhvien())
       dispatch(getListKhoa())
       dispatch(getListMonhoc())
       dispatch(getListLop())
-   }, [isLoggedIn])
+   }, [isLoggedInAdmin])
    return (
       <div className="app sidebar-mini rtl">
          <main className="app-content">

@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 function Dangkymonhoc() {
    const navigate = useNavigate()
    const dispatch = useDispatch()
-   const { isLoggedIn, sinhvien } = useSelector((state) => state.auth)
+   const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
 
    const { monhoctochucs, token } = useSelector((state) => state.monhoctochuc)
 
@@ -17,37 +17,50 @@ function Dangkymonhoc() {
 
    const [listMH, setListMH] = useState([])
 
-   const [dsMHDK, setDSMHDK] = useState([])
+   const [dsMHDK, setDSMHDK] = useState(JSON.parse(localStorage.getItem('mhdk')) || [])
    useEffect(() => {
       dispatch(actions.getListMonhoctochuc())
-      dispatch(actions.getListMonhocInDSDKMH(sinhvien.mssv))
-
-      !isLoggedIn && navigate('/')
-   }, [isLoggedIn, msmh, dsMHDK.length, token])
+      dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
+      localStorage.setItem('mhdk', JSON.stringify(dsMHDK) || [])
+      !isLoggedInSinhvien && navigate('/')
+   }, [isLoggedInSinhvien, msmh, dsMHDK?.length, token])
 
    const handleLocMonHoc = () => {
       const list = monhoctochucs.filter((i) => i.msmh === msmh)
       setListMH(list)
    }
+
+   const abc = (a) => {
+      var x = []
+      while (a / 10 !== 0) {
+         x.push(a % 10)
+         a = Math.floor(a / 10)
+      }
+      var y = []
+      for (let j = x.length - 1; j >= 0; j--) {
+         y.push(x[j])
+      }
+      return y
+   }
    const handleAddMHDK = (mh) => {
-      const search = danhsachsvdk.find((i) => i.msmh === mh.msmh) || dsMHDK.find((i) => i.msmh === mh.msmh)
+      const search = danhsachsvdk?.find((i) => i.msmh === mh.msmh) || dsMHDK?.find((i) => i.msmh === mh.msmh)
       !search
          ? setDSMHDK((prev) => [
               ...prev,
               {
                  msmh: mh.msmh,
-                 tenmh: mh?.monhoc.tenmh,
-                 sotinchi: mh?.monhoc.sotinchi,
-                 hocphi: mh?.monhoc.sotinchi * 613000,
+                 tenmh: mh.monhoc?.tenmh,
+                 sotinchi: mh.monhoc?.sotinchi,
+                 hocphi: mh.monhoc?.sotinchi * 613000,
               },
            ])
-         : toast.error('Đã có môn học...!')
+         : toast.error('Đã có môn học trong danh sách đăng ký...!')
    }
 
    const sumSTC = (a) => {
       let kq = 0
       for (let i = 0; i < a.length; i++) {
-         kq = +kq + (+a[i].sotinchi || +a[i].monhocDK?.sotinchi)
+         kq = kq + (+a[i].sotinchi || +a[i].monhocDK?.sotinchi || 0)
       }
       return kq
    }
@@ -71,7 +84,8 @@ function Dangkymonhoc() {
       )
       setDSMHDK([])
    }
-   console.log(danhsachsvdk)
+   console.log(dsMHDK)
+
    return (
       <div className="m-1 p-[4px] border-[1px] text-[12px]">
          <div>
@@ -92,7 +106,7 @@ function Dangkymonhoc() {
                Lọc môn học tự chọn
             </button>
          </div>
-         <div className="h-[300px]">
+         <div>
             <table>
                <thead className="bg-[#F0F0F0]">
                   <tr>
@@ -100,16 +114,17 @@ function Dangkymonhoc() {
                         <input type="checkbox" id="all" />
                      </th>
                      <th>Mã môn học</th>
-                     <th>Mã môn học</th>
+                     <th>Tên môn học</th>
+                     <th>Mô tả</th>
                      <th>Số tín chỉ</th>
                      <th>Học phí</th>
                   </tr>
                </thead>
                <tbody>
-                  {listMH.length > 0 ? (
-                     listMH.map((item) => {
+                  {listMH.length > 0 &&
+                     listMH.map((item, index) => {
                         return (
-                           <tr key={item.id}>
+                           <tr key={index}>
                               <td width={10}>
                                  <input
                                     type="checkbox"
@@ -124,16 +139,69 @@ function Dangkymonhoc() {
                               <td>{item?.monhoc.sotinchi * 613000}</td>
                            </tr>
                         )
-                     })
-                  ) : (
-                     <td colSpan={5} style={{ textAlign: 'center' }}>
-                        Data rổng
-                     </td>
-                  )}
+                     })}
+                  {monhoctochucs.filter((i) => i.monhoc?.mskhoa == '0').length > 0 &&
+                     monhoctochucs
+                        .filter((i) => i.monhoc?.mskhoa == '0')
+                        .map((i, index) => {
+                           return (
+                              <tr key={index}>
+                                 <td width={10}>
+                                    <input
+                                       type="checkbox"
+                                       name="check1"
+                                       defaultValue={1}
+                                       onClick={() => handleAddMHDK(i)}
+                                    />
+                                 </td>
+                                 <td>{i.msmh}</td>
+                                 <td>{i?.monhoc.tenmh}</td>
+                                 <td>
+                                    {i?.monhoc.mota == 'BB'
+                                       ? 'Bắc buộc'
+                                       : i?.monhoc.mota == 'TC'
+                                       ? 'Tự chọn'
+                                       : 'Tốt nghiệp'}
+                                 </td>
+                                 <td>{i?.monhoc.sotinchi}</td>
+                                 <td>{i?.monhoc.sotinchi * 613000}</td>
+                              </tr>
+                           )
+                        })}
+                  {monhoctochucs &&
+                     monhoctochucs.filter((i) => i.monhoc?.mskhoa == sinhvien?.mssv?.slice(2, 3)).length > 0 &&
+                     monhoctochucs
+                        .filter((i) => i.monhoc?.mskhoa == sinhvien?.mssv.slice(2, 3))
+                        .map((i, index) => {
+                           return (
+                              <tr key={index}>
+                                 <td width={10}>
+                                    <input
+                                       type="checkbox"
+                                       name="check1"
+                                       defaultValue={1}
+                                       onClick={() => handleAddMHDK(i)}
+                                    />
+                                 </td>
+                                 <td>{i.msmh}</td>
+                                 <td>{i?.monhoc.tenmh}</td>
+                                 <td>
+                                    {i?.monhoc.mota == 'BB'
+                                       ? 'Bắc buộc'
+                                       : i?.monhoc.mota == 'TC'
+                                       ? 'Tự chọn'
+                                       : 'Tốt nghiệp'}
+                                 </td>
+                                 <td>{i?.monhoc.sotinchi}</td>
+                                 <td>{i?.monhoc.sotinchi * 613000}</td>
+                              </tr>
+                           )
+                        })}
                </tbody>
             </table>
          </div>
          <div>
+            <div className="uppercase text-[14px] font-bold p-2">Danh sách môn học đã thêm</div>
             <table>
                <thead className="bg-[#F0F0F0]">
                   <tr>
@@ -150,9 +218,9 @@ function Dangkymonhoc() {
                </thead>
                <tbody>
                   {danhsachsvdk.length > 0 &&
-                     danhsachsvdk.map((item) => {
+                     danhsachsvdk.map((item, index) => {
                         return (
-                           <tr key={item.id}>
+                           <tr key={index}>
                               <td width={10}>
                                  <input type="checkbox" id="all" />
                               </td>
@@ -160,23 +228,16 @@ function Dangkymonhoc() {
                               <td>{item?.monhocDK.tenmh}</td>
                               <td>{item?.monhocDK.sotinchi}</td>
                               <td>{item.hocphi}</td>
-                              <td>Đã lưu vào CSDL</td>
-                              <td>
-                                 <button
-                                    className="bg-[#F0F0F0] p-2 w-[100px] hover:font-bold"
-                                    onClick={() => handleRemoveDSDKMH(item)}
-                                 >
-                                    Xoá
-                                 </button>
-                              </td>
+                              <td className="font-bold">Đã lưu vào CSDL</td>
+                              <td></td>
                            </tr>
                         )
                      })}
                   {dsMHDK &&
                      dsMHDK.length > 0 &&
-                     dsMHDK.map((item) => {
+                     dsMHDK.map((item, index) => {
                         return (
-                           <tr key={item.id}>
+                           <tr key={index}>
                               <td width={10}>
                                  <input type="checkbox" id="all" />
                               </td>
@@ -196,14 +257,14 @@ function Dangkymonhoc() {
                            </tr>
                         )
                      })}
-                  {dsMHDK.length > 0 ? (
+                  {dsMHDK?.length > 0 ? (
                      <>
                         <tr>
                            <td colSpan={2} className="font-bold">
                               Tổng số tín chỉ
                            </td>
                            <td colSpan={5} className="font-bold">
-                              {sumSTC(dsMHDK) + sumSTC(danhsachsvdk)}
+                              {sumSTC(dsMHDK) + +sumSTC(danhsachsvdk)}
                            </td>
                         </tr>
                         <tr>
@@ -211,7 +272,7 @@ function Dangkymonhoc() {
                               Tổng tiền
                            </td>
                            <td colSpan={5} className="font-bold">
-                              {sumHocPhi(dsMHDK)} đ
+                              {abc(sumHocPhi(dsMHDK) + sumHocPhi(danhsachsvdk))} đ
                            </td>
                         </tr>
                      </>

@@ -11,11 +11,13 @@ function Lop() {
 
    const dispatch = useDispatch()
    const { lops, token, msg } = useSelector((state) => state.lop)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
    const { sinhviens } = useSelector((state) => state.sinhvien)
    useEffect(() => {
       dispatch(getListLop())
       dispatch(getListSinhvien())
-   }, [token, msg])
+      !isLoggedInAdmin && navigate('/login')
+   }, [isLoggedInAdmin, token, msg])
    const handleRemoveLop = (lop) => {
       const kq = sinhviens.find((i) => i.mslop === lop.mslop)
       if (!kq) {

@@ -10,13 +10,13 @@ function Hocky() {
 
    const dispatch = useDispatch()
    const { hockys, token, msg } = useSelector((state) => state.hocky)
-   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
 
    useEffect(() => {
-      isLoggedIn === false && navigate('/login')
+      !isLoggedInAdmin && navigate('/login')
 
       dispatch(getListHocky())
-   }, [isLoggedIn, token, msg])
+   }, [isLoggedInAdmin, token, msg])
 
    const handleRemoveHocky = (hk) => {
       dispatch(deleteHockyByMShocky(hk.mshocky))

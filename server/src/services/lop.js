@@ -62,9 +62,15 @@ export const LophocDelete = (mslop) =>
             const sv = await db.Sinhvien.findOne({ where: { mslop } })
             if (!sv) {
                await lop.destroy()
+               const token =
+                  lop.destroy() &&
+                  jwt.sign({ mslop: lop.destroy().mslop, tenlop: lop.destroy().tenlop }, process.env.SECRET_KEY, {
+                     expiresIn: '2d',
+                  })
                resolve({
                   err: 0,
                   msg: 'Delete success...!',
+                  token: token || null,
                })
             } else {
                resolve({

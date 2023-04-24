@@ -20,11 +20,12 @@ export const createMonhoc = ({ msmh, tenmh, sotinchi, mskhoa, mota, sotiet }) =>
          })
          const token =
             response[1] &&
-            jwt.sign({ msmh: response[0].msmh, tenmh: response[0].tenmh }, process.env.SECRET_KEY, { expiresIn: '2d' })
+            jwt.sign({ msmh: response[0].msmh, tenmh: response[0].tenmh }, process.env.SECRET_KEY, { expiresIn: '2h' })
          resolve({
             err: token ? 0 : 2,
             msg: token ? 'Create is successfully !' : 'MSMH has been aldready used !',
             token: token || null,
+            response,
          })
       } catch (error) {
          reject(error)
@@ -61,9 +62,15 @@ export const MonhocDelete = (msmh) =>
          })
          if (monhoc) {
             await monhoc.destroy()
+            const token =
+               monhoc.destroy() &&
+               jwt.sign({ msmh: monhoc.destroy().msmh, tenmh: monhoc.destroy().tenmh }, process.env.SECRET_KEY, {
+                  expiresIn: '2d',
+               })
             resolve({
                err: 0,
                msg: 'Delete success...!',
+               token: token || null,
             })
          } else {
             resolve({
@@ -103,10 +110,11 @@ export const getLimitMonhoc = (offset) =>
 export const MonhocUpdate = ({ msmh, tenmh, sotinchi, mskhoa, mota, sotiet }) =>
    new Promise(async (resolve, reject) => {
       try {
-         const mh = db.Monhoc.findOne({ where: { msmh } })
+         const mh = await db.Monhoc.findOne({ where: { msmh } })
          if (mh) {
-            db.Monhoc.update(
+            await db.Monhoc.update(
                {
+                  msmh: msmh ? msmh : mh.msmh,
                   tenmh: tenmh ? tenmh : mh.tenmh,
                   sotinchi: sotinchi ? sotinchi : mh.sotinchi,
                   mskhoa: mskhoa ? mskhoa : mh.mskhoa,
@@ -115,6 +123,7 @@ export const MonhocUpdate = ({ msmh, tenmh, sotinchi, mskhoa, mota, sotiet }) =>
                },
                { where: { msmh } }
             )
+            // await mh.save()
             resolve({
                err: 0,
                msg: 'Updata success...!',

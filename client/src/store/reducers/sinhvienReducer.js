@@ -32,15 +32,21 @@ const sinhvienReducer = (state = initState, action) => {
             count: action.count || 0,
          }
       }
-      case actionType.DELETE_SUCCESS:
+      case actionType.DELETE_SUCCESS: {
+         return {
+            ...state,
+            msg: action.msg || '',
+            token: action.token,
+         }
+      }
       case actionType.DELETE_FAIL: {
          return {
             ...state,
             msg: action.msg || '',
          }
       }
-      case actionType.UPDATE_SUCCESS:
-      case actionType.UPDATE_FAIL: {
+      case actionType.UPDATE_SINHVIEN_SUCCESS:
+      case actionType.UPDATE_SINHVIEN_FAIL: {
          return {
             ...state,
             msg: action.data.msg,

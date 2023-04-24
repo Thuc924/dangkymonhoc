@@ -11,6 +11,7 @@ import lopReducer from './lopReducer'
 import hockyReducer from './hockyReducer'
 import monhoctochucReducer from './monhoctochucReducer'
 import dangKyMonhoc from './dangkymonhocReducer'
+import adminReducer from './adminReducer'
 
 const commonConfig = {
    storage,
@@ -20,12 +21,12 @@ const commonConfig = {
 const authConfig = {
    ...commonConfig,
    key: 'auth',
-   whitelist: ['isLoggedIn', 'token', 'sinhvien', 'admin'],
+   whitelist: ['isLoggedInAdmin', 'tokenAdmin', 'tokenSinhvien', 'sinhvien', 'admin', 'isLoggedInSinhvien'],
 }
-
 const rootReducer = combineReducers({
    auth: persistReducer(authConfig, authReducer),
    sinhvien: sinhvienReducer,
+   admin: adminReducer,
    khoa: khoaReducer,
    lop: lopReducer,
    monhoc: monhocReducer,

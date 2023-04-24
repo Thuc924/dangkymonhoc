@@ -1,20 +1,28 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllDSMH, getListMonhocInDSDKMH } from '../../store/actions'
+import { getAllDSMH, getListKhoa, getListMonhoc } from '../../store/actions'
 import { ModalDetailDK, ModalDetailDKMH } from '../../components'
+import { useNavigate } from 'react-router-dom'
+import { compareValues } from '../../ultils/func'
 
 function DanhsachSVDKMH() {
+   const navigate = useNavigate()
    const dispatch = useDispatch()
    const { danhsachs } = useSelector((state) => state.dangkymonhoc)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
+   const { khoas } = useSelector((state) => state.khoa)
+   const { monhocs } = useSelector((state) => state.monhoc)
 
-   const [show, setShow] = useState(false)
+   const [khoa, setKhoa] = useState('')
 
-   const [mssv, setMssv] = useState({ mssv: '' })
+   const [monhoc, setMonhoc] = useState('')
 
    useEffect(() => {
-      dispatch(getListMonhocInDSDKMH())
       dispatch(getAllDSMH())
-   }, [])
+      dispatch(getListMonhoc())
+      dispatch(getListKhoa())
+      !isLoggedInAdmin && navigate('/login')
+   }, [isLoggedInAdmin])
    const groupByCategory = danhsachs.reduce((group, monhoc) => {
       const { mssv } = monhoc
       group[mssv] = group[mssv] ?? []
@@ -22,11 +30,13 @@ function DanhsachSVDKMH() {
       return group
    }, {})
 
-   const handleViewDetail = (item) => {
-      setMssv({ mssv: item })
-      setShow(true)
+   const sumHocPhi = (a) => {
+      let kq = 0
+      for (let i = 0; i < a.length; i++) {
+         kq = +kq + +a[i].hocphi
+      }
+      return kq
    }
-
    return (
       <div className="app sidebar-mini rtl">
          <main className="app-content">
@@ -44,6 +54,75 @@ function DanhsachSVDKMH() {
                <div className="col-md-12">
                   <div className="tile">
                      <div className="tile-body">
+                        <div className="flex">
+                           <div className="form-group col-md-3">
+                              <select
+                                 className="form-control"
+                                 id="mskhoa"
+                                 required
+                                 onChange={(e) => setKhoa(e.target.value)}
+                              >
+                                 <option value={''}>-- Chọn khoa --</option>
+                                 {khoas &&
+                                    khoas.length > 0 &&
+                                    khoas.map((item, index) => {
+                                       return (
+                                          <>
+                                             <option key={index} value={item.mskhoa}>
+                                                {item.tenkhoa}
+                                             </option>
+                                          </>
+                                       )
+                                    })}
+                              </select>
+                           </div>
+                           <div className="form-group col-md-3">
+                              {!khoa ? (
+                                 <select
+                                    disabled
+                                    className="form-control"
+                                    id="mskhoa"
+                                    required
+                                    onChange={(e) => setMonhoc(e.target.value)}
+                                 >
+                                    <option value={''}>-- Chọn môn học --</option>
+                                    {monhocs &&
+                                       monhocs.length > 0 &&
+                                       monhocs.map((item, index) => {
+                                          return (
+                                             <>
+                                                <option key={index} value={item.msmh}>
+                                                   {item.tenmh}
+                                                </option>
+                                             </>
+                                          )
+                                       })}
+                                 </select>
+                              ) : (
+                                 <select
+                                    className="form-control"
+                                    id="mskhoa"
+                                    required
+                                    onChange={(e) => setMonhoc(e.target.value)}
+                                 >
+                                    <option value={''}>-- Chọn môn học --</option>
+                                    {monhocs &&
+                                       monhocs.length > 0 &&
+                                       monhocs
+                                          .filter((i) => i.mskhoa === khoa)
+                                          .map((item, index) => {
+                                             return (
+                                                <>
+                                                   <option key={index} value={item.msmh}>
+                                                      {item.tenmh}
+                                                   </option>
+                                                </>
+                                             )
+                                          })}
+                                 </select>
+                              )}
+                           </div>
+                        </div>
                         <table
                            className="table table-hover table-bordered js-copytextarea"
                            cellPadding={0}
@@ -53,47 +132,57 @@ function DanhsachSVDKMH() {
                         >
                            <thead>
                               <tr>
-                                 <th width={10}>
-                                    <input type="checkbox" id="all" />
-                                 </th>
-                                 <th width={150}>Mã số sinh viên</th>
-                                 <th width={150}>Tổng số môn học đăng ký</th>
-                                 <th width={100}>Tính năng</th>
+                                 <th width={10}>STT</th>
+                                 <th width={100}>Mã số sinh viên</th>
+                                 <th width={150}>Tên sinh viên</th>
+                                 <th width={150}>Mã số môn học đã đăng ký</th>
+                                 <th width={150}>Tên môn học đã đăng ký</th>
+                                 <th width={100}>Học phí</th>
                               </tr>
                            </thead>
-                           {Object.keys(groupByCategory)
-                              .map((i) => groupByCategory[i])
-                              .map((a) => a) &&
-                              Object.keys(groupByCategory).map((i, index) => {
-                                 return (
-                                    <tbody key={index}>
-                                       <tr>
-                                          <td width={10}>
-                                             <input type="checkbox" name="check1" defaultValue={1} />
-                                          </td>
-                                          <td>{i}</td>
-                                          <td>{groupByCategory[i]?.map((a) => a).length}</td>
-                                          <td>
-                                             <button
-                                                className="btn btn-primary btn-sm edit"
-                                                type="button"
-                                                title="Xem chi tiết"
-                                                onClick={() => handleViewDetail(i)}
-                                             >
-                                                Xem chi tiết
-                                             </button>
-                                          </td>
-                                       </tr>
-                                    </tbody>
-                                 )
-                              })}
+                           {monhoc
+                              ? danhsachs &&
+                                danhsachs.length > 0 &&
+                                danhsachs
+                                   .filter((i) => i.msmh === monhoc)
+                                   .sort(compareValues('mssv', 'desc'))
+                                   .map((item, index) => {
+                                      return (
+                                         <tbody key={index}>
+                                            <tr>
+                                               <td width={10}>{index + 1}</td>
+                                               <td>{item.mssv}</td>
+                                               <td>{item.Sinhvien.tensv}</td>
+                                               <td>{item.msmh}</td>
+                                               <td>{item.monhocDK.tenmh}</td>
+                                               <td>{item.hocphi}</td>
+                                            </tr>
+                                         </tbody>
+                                      )
+                                   })
+                              : danhsachs &&
+                                danhsachs.length > 0 &&
+                                danhsachs.sort(compareValues('mssv', 'desc')).map((item, index) => {
+                                   return (
+                                      <tbody key={index}>
+                                         <tr>
+                                            <td width={10}>{index + 1}</td>
+                                            <td>{item.mssv}</td>
+                                            <td>{item.Sinhvien.tensv}</td>
+                                            <td>{item.msmh}</td>
+                                            <td>{item.monhocDK.tenmh}</td>
+                                            <td>{item.hocphi}</td>
+                                         </tr>
+                                      </tbody>
+                                   )
+                                })}
                         </table>
                      </div>
                   </div>
                </div>
             </div>
          </main>
-         {show && <ModalDetailDKMH setShow={setShow} mssv={mssv} />}
+         {/* {show && <ModalDetailDKMH setShow={setShow} mssv={mssv} sumHocPhi={sumHocPhi} />} */}
       </div>
    )
 }

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { deleteMonhoctochucByMSMH, getListMonhoctochuc } from '../../store/actions/monhoctochuc'
 import { getListKhoa } from '../../store/actions'
+import { compareValues } from '../../ultils/func'
 
 function Monhoctochuc() {
    const dispatch = useDispatch()
@@ -13,32 +14,14 @@ function Monhoctochuc() {
 
    const { monhoctochucs, token, msg } = useSelector((state) => state.monhoctochuc)
    const { khoas } = useSelector((state) => state.khoa)
-   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
    const [khoa, setKhoa] = useState({ mskhoa: '' })
    useEffect(() => {
-      isLoggedIn === false && navigate('/login')
+      !isLoggedInAdmin && navigate('/login')
       dispatch(getListMonhoctochuc())
       dispatch(getListKhoa())
-   }, [isLoggedIn, token, msg, khoa])
-   function compareValues(key, order = 'asc') {
-      return function (a, b) {
-         if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-            // nếu không tồn tại
-            return 0
-         }
+   }, [isLoggedInAdmin, token, msg, khoa])
 
-         const varA = typeof a[key] === 'string' ? a[key].toUpperCase() : a[key]
-         const varB = typeof b[key] === 'string' ? b[key].toUpperCase() : b[key]
-
-         let comparison = 0
-         if (varA > varB) {
-            comparison = 1
-         } else if (varA < varB) {
-            comparison = -1
-         }
-         return order == 'desc' ? comparison * -1 : comparison
-      }
-   }
    const handleRemoveMHTC = (mh) => {
       if (mh) {
          dispatch(deleteMonhoctochucByMSMH(mh.msmh))

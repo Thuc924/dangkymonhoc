@@ -39,7 +39,7 @@ export const getAll = () =>
                {
                   model: db.Monhoc,
                   as: 'monhoc',
-                  attributes: ['tenmh', 'mskhoa', 'sotinchi'],
+                  attributes: ['tenmh', 'mskhoa', 'sotinchi', 'mota'],
                },
                {
                   model: db.Hocky,

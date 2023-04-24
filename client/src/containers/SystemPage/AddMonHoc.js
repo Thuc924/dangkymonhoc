@@ -31,7 +31,7 @@ function AddMonHoc() {
          dispatch(createMonhoc(monhoc))
          toast.success('Thêm thành công...!')
          navigate('/admin/monhocs')
-      } else toast.error('Đã tồn tại mã môn học...!')
+      } else toast.error('Đã tồn tại môn học...!')
    }
    console.log(monhoc)
    return (
@@ -92,7 +92,7 @@ function AddMonHoc() {
                                     })
                                  }
                               >
-                                 <option value={''}>-- Chọn khoa --</option>
+                                 <option value={''}>-- Chọn mô tả --</option>
                                  <option value="BB">Bắc buộc</option>
                                  <option value="TC">Tự chọn</option>
                                  <option value="TN">Tốt nghiệp</option>
@@ -117,7 +117,7 @@ function AddMonHoc() {
                                     khoas.map((item) => {
                                        return (
                                           <>
-                                             <option value={item.mskhoa}>{item.mskhoa}</option>
+                                             <option value={item.mskhoa}>{item.tenkhoa}</option>
                                           </>
                                        )
                                     })}

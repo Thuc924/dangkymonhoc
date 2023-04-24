@@ -14,14 +14,14 @@ export const add = async (req, res) => {
    } catch (error) {
       return res.status(500).json({
          err: -1,
-         msg: 'Fail at hocky controller ' + error,
+         msg: 'Fail at monhoctochuc controller ' + error,
       })
    }
 }
-export const getAllDSDKMH = async (req, res) => {
+export const getAllDSByMSSV = async (req, res) => {
    try {
       const { mssv } = req.query
-      const response = await dangkymonhocService.getAllDS(mssv)
+      const response = await dangkymonhocService.getAllSV(mssv)
       return res.status(200).json(response)
    } catch (error) {
       return res.status(500).json({
@@ -32,7 +32,7 @@ export const getAllDSDKMH = async (req, res) => {
 }
 export const getAll = async (req, res) => {
    try {
-      const response = await dangkymonhocService.getAllSV()
+      const response = await dangkymonhocService.getAllDS()
       return res.status(200).json(response)
    } catch (error) {
       return res.status(500).json({

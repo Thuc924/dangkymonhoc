@@ -1,4 +1,12 @@
-import { Home, Contact, Chitietgioithieu, LoginAdmin, Dangkymonhoc } from '../../containers/PublicPage'
+import {
+   Home,
+   Contact,
+   Chitietgioithieu,
+   LoginAdmin,
+   Dangkymonhoc,
+   XemHocPhi,
+   Thongtincanhan,
+} from '../../containers/PublicPage'
 import {
    AddSinhVien,
    Admin,
@@ -15,6 +23,7 @@ import {
    DanhsachSVDKMH,
 } from '../../containers/SystemPage'
 import AddLophoc from '../../containers/SystemPage/AddLophoc'
+import ThongtinQTV from '../../containers/SystemPage/ThongtinQuanTriVien'
 
 export const pathRoutes = [
    {
@@ -33,6 +42,18 @@ export const pathRoutes = [
       path: '/gioithieu',
       component: Chitietgioithieu,
    },
+   {
+      path: '/hocphi',
+      component: XemHocPhi,
+   },
+   {
+      path: '/thongtincanhan',
+      component: Thongtincanhan,
+   },
+   // {
+   //    path: '/thongtincanhan',
+   //    component: Thongtincanhan,
+   // },
    {
       path: '/login',
       component: LoginAdmin,
@@ -143,6 +164,21 @@ export const pathRoutes = [
       component: DanhsachSVDKMH,
       layout: 'Admin',
    },
+   {
+      path: '/admin/danhsachsvdangky/all/mssv=:mssv',
+      component: DanhsachSVDKMH,
+      layout: 'Admin',
+   },
+   {
+      path: '/admin/thongtinadmin',
+      component: ThongtinQTV,
+      layout: 'Admin',
+   },
+   {
+      path: '/admin/thongtinadmin/getone/msqtv=:msqtv',
+      component: ThongtinQTV,
+      layout: 'Admin',
+   },
 ]
 export const linkRoute = {
    HOME_ADMIN: '/admin',
@@ -159,4 +195,5 @@ export const linkRoute = {
    HOCKY_ADMIN: '/admin/hockies',
    HOCKY_ADD: '/admin/hockies/add',
    DS_SV: '/admin/danhsachsvdangky',
+   TT_ADMIN: '/admin/thongtinadmin',
 }

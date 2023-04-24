@@ -29,7 +29,7 @@ function SidebarAdmin() {
                   <button
                      className="app-nav__item"
                      onClick={() => {
-                        dispatch(action.logout())
+                        dispatch(action.logoutAdmin())
                      }}
                   >
                      <i className="bx bx-log-out bx-rotate-180" />{' '}
@@ -45,7 +45,9 @@ function SidebarAdmin() {
                   <p className="app-sidebar__user-name"></p>
                   <p className="app-sidebar__user-designation text-white">
                      Chào mừng {' - '}
-                     <span className="text-red-500 font-bold">{admins.tenqtv}</span>
+                     <Link className="text-red-500 font-bold hover:underline cursor-pointer" to={linkRoute.TT_ADMIN}>
+                        {admins.tenqtv}
+                     </Link>
                   </p>
                </div>
             </div>

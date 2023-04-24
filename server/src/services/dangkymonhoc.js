@@ -27,7 +27,35 @@ export const addMonhocInDSDKMH = ({ msmh, mssv, hocphi }) =>
       }
    })
 
-export const getAllDS = (mssv) =>
+export const getAllDS = () =>
+   new Promise(async (resolve, reject) => {
+      try {
+         const response = await db.PhieuDKMH.findAll({
+            raw: true,
+            nest: true,
+            include: [
+               {
+                  model: db.Monhoc,
+                  as: 'monhocDK',
+                  attributes: ['tenmh', 'sotinchi', 'mskhoa'],
+               },
+               {
+                  model: db.Sinhvien,
+                  as: 'Sinhvien',
+                  attributes: ['tensv'],
+               },
+            ],
+         })
+         resolve({
+            err: response ? 0 : 1,
+            msg: response ? 'Get DSDKMH ok...!' : 'Get DSDKMH fail...!',
+            response,
+         })
+      } catch (error) {
+         reject(error)
+      }
+   })
+export const getAllSV = (mssv) =>
    new Promise(async (resolve, reject) => {
       try {
          const response = await db.PhieuDKMH.findAll({
@@ -46,21 +74,6 @@ export const getAllDS = (mssv) =>
                   attributes: ['tensv'],
                },
             ],
-         })
-         resolve({
-            err: response ? 0 : 1,
-            msg: response ? 'Get DSDKMH ok...!' : 'Get DSDKMH fail...!',
-            response,
-         })
-      } catch (error) {
-         reject(error)
-      }
-   })
-export const getAllSV = () =>
-   new Promise(async (resolve, reject) => {
-      try {
-         const response = await db.PhieuDKMH.findAll({
-            raw: true,
          })
          resolve({
             err: response ? 0 : 1,

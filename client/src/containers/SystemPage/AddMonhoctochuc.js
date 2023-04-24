@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as actions from '../../store/actions'
 import { toast } from 'react-toastify'
 import { addMonhoctochuc } from '../../store/actions/monhoctochuc'
+import { compareValues } from '../../ultils/func'
 
 function AddMonhoctochuc() {
    const dispatch = useDispatch()
@@ -31,26 +32,6 @@ function AddMonhoctochuc() {
          })
          toast.success('Thêm thành công...!')
          navigate('/admin/monhoctochucs')
-      }
-   }
-   console.log(hocky)
-   function compareValues(key, order = 'asc') {
-      return function (a, b) {
-         if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-            // nếu không tồn tại
-            return 0
-         }
-
-         const varA = typeof a[key] === 'string' ? a[key].toUpperCase() : a[key]
-         const varB = typeof b[key] === 'string' ? b[key].toUpperCase() : b[key]
-
-         let comparison = 0
-         if (varA > varB) {
-            comparison = 1
-         } else if (varA < varB) {
-            comparison = -1
-         }
-         return order == 'desc' ? comparison * -1 : comparison
       }
    }
    const handleAddMHTC = (mh) => {

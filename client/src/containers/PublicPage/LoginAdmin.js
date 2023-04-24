@@ -6,6 +6,9 @@ import * as action from '../../store/actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+
+import bcryptjs from 'bcryptjs'
+import { toast } from 'react-toastify'
 function LoginAdmin() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
@@ -13,18 +16,22 @@ function LoginAdmin() {
       msqtv: '',
       matkhau: '',
    })
-   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
+   const { admins } = useSelector((state) => state.admin)
    useEffect(() => {
-      isLoggedIn && navigate('/admin')
-   }, [isLoggedIn])
+      dispatch(action.getAllADmin())
+      isLoggedInAdmin && navigate('/admin')
+   }, [isLoggedInAdmin])
    const handleLogin = async () => {
-      let invalids = validate(userLogin)
-      console.log(invalids)
-      if (invalids === 0) {
-         dispatch(action.login(userLogin))
-         // alert('Đăng nhập thành công...!')
-         navigate('/admin')
-      }
+      if (!userLogin.msqtv || !userLogin.matkhau) toast.error('Vui lòng nhập đầy đủ thông tin đăng nhập...!')
+      const kq = admins.find((i) => i.msqtv === userLogin.msqtv)
+      if (kq) {
+         if (userLogin?.matkhau === kq.matkhau) {
+            dispatch(action.loginAdmin(userLogin))
+            navigate('/admin')
+            toast.success('Đăng nhập thành công...!')
+         } else toast.error('Mật khẩu không đúng...!')
+      } else toast.error('Không tìm thấy mã quản trị viên...!')
    }
    const validate = (user) => {
       let invalids = 0
@@ -62,6 +69,7 @@ function LoginAdmin() {
                         id="username"
                         onChange={(e) => {
                            setUserLogin({
+                              ...userLogin,
                               msqtv: e.target.value,
                            })
                         }}
@@ -81,7 +89,7 @@ function LoginAdmin() {
                         id="password-field"
                         onChange={(e) => {
                            setUserLogin({
-                              msqtv: userLogin.msqtv,
+                              ...userLogin,
                               matkhau: e.target.value,
                            })
                         }}

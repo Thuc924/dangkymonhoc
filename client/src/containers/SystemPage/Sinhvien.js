@@ -14,8 +14,8 @@ function Sinhvien() {
    const listRef = useRef()
    const dispatch = useDispatch()
    const [params] = useSearchParams()
-   const { token, sinhviens, msg } = useSelector((state) => state.sinhvien)
-   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { sinhviens } = useSelector((state) => state.sinhvien)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
 
    const [showSV, setShowSV] = useState(false)
    const [sinhvien, setSinhvien] = useState([])
@@ -27,7 +27,7 @@ function Sinhvien() {
          behavior: 'smooth',
          block: 'start',
       })
-   }, [isLoggedIn, params.get('pageSV'), msg, token])
+   }, [isLoggedInAdmin, params.get('pageSV')])
 
    const handleRemoveSinhvien = (sv) => {
       dispatch(acions.deleteSinhvienByMSSV(sv.mssv))
@@ -106,15 +106,11 @@ function Sinhvien() {
                                           <td>{item.mssv}</td>
                                           <td>{item.tensv}</td>
                                           <td>
-                                             {/* <img
+                                             <img
                                                 className="img-card-person"
-                                                src={imgs.item.avatar.slice(
-                                                   0,
-                                                   item.avatar.length - 4
-                                                )}
+                                                src={item.avatar.slice(0, item.avatar.length - 4)}
                                                 alt="Avatar"
-                                             /> */}
-                                             {item.avatar.slice(0, item.avatar.length - 4)}
+                                             />
                                           </td>
                                           <td>{item.diachi} </td>
                                           <td>{item.email}</td>

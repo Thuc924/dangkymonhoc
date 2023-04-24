@@ -8,6 +8,7 @@ import { PaginationMH } from '../PublicPage'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import Modal from '../../components/Modal'
+import { compareValues } from '../../ultils/func'
 
 function Monhoc() {
    const dispatch = useDispatch()
@@ -19,42 +20,22 @@ function Monhoc() {
    const [monhoc, setMonhoc] = useState([])
    const { monhocs, token, msg } = useSelector((state) => state.monhoc)
    const { khoas } = useSelector((state) => state.khoa)
-   const { isLoggedIn } = useSelector((state) => state.auth)
+   const { isLoggedInAdmin } = useSelector((state) => state.auth)
    const [khoa, setKhoa] = useState({
       tenkhoa: '',
    })
    useEffect(() => {
-      isLoggedIn === false && navigate('/login')
+      !isLoggedInAdmin && navigate('/login')
 
       let offset = params.get('pageMH') ? +params.get('pageMH') - 1 : 0
 
-      // dispatch(getListMonhocLimit(offset))
       dispatch(getListMonhoc())
       dispatch(getListKhoa())
-   }, [isLoggedIn, token, msg, khoa])
+   }, [isLoggedInAdmin, token, msg, khoa])
 
    const handleRemoveMonHoc = (mh) => {
       dispatch(deleteMonhocByMSMH(mh.msmh))
       toast.success('Xoá thành công...!')
-   }
-   function compareValues(key, order = 'asc') {
-      return function (a, b) {
-         if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
-            // nếu không tồn tại
-            return 0
-         }
-
-         const varA = typeof a[key] === 'string' ? a[key].toUpperCase() : a[key]
-         const varB = typeof b[key] === 'string' ? b[key].toUpperCase() : b[key]
-
-         let comparison = 0
-         if (varA > varB) {
-            comparison = 1
-         } else if (varA < varB) {
-            comparison = -1
-         }
-         return order == 'desc' ? comparison * -1 : comparison
-      }
    }
 
    const handleShowUpdateMonhoc = (mh) => {
@@ -142,7 +123,7 @@ function Monhoc() {
                            {!khoa.tenkhoa
                               ? monhocs &&
                                 monhocs.length > 0 &&
-                                monhocs.sort(compareValues('mskhoa', 'desc')).map((mh) => {
+                                monhocs.sort(compareValues('msmh', 'desc')).map((mh) => {
                                    return (
                                       <tbody key={mh.id}>
                                          <tr>

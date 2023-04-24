@@ -13,7 +13,7 @@ function Gioithieu() {
       'Thông tin công khai',
    ]
    return (
-      <div className="p-[12px] uppercase">
+      <div className="p-[12px] uppercase border-[#ccc] border-[1px] border-solid m-1">
          <div className="">
             <Link className="text-[16px] text-[#FF0000] p-0 m-0 hover:underline" to="/gioithieu">
                Thông tin quản lý đào tạo

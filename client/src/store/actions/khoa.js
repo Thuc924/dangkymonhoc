@@ -51,6 +51,7 @@ export const deleteKhoaByMskhoa = (mskhoa) => async (dispatch) => {
          dispatch({
             type: actionType.DELETE_SUCCESS,
             msg: response.data.msg,
+            token: response.data.token,
          })
       } else {
          dispatch({
