@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
-import bcryptjs from 'bcryptjs'
 import { toast } from 'react-toastify'
 function LoginAdmin() {
    const dispatch = useDispatch()
@@ -31,7 +30,7 @@ function LoginAdmin() {
             navigate('/admin')
             toast.success('Đăng nhập thành công...!')
          } else toast.error('Mật khẩu không đúng...!')
-      } else toast.error('Không tìm thấy mã quản trị viên...!')
+      } else toast.error('Không tìm thấy quản trị viên...!')
    }
    const validate = (user) => {
       let invalids = 0

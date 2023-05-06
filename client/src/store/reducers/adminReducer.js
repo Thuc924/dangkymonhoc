@@ -24,7 +24,7 @@ const adminReducer = (state = initState, action) => {
       case actionType.UPDATE_FAIL: {
          return {
             ...state,
-            msg: action.data.msg,
+            msg: action.data.msg || '',
          }
       }
       default:

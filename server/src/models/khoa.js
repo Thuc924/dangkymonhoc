@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       static associate(models) {
          // define association here
          Khoa.hasMany(models.Lophoc, { foreignKey: 'mskhoa', as: 'khoa' })
-         Khoa.hasMany(models.Monhoc, { foreignKey: 'mskhoa', as: 'khoaMH' })
+         Khoa.hasMany(models.Monhoc, { foreignKey: { name: 'mskhoa', unique: false }, as: 'khoaMH' })
       }
    }
    Khoa.init(

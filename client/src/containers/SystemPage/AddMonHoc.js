@@ -4,7 +4,7 @@ import InputForm from '../../components/InputForm'
 import { linkRoute } from '../../ultils/Common/constant'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { create, getListKhoa } from '../../store/actions'
+import { create, getListHocky, getListKhoa } from '../../store/actions'
 import { createMonhoc, getListMonhoc } from '../../store/actions/monhoc'
 import { toast } from 'react-toastify'
 
@@ -16,14 +16,20 @@ function AddMonHoc() {
       tenmh: '',
       sotinchi: '',
       mskhoa: '',
+      mshocky: '',
       mota: '',
       sotiet: '',
    })
    const { khoas } = useSelector((state) => state.khoa)
    const { monhocs } = useSelector((state) => state.monhoc)
+   const { hockys } = useSelector((state) => state.hocky)
+
+   const [hocky, setHocky] = useState({ mshocky: '' })
+
    useEffect(() => {
       dispatch(getListKhoa())
       dispatch(getListMonhoc())
+      dispatch(getListHocky())
    }, [])
    const handleCreateMonhoc = () => {
       const kq = monhocs.find((i) => i.msmh === monhoc.msmh)
@@ -114,10 +120,38 @@ function AddMonHoc() {
                                  <option value={''}>-- Chọn khoa --</option>
                                  {khoas &&
                                     khoas.length > 0 &&
-                                    khoas.map((item) => {
+                                    khoas.map((item, index) => {
                                        return (
                                           <>
-                                             <option value={item.mskhoa}>{item.tenkhoa}</option>
+                                             <option key={index} value={item.mskhoa}>
+                                                {item.tenkhoa}
+                                             </option>
+                                          </>
+                                       )
+                                    })}
+                              </select>
+                           </div>
+                           <div className="form-group col-md-3">
+                              <select
+                                 className="form-control"
+                                 id="mshocky"
+                                 required
+                                 onChange={(e) =>
+                                    setMonHoc({
+                                       ...monhoc,
+                                       mshocky: e.target.value,
+                                    })
+                                 }
+                              >
+                                 <option value={''}>-- Chọn học kỳ --</option>
+                                 {hockys &&
+                                    hockys.length > 0 &&
+                                    hockys.map((item, index) => {
+                                       return (
+                                          <>
+                                             <option key={index} value={item.mshocky}>
+                                                {item.tenhocky}
+                                             </option>
                                           </>
                                        )
                                     })}

@@ -15,15 +15,18 @@ function AddMonhoctochuc() {
    const { monhocs } = useSelector((state) => state.monhoc)
    const { hockys } = useSelector((state) => state.hocky)
    const { khoas } = useSelector((state) => state.khoa)
+   const { monhoctochucs } = useSelector((state) => state.monhoctochuc)
    const [mhtc, setMHTC] = useState([])
    const [hocky, setHocky] = useState({ mshocky: '' })
+   const [mhByHK, setMHByHK] = useState([])
    const [khoa, setKhoa] = useState({
-      mskhoa: '',
+      tenkhoa: '',
    })
    useEffect(() => {
       dispatch(actions.getListMonhoc())
       dispatch(actions.getListHocky())
       dispatch(actions.getListKhoa())
+      dispatch(actions.getListMonhoctochuc())
    }, [])
    const handleCreateMHTC = () => {
       if (mhtc) {
@@ -35,8 +38,21 @@ function AddMonhoctochuc() {
       }
    }
    const handleAddMHTC = (mh) => {
-      mhtc.push({ ...mhtc.msmh, msmh: mh.msmh, mshocky: hocky.mshocky })
+      const x = monhoctochucs.find((i) => i.msmh === mh.msmh)
+      if (!x) {
+         mhtc.push({ ...mhtc.msmh, msmh: mh.msmh, mshocky: hocky.mshocky })
+      } else toast.error('Đã có môn học trong danh sách...!')
    }
+
+   const handleChangeHocKy = (e) => {
+      const list = monhocs.filter((i) => i.mshocky == e.target.value)
+      setMHByHK(list)
+      setHocky({ mshocky: e.target.value })
+   }
+   const handleChangeKhoa = (e) => {
+      setKhoa({ tenkhoa: e.target.value })
+   }
+   console.log(mhtc)
    return (
       <div className="app sidebar-mini rtl">
          <main className="app-content">
@@ -58,11 +74,7 @@ function AddMonhoctochuc() {
                                  className="form-control"
                                  id="mskhoa"
                                  required
-                                 onChange={(e) =>
-                                    setKhoa({
-                                       tenkhoa: e.target.value,
-                                    })
-                                 }
+                                 onChange={(e) => handleChangeKhoa(e)}
                               >
                                  <option value={''}>-- Chọn khoa --</option>
                                  {khoas &&
@@ -76,17 +88,7 @@ function AddMonhoctochuc() {
                                     })}
                               </select>
                            ) : (
-                              <select
-                                 className="form-control"
-                                 id="mskhoa"
-                                 required
-                                 onChange={(e) =>
-                                    setKhoa({
-                                       tenkhoa: e.target.value,
-                                    })
-                                 }
-                                 disabled
-                              >
+                              <select className="form-control" id="mskhoa" disabled>
                                  <option value={''}>-- Chọn khoa --</option>
                                  {khoas &&
                                     khoas.length > 0 &&
@@ -105,7 +107,7 @@ function AddMonhoctochuc() {
                               className="form-control"
                               id="mshocky"
                               required
-                              onChange={(e) => setHocky({ mshocky: e.target.value })}
+                              onChange={(e) => handleChangeHocKy(e)}
                            >
                               <option value={''}>-- Chọn học kỳ --</option>
                               {hockys &&
@@ -138,6 +140,7 @@ function AddMonhoctochuc() {
                               <th width={100}>Mô tả</th>
                               <th width={100}>Số tiết</th>
                               <th width={200}>Khoa</th>
+                              <th width={150}>Học kỳ</th>
                            </tr>
                         </thead>
                         {!khoa.tenkhoa
@@ -165,11 +168,12 @@ function AddMonhoctochuc() {
                                          <td>{mh.mota}</td>
                                          <td>{mh.sotiet}</td>
                                          <td>{mh.khoaMH?.tenkhoa}</td>
+                                         <td>{mh.mshocky}</td>
                                       </tr>
                                    </tbody>
                                 )
                              })
-                           : monhocs
+                           : mhByHK
                                 .filter((i) => i.khoaMH?.tenkhoa === khoa.tenkhoa)
                                 .map((mh) => {
                                    return (
@@ -189,6 +193,7 @@ function AddMonhoctochuc() {
                                             <td>{mh.mota}</td>
                                             <td>{mh.sotiet}</td>
                                             <td>{mh.khoaMH?.tenkhoa}</td>
+                                            <td>{mh.mshocky}</td>
                                          </tr>
                                       </tbody>
                                    )

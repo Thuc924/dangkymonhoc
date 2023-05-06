@@ -4,7 +4,6 @@ import { apiLoginAdmin, apiLoginSinhvien } from '../../services/auth'
 export const loginAdmin = (payload) => async (dispatch) => {
    try {
       const response = await apiLoginAdmin(payload)
-      console.log(response)
       if (response?.data.err === 0) {
          dispatch({
             type: actionType.LOGIN_SUCCESS,
@@ -28,7 +27,6 @@ export const loginAdmin = (payload) => async (dispatch) => {
 export const loginSinhvien = (payload) => async (dispatch) => {
    try {
       const response = await apiLoginSinhvien(payload)
-      console.log(response)
       if (response?.data.err === 0) {
          dispatch({
             type: actionType.LOGIN_SV_SUCCESS,

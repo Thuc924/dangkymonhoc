@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateSinhvien } from '../store/actions/sinhvien'
 import { getListLop } from '../store/actions/lop'
-import { getListKhoa, updateMonhoc } from '../store/actions'
+import { getListHocky, getListKhoa, updateMonhoc } from '../store/actions'
 import { toast } from 'react-toastify'
 
 function Modal({ setShow, sinhvien, monhoc, title }) {
@@ -26,14 +26,18 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
       tenmh: monhoc ? monhoc.tenmh : '',
       sotinchi: monhoc ? monhoc.sotinchi : '',
       mskhoa: monhoc ? monhoc.mskhoa : '',
+      mshocky: monhoc ? monhoc.mshocky : '',
       mota: monhoc ? monhoc.mota : '',
       sotiet: monhoc ? monhoc.sotiet : '',
    })
+   console.log(editMH)
    const { lops } = useSelector((state) => state.lop)
    const { khoas } = useSelector((state) => state.khoa)
+   const { hockys } = useSelector((state) => state.hocky)
    useEffect(() => {
       dispatch(getListLop())
       dispatch(getListKhoa())
+      dispatch(getListHocky())
    }, [])
    const handleShowModal = () => {
       setShow(false)
@@ -44,8 +48,7 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
       toast.success('Cập nhật thành công...!')
       setShow(false)
    }
-   // console.log(editMH)
-   console.log(sinhvien)
+
    return (
       <div className="fixed z-[1] pt-[100px] left-0 top-0 w-[100%] h-[100%] bg-[#0006]">
          <div className="absolute w-[1000px] h-[500px] bg-white left-[50%] right-[50%] translate-x-[-50%] p-[10px] rounded-xl">
@@ -140,10 +143,12 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
                         <option value={''}>-- Chọn lớp --</option>
                         {lops &&
                            lops.length > 0 &&
-                           lops.map((item) => {
+                           lops.map((item, index) => {
                               return (
                                  <>
-                                    <option value={item.mslop}>{item.mslop}</option>
+                                    <option key={index} value={item.mslop}>
+                                       {item.mslop}
+                                    </option>
                                  </>
                               )
                            })}
@@ -222,6 +227,31 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
                               return (
                                  <>
                                     <option value={item.mskhoa}>{item.mskhoa}</option>
+                                 </>
+                              )
+                           })}
+                     </select>
+                  </div>
+                  <div className="form-group col-md-3">
+                     <select
+                        className="form-control"
+                        id="mshocky"
+                        required
+                        onChange={(e) =>
+                           setEditMH({
+                              ...editMH,
+                              mshocky: e.target.value,
+                           })
+                        }
+                        value={editMH.mshocky}
+                     >
+                        <option value={''}>-- Chọn học kỳ --</option>
+                        {hockys &&
+                           hockys.length > 0 &&
+                           hockys.map((item) => {
+                              return (
+                                 <>
+                                    <option value={item.mshocky}>{item.tenhocky}</option>
                                  </>
                               )
                            })}

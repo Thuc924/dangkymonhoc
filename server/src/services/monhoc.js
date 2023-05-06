@@ -3,7 +3,7 @@ import db from '../models'
 import jwt from 'jsonwebtoken'
 require('dotenv').config()
 
-export const createMonhoc = ({ msmh, tenmh, sotinchi, mskhoa, mota, sotiet }) =>
+export const createMonhoc = ({ msmh, tenmh, sotinchi, mskhoa, mshocky, mota, sotiet }) =>
    new Promise(async (resolve, reject) => {
       try {
          const response = await db.Monhoc.findOrCreate({
@@ -14,6 +14,7 @@ export const createMonhoc = ({ msmh, tenmh, sotinchi, mskhoa, mota, sotiet }) =>
                tenmh,
                sotinchi,
                mskhoa,
+               mshocky,
                mota,
                sotiet,
             },
@@ -107,7 +108,7 @@ export const getLimitMonhoc = (offset) =>
          reject(error)
       }
    })
-export const MonhocUpdate = ({ msmh, tenmh, sotinchi, mskhoa, mota, sotiet }) =>
+export const MonhocUpdate = ({ msmh, tenmh, sotinchi, mskhoa, mshocky, mota, sotiet }) =>
    new Promise(async (resolve, reject) => {
       try {
          const mh = await db.Monhoc.findOne({ where: { msmh } })
@@ -118,6 +119,7 @@ export const MonhocUpdate = ({ msmh, tenmh, sotinchi, mskhoa, mota, sotiet }) =>
                   tenmh: tenmh ? tenmh : mh.tenmh,
                   sotinchi: sotinchi ? sotinchi : mh.sotinchi,
                   mskhoa: mskhoa ? mskhoa : mh.mskhoa,
+                  mshocky: mshocky ? mshocky : mh.mshocky,
                   mota: mota ? mota : mh.mota,
                   sotiet: sotiet ? sotiet : mh.sotiet,
                },

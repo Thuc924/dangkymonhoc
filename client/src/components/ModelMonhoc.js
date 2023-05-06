@@ -13,7 +13,7 @@ function ModelMonhoc({ setShowModel, mskhoa }) {
    return (
       <div className="fixed z-[1] pt-[100px] left-0 top-0 w-[100%] h-[100%] bg-[#0006]">
          <div className="fixed z-[1] pt-[100px] left-0 top-0 w-[100%] h-[100%] bg-[#0006]">
-            <div className="absolute w-[1000px] h-[500px] bg-white left-[50%] right-[50%] translate-x-[-50%] p-[10px] rounded-xl overflow-scroll">
+            <div className="absolute w-[1000px] h-[670px] bg-white left-[50%] right-[50%] translate-x-[-50%] p-[10px] rounded-xl overflow-scroll">
                <div className="text-[14px] font-bold flex justify-end">
                   <span className="cursor-pointer p-2 hover:opacity-80" onClick={() => setShowModel(false)}>
                      X
@@ -45,25 +45,17 @@ function ModelMonhoc({ setShowModel, mskhoa }) {
                                  .map((i, index) => {
                                     return (
                                        <tr key={index}>
-                                          <td>{i.msmh}</td>
+                                          <td className="italic">{i.msmh}</td>
                                           <td>{i.tenmh}</td>
                                           <td>{i.sotinchi}</td>
                                           <td>{i.sotinchi * 613000}</td>
                                        </tr>
                                     )
                                  })}
-                           <tr>
-                              <td colSpan={4} className="text-right">
-                                 {/* Tổng tiền: <span className="font-bold">{sumHocPhi(danhsachsvdk)}</span> */}
-                              </td>
-                           </tr>
                         </tbody>
                      </table>
                   </div>
                </div>
-               {/* <button className="btn btn-cancel mt-2" onClick={() => setShow(false)}>
-                  Đóng
-               </button> */}
             </div>
          </div>
       </div>

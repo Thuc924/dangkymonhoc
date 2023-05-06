@@ -113,10 +113,11 @@ function Monhoc() {
                                  </th>
                                  <th width={100}>Mã số môn học</th>
                                  <th width={100}>Tên môn học</th>
-                                 <th width={50}>Số tín chỉ</th>
+                                 <th width={60}>Số tín chỉ</th>
                                  <th width={50}>Mô tả</th>
                                  <th width={50}>Số tiết</th>
-                                 <th width={150}>Khoa</th>
+                                 <th width={130}>Khoa</th>
+                                 <th width={100}>Được tổ chức</th>
                                  <th width={100}>Tính năng</th>
                               </tr>
                            </thead>
@@ -142,6 +143,7 @@ function Monhoc() {
                                             </td>
                                             <td>{mh.sotiet}</td>
                                             <td>{mh.khoaMH?.tenkhoa}</td>
+                                            <td>{mh.mshocky}</td>
                                             <td>
                                                <button
                                                   className="btn btn-primary btn-sm trash"
@@ -185,6 +187,8 @@ function Monhoc() {
                                                </td>
                                                <td>{mh.sotiet}</td>
                                                <td>{mh.khoaMH?.tenkhoa}</td>
+                                               <td>{mh.mshocky}</td>
+
                                                <td>
                                                   <button
                                                      className="btn btn-primary btn-sm trash"

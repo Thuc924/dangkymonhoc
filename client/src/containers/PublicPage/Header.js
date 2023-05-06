@@ -21,7 +21,10 @@ function Header() {
                   <Link className="mr-4 font-bold text-red-500 text-[12px] hover:underline" to="/thongtincanhan">
                      Thay đổi mật khẩu
                   </Link>
-                  <button className="mb-0 mr-4 font-bold text-red-500" onClick={() => dispatch(logoutSinhvien())}>
+                  <button
+                     className="mb-0 mr-4 font-bold text-red-500 hover:underline"
+                     onClick={() => dispatch(logoutSinhvien())}
+                  >
                      Thoát
                   </button>
                </>

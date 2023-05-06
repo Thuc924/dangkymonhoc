@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllDSMH, getListKhoa, getListMonhoc } from '../../store/actions'
+import { getAllDSMH, getListHocky, getListKhoa, getListMonhoc, getListMonhoctochuc } from '../../store/actions'
 import { ModalDetailDK, ModalDetailDKMH } from '../../components'
 import { useNavigate } from 'react-router-dom'
 import { compareValues } from '../../ultils/func'
@@ -12,15 +12,21 @@ function DanhsachSVDKMH() {
    const { isLoggedInAdmin } = useSelector((state) => state.auth)
    const { khoas } = useSelector((state) => state.khoa)
    const { monhocs } = useSelector((state) => state.monhoc)
+   const { monhoctochucs } = useSelector((state) => state.monhoctochuc)
+   const { hockys } = useSelector((state) => state.hocky)
 
-   const [khoa, setKhoa] = useState('')
-
+   const [dsmhBykhoa, setDSMHByKhoa] = useState([])
+   const [hocky, setHocky] = useState({ mshocky: '' })
+   const [khoa, setKhoa] = useState({ mskhoa: '' })
+   const [mhByHK, setMHByHK] = useState([])
    const [monhoc, setMonhoc] = useState('')
 
    useEffect(() => {
       dispatch(getAllDSMH())
       dispatch(getListMonhoc())
       dispatch(getListKhoa())
+      dispatch(getListMonhoctochuc())
+      dispatch(getListHocky())
       !isLoggedInAdmin && navigate('/login')
    }, [isLoggedInAdmin])
    const groupByCategory = danhsachs.reduce((group, monhoc) => {
@@ -30,13 +36,19 @@ function DanhsachSVDKMH() {
       return group
    }, {})
 
-   const sumHocPhi = (a) => {
-      let kq = 0
-      for (let i = 0; i < a.length; i++) {
-         kq = +kq + +a[i].hocphi
-      }
-      return kq
+   const handleChangeHocKy = (e) => {
+      const list = monhoctochucs.filter((i) => i.mshocky == e.target.value)
+      setMHByHK(list)
+      setHocky({ mshocky: e.target.value })
    }
+   const handleChangeKhoa = (e) => {
+      const list = mhByHK.filter((i) => i.monhoc?.mskhoa == e.target.value)
+      setDSMHByKhoa(list)
+      setKhoa({ mskhoa: e.target.value })
+   }
+
+   console.log(dsmhBykhoa)
+   console.log(danhsachs)
    return (
       <div className="app sidebar-mini rtl">
          <main className="app-content">
@@ -58,45 +70,53 @@ function DanhsachSVDKMH() {
                            <div className="form-group col-md-3">
                               <select
                                  className="form-control"
-                                 id="mskhoa"
+                                 id="mshocky"
                                  required
-                                 onChange={(e) => setKhoa(e.target.value)}
+                                 onChange={(e) => handleChangeHocKy(e)}
                               >
-                                 <option value={''}>-- Chọn khoa --</option>
-                                 {khoas &&
-                                    khoas.length > 0 &&
-                                    khoas.map((item, index) => {
+                                 <option value={''}>-- Chọn học kỳ --</option>
+                                 {hockys &&
+                                    hockys.length > 0 &&
+                                    hockys.map((item) => {
                                        return (
                                           <>
-                                             <option key={index} value={item.mskhoa}>
-                                                {item.tenkhoa}
-                                             </option>
+                                             <option value={item.mshocky}>{item.tenhocky}</option>
                                           </>
                                        )
                                     })}
                               </select>
                            </div>
                            <div className="form-group col-md-3">
-                              {!khoa ? (
+                              {!hocky.mshocky ? (
+                                 <select className="form-control" id="mskhoa" required disabled>
+                                    <option value={''}>-- Chọn khoa --</option>
+                                 </select>
+                              ) : (
                                  <select
-                                    disabled
                                     className="form-control"
                                     id="mskhoa"
                                     required
-                                    onChange={(e) => setMonhoc(e.target.value)}
+                                    onChange={(e) => handleChangeKhoa(e)}
                                  >
-                                    <option value={''}>-- Chọn môn học --</option>
-                                    {monhocs &&
-                                       monhocs.length > 0 &&
-                                       monhocs.map((item, index) => {
+                                    <option value={''}>-- Chọn khoa --</option>
+                                    {khoas &&
+                                       khoas.length > 0 &&
+                                       khoas.map((item, index) => {
                                           return (
                                              <>
-                                                <option key={index} value={item.msmh}>
-                                                   {item.tenmh}
+                                                <option key={index} value={item.mskhoa}>
+                                                   {item.tenkhoa}
                                                 </option>
                                              </>
                                           )
                                        })}
+                                 </select>
+                              )}
+                           </div>
+                           <div className="form-group col-md-3">
+                              {!khoa.mskhoa ? (
+                                 <select disabled className="form-control" id="mskhoa" required>
+                                    <option value={''}>-- Chọn môn học --</option>
                                  </select>
                               ) : (
                                  <select
@@ -106,22 +126,26 @@ function DanhsachSVDKMH() {
                                     onChange={(e) => setMonhoc(e.target.value)}
                                  >
                                     <option value={''}>-- Chọn môn học --</option>
-                                    {monhocs &&
-                                       monhocs.length > 0 &&
-                                       monhocs
-                                          .filter((i) => i.mskhoa === khoa)
-                                          .map((item, index) => {
-                                             return (
-                                                <>
-                                                   <option key={index} value={item.msmh}>
-                                                      {item.tenmh}
-                                                   </option>
-                                                </>
-                                             )
-                                          })}
+                                    {dsmhBykhoa &&
+                                       dsmhBykhoa.length > 0 &&
+                                       dsmhBykhoa.map((item, index) => {
+                                          return (
+                                             <>
+                                                <option key={index} value={item.msmh}>
+                                                   {item.monhoc?.tenmh}
+                                                </option>
+                                             </>
+                                          )
+                                       })}
                                  </select>
                               )}
                            </div>
+                        </div>
+                        <div className="italic p-2 text-[16px]">
+                           <span>
+                              Tổng số sinh viên đăng ký môn <span className="font-bold">{monhoc}</span>:{' '}
+                              {danhsachs.filter((i) => i.msmh === monhoc).length}
+                           </span>
                         </div>
                         <table
                            className="table table-hover table-bordered js-copytextarea"

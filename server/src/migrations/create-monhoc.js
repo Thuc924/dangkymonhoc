@@ -7,9 +7,11 @@ module.exports = {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
+            primaryKey: true,
             type: Sequelize.INTEGER,
          },
          msmh: {
+            primaryKey: true,
             type: Sequelize.STRING,
          },
          tenmh: {
@@ -19,6 +21,13 @@ module.exports = {
             type: Sequelize.STRING,
          },
          mskhoa: {
+            primaryKey: true,
+
+            type: Sequelize.STRING,
+         },
+         mshocky: {
+            primaryKey: true,
+
             type: Sequelize.STRING,
          },
          mota: {

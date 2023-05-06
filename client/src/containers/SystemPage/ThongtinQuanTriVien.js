@@ -16,7 +16,6 @@ function ThongtinQTV() {
       !isLoggedInAdmin && navigate('/login')
       dispatch(acions.getOneAdmin(admin.msqtv))
    }, [isLoggedInAdmin, ttAdmin])
-   console.log(ttAdmin)
    const handleUpdateAdmin = () => {
       dispatch(acions.updateAdmin(ttAdmin))
       toast.success('Cập nhật thông tin Quản trị viên thành công...!')

@@ -1,9 +1,9 @@
 import * as monhocService from '../services/monhoc'
 
 export const create = async (req, res) => {
-   const { msmh, tenmh, sotinchi, mskhoa, mota, sotiet } = req.body
+   const { msmh, tenmh, sotinchi, mskhoa, mshocky, mota, sotiet } = req.body
    try {
-      if (!msmh || !tenmh || !sotinchi || !mskhoa || !mota || !sotiet) {
+      if (!msmh || !tenmh || !sotinchi || !mskhoa || !mshocky || !mota || !sotiet) {
          return res.status(400).json({
             err: 1,
             msg: 'Missing input...!',
@@ -57,8 +57,8 @@ export const getMonhocLitmits = async (req, res) => {
 }
 export const updateMonhoc = async (req, res) => {
    try {
-      const { msmh, tenmh, sotinchi, mskhoa, mota, sotiet } = req.body
-      if (!msmh || !tenmh || !sotinchi || !mskhoa || !mota || !sotiet) {
+      const { msmh, tenmh, sotinchi, mskhoa, mshocky, mota, sotiet } = req.body
+      if (!msmh || !tenmh || !sotinchi || !mskhoa || !mshocky || !mota || !sotiet) {
          return res.status(400).json({
             err: 1,
             msg: 'Missing input...!',

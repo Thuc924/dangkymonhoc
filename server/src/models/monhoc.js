@@ -14,11 +14,8 @@ module.exports = (sequelize, DataTypes) => {
             targetKey: 'mskhoa',
             as: 'khoaMH',
          })
-         Monhoc.hasOne(models.Monhoctochuc, { foreignKey: 'msmh', as: 'monhoc' })
-         Monhoc.hasMany(models.PhieuDKMH, {
-            foreignKey: 'msmh',
-            as: 'monhocDK',
-         })
+         Monhoc.hasOne(models.Monhoctochuc, { foreignKey: { name: 'msmh', unique: false }, as: 'monhoc' })
+         Monhoc.hasMany(models.PhieuDKMH, { foreignKey: 'msmh', as: 'monhocDK' })
       }
    }
    Monhoc.init(
@@ -27,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
          tenmh: DataTypes.STRING,
          sotinchi: DataTypes.STRING,
          mskhoa: DataTypes.STRING,
+         mshocky: DataTypes.STRING,
          mota: DataTypes.STRING,
          sotiet: DataTypes.STRING,
       },

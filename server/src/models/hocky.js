@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
        */
       static associate(models) {
          // define association here
-         Hocky.hasMany(models.Monhoctochuc, { foreignKey: 'mshocky', as: 'hockies' })
+         Hocky.hasMany(models.Monhoctochuc, { foreignKey: { name: 'mshocky', unique: false }, as: 'hockies' })
       }
    }
    Hocky.init(

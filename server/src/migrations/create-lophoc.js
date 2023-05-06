@@ -12,6 +12,8 @@ module.exports = {
             type: Sequelize.STRING,
          },
          mskhoa: {
+            primaryKey: true,
+
             type: Sequelize.STRING,
          },
          tenlop: {

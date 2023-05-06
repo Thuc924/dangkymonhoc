@@ -22,6 +22,7 @@ function LoginUser() {
             toast.error('Không tìm thấy sinh viên...!')
          } else if (bcryptjs.compareSync(loginSV.matkhau, findSV.matkhau)) {
             dispatch(loginSinhvien(loginSV))
+            toast.success('Đăng nhập thành công...!')
          } else toast.error('Mật khẩu không khớp...!')
       }
    }

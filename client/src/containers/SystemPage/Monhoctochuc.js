@@ -28,7 +28,6 @@ function Monhoctochuc() {
          toast.success('Xoá thành công...!')
       }
    }
-   console.log(monhoctochucs.filter((i) => i.monhoc?.mskhoa === khoa.mskhoa).map((mh) => mh.monhoc?.tenmh))
    return (
       <div className="app sidebar-mini rtl">
          <main className="app-content">

@@ -14,7 +14,7 @@ function Sinhvien() {
    const listRef = useRef()
    const dispatch = useDispatch()
    const [params] = useSearchParams()
-   const { sinhviens } = useSelector((state) => state.sinhvien)
+   const { sinhviens, token } = useSelector((state) => state.sinhvien)
    const { isLoggedInAdmin } = useSelector((state) => state.auth)
 
    const [showSV, setShowSV] = useState(false)
@@ -27,7 +27,7 @@ function Sinhvien() {
          behavior: 'smooth',
          block: 'start',
       })
-   }, [isLoggedInAdmin, params.get('pageSV')])
+   }, [isLoggedInAdmin, params.get('pageSV'), token])
 
    const handleRemoveSinhvien = (sv) => {
       dispatch(acions.deleteSinhvienByMSSV(sv.mssv))
