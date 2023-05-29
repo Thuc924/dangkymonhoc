@@ -1,11 +1,11 @@
-import express from 'express'
+import express from "express"
 
-import * as authController from '../controllers/authController'
-import veriftToken from '../middlewares/verifyToken'
+import * as authController from "../controllers/authController"
 
 const router = express.Router()
-router.post('/login', authController.authLogin)
-router.post('/loginSinhvien', authController.authLoginSinhvien)
-router.use(veriftToken)
+router.post("/login", authController.authLogin)
+router.post("/loginSinhvien", authController.authLoginSinhvien)
+router.post("/password/email", authController.sendResetEmail)
+router.post("/password/reset", authController.resetPassword)
 
 export default router

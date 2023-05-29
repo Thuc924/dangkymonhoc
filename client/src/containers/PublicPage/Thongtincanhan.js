@@ -1,199 +1,185 @@
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { logoutSinhvien, updateSinhvien } from '../../store/actions'
-import { useNavigate } from 'react-router-dom'
-import bcryptjs from 'bcryptjs'
-import { toast } from 'react-toastify'
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+
+import { linkRoute } from "../../ultils/Common/constant"
+import { Button } from "../../components"
+import * as actions from "../../store/actions"
 
 function Thongtincanhan() {
-   const dispatch = useDispatch()
+	const dispatch = useDispatch()
 
-   const navigate = useNavigate()
+	const navigate = useNavigate()
 
-   const [showResetPass, setShowResetpPass] = useState(false)
+	const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
+	const { currentSinhvien } = useSelector((state) => state.sinhvien)
+	const [updateAccount, setUpdateAccount] = useState(currentSinhvien)
+	console.log(updateAccount)
 
-   const [disableNumber, setDisableNumber] = useState(true)
+	useEffect(() => {
+		!isLoggedInSinhvien && navigate("/")
 
-   const [disableEmail, setDisableEmail] = useState(true)
+		// setUpdateAccount(currentSinhvien)
+	}, [isLoggedInSinhvien, updateAccount])
 
-   const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
+	const handleUpdateSinhvien = () => {
+		// console.log(updateAccount)
+		dispatch(actions.updateSinhvien(updateAccount))
+		toast.success("Cập nhật thành công...!")
+	}
+	return (
+		<div className='m-1 min-h-[500px]'>
+			<div className='p-2'>
+				<h4 className='text-center uppercase'>
+					Cập nhật thông tin tài khoản
+				</h4>
+				<div className='flex justify-center'>
+					<table className='w-[600px] border-0'>
+						<thead></thead>
+						<tbody>
+							{" "}
+							<tr>
+								<td>
+									<label
+										className='m-0 cursor-pointer hover:underline'
+										htmlFor='name'
+									>
+										Họ và tên
+									</label>
+								</td>
+								<td>
+									<input
+										className='w-full p-1 m-1 border-[1px] border-solid border-slate-400 rounded-sm'
+										type='text'
+										id='name'
+										value={updateAccount.tensv}
+										onChange={(e) =>
+											setUpdateAccount({
+												...updateAccount,
+												tensv: e.target.value,
+											})
+										}
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label
+										className='m-0 cursor-pointer hover:underline'
+										htmlFor='email'
+									>
+										Email
+									</label>
+								</td>
+								<td>
+									<input
+										className='w-full p-1 m-1 border-[1px] border-solid border-slate-400 rounded-sm'
+										type='text'
+										id='email'
+										value={updateAccount.email}
+										onChange={(e) =>
+											setUpdateAccount({
+												...updateAccount,
+												email: e.target.value,
+											})
+										}
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label
+										className='m-0 cursor-pointer hover:underline'
+										htmlFor='sdt'
+									>
+										Số điện thoại
+									</label>
+								</td>
 
-   const [sv, setSV] = useState({
-      mssv: sinhvien?.mssv,
-      tensv: sinhvien?.tensv,
-      email: sinhvien?.email,
-      matkhau: sinhvien?.matkhau,
-      diachi: sinhvien?.diachi,
-      sodienthoai: sinhvien?.sodienthoai,
-      ngaysinh: sinhvien?.ngaysinh,
-      noisinh: sinhvien?.noisinh,
-      gioitinh: sinhvien?.gioitinh,
-      mslop: sinhvien?.mslop,
-   })
-
-   const [matkhauHienTai, setMatKhauHienTai] = useState('')
-
-   const [xacnhanmatkhau, setXacnhanmatkhau] = useState('')
-
-   useEffect(() => {
-      !isLoggedInSinhvien && navigate('/')
-   }, [isLoggedInSinhvien])
-
-   const handleEditTT = () => {
-      if (!bcryptjs.compareSync(matkhauHienTai, sinhvien.matkhau)) {
-         toast.error('Mật khẩu hiện tại không đúng...!')
-      } else if (sv.matkhau !== xacnhanmatkhau) toast.error('Mật khẩu xác nhận không trùng khớp')
-      else {
-         dispatch(updateSinhvien(sv))
-         toast.success('Cập nhật thành công...!')
-         dispatch(logoutSinhvien())
-      }
-   }
-
-   return (
-      <div className="m-1 text-[10px]">
-         <div className="uppercase font-bold bg-[#67b0c1] p-1">Thay đổi thông tin cá nhân</div>
-         <div className="border-2 border-black flex flex-col items-center">
-            <div className=" w-[635px] p-[4px]">
-               <div className=" bg-[#ccccff] pl-[4px] p-[2px] font-bold">Thông tin cá nhân</div>
-               <div className="flex justify-center">
-                  <ul className="m-0">
-                     <li className="p-[3px]">Tài khoản: </li>
-                     <li className="p-[3px]">Họ tên: </li>
-                     <li className="p-[3px]">Mật khẩu: </li>
-                  </ul>
-                  <ul className="m-0">
-                     <li className="p-[3px] font-bold italic">{sv.mssv}</li>
-                     <li className="p-[3px] font-bold italic">{sv.tensv}</li>
-                     <button
-                        className="p-[3px] text-[#0000ff] hover:underline"
-                        onClick={() => setShowResetpPass(!showResetPass)}
-                     >
-                        Thay đổi mật khẩu
-                     </button>
-                  </ul>
-               </div>
-            </div>
-            <div className=" w-[635px] p-[4px]">
-               <div className="bg-[#ccccff] pl-[4px] p-[2px] font-bold flex justify-between">
-                  <span>Điện thoại</span>
-                  <button
-                     className="font-normal text-[#0000ff] hover:underline m-0"
-                     onClick={() => setDisableNumber(false)}
-                  >
-                     Sửa đổi
-                  </button>
-               </div>
-               <div className="flex justify-center">
-                  <ul className="m-0">
-                     <li className="p-[3px] w-[120px]">Điện thoại (1): </li>
-                     <li className="p-[3px] w-[120px]">Điện thoại (2): </li>
-                  </ul>
-                  <ul className="m-0">
-                     <li className="p-[3px]">
-                        <input
-                           type="text"
-                           disabled={disableNumber}
-                           className="border-[1px] w-[240px] border-black border-solid bg-[#efefef4d] rounded-sm italic"
-                           value={sv.sodienthoai}
-                           onChange={(e) => setSV({ ...sv, sodienthoai: e.target.value })}
-                        />
-                     </li>
-                     <li className="p-[3px]">
-                        <input
-                           type="text"
-                           disabled={disableNumber}
-                           className="border-[1px] w-[240px] border-black border-solid bg-[#efefef4d] rounded-sm"
-                        />
-                     </li>
-                  </ul>
-               </div>
-            </div>
-            <div className=" w-[635px] p-[4px]">
-               <div className="bg-[#ccccff] pl-[4px] p-[2px] font-bold flex justify-between">
-                  <span>Email</span>
-                  <button
-                     className="font-normal text-[#0000ff] hover:underline m-0"
-                     onClick={() => setDisableEmail(false)}
-                  >
-                     Sửa đổi
-                  </button>
-               </div>
-               <div className="flex justify-center">
-                  <ul className="m-0">
-                     <li className="p-[3px] w-[120px]">Địa chỉ email (1): </li>
-                     <li className="p-[3px] w-[120px]">Địa chỉ email (2): </li>
-                  </ul>
-                  <ul className="m-0">
-                     <li className="p-[3px]">
-                        <input
-                           type="text"
-                           disabled={disableEmail}
-                           className="border-[1px] w-[240px] border-black border-solid bg-[#efefef4d] rounded-sm"
-                           value={sv.email}
-                           onChange={(e) => setSV({ ...sv, email: e.target.value })}
-                        />
-                     </li>
-                     <li className="p-[3px]">
-                        <input
-                           type="text"
-                           disabled={disableEmail}
-                           className="border-[1px] w-[240px] border-black border-solid bg-[#efefef4d] rounded-sm"
-                        />
-                     </li>
-                  </ul>
-               </div>
-            </div>
-            {showResetPass && (
-               <div className=" w-[635px] p-[4px]">
-                  <div className=" bg-[#ccccff] pl-[4px] p-[2px] font-bold">
-                     Thay đổi mật khẩu (Lưu ý: mật khẩu cần khác với mật khẩu mặc định ngày sinh )
-                  </div>
-                  <div className="flex justify-center">
-                     <ul className="m-0">
-                        <li className="p-[3px] w-[120px]">Nhập mật khẩu hiện tại: </li>
-                        <li className="p-[3px] w-[120px]">Nhập mật khẩu mới: </li>
-                        <li className="p-[3px] w-[120px]">Xác nhận mật khẩu mới: </li>
-                     </ul>
-                     <ul className="m-0">
-                        <li className="p-[3px]">
-                           <input
-                              onChange={(e) => setMatKhauHienTai(e.target.value)}
-                              type="text"
-                              className="border-[1px] w-[240px] border-black border-solid bg-[#efefef4d] rounded-sm w-[240px]"
-                           />
-                        </li>
-                        <li className="p-[3px]">
-                           <input
-                              onChange={(e) => setSV({ ...sv, matkhau: e.target.value })}
-                              type="text"
-                              className="border-[1px] w-[240px] border-black border-solid bg-[#efefef4d] rounded-sm"
-                           />
-                        </li>
-                        <li className="p-[3px]">
-                           <input
-                              onChange={(e) => setXacnhanmatkhau(e.target.value)}
-                              type="text"
-                              className="border-[1px] w-[240px] border-black border-solid bg-[#efefef4d] rounded-sm"
-                           />
-                        </li>
-                     </ul>
-                  </div>
-               </div>
-            )}
-            <div>
-               <button
-                  className="p-[4px] hover:underline border-[1px] border-black border-solid rounded-sm bg-[#f0f0f0] m-1"
-                  onClick={handleEditTT}
-               >
-                  Lưu lại
-               </button>
-               <button className="p-[4px] hover:underline border-[1px] border-black border-solid rounded-sm bg-[#f0f0f0] m-1">
-                  Huỷ bỏ
-               </button>
-            </div>
-         </div>
-      </div>
-   )
+								<td>
+									<input
+										className='w-full p-1 m-1 border-[1px] border-solid border-slate-400 rounded-sm'
+										type='text'
+										id='sdt'
+										value={updateAccount.sodienthoai}
+										onChange={(e) =>
+											setUpdateAccount({
+												...updateAccount,
+												sodienthoai: e.target.value,
+											})
+										}
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label
+										className='m-0 cursor-pointer hover:underline'
+										htmlFor='diachi'
+									>
+										Địa chỉ
+									</label>
+								</td>
+								<td>
+									<input
+										className='w-full p-1 m-1 border-[1px] border-solid border-slate-400 rounded-sm'
+										type='text'
+										id='diachi'
+										value={updateAccount.diachi}
+										onChange={(e) =>
+											setUpdateAccount({
+												...updateAccount,
+												diachi: e.target.value,
+											})
+										}
+									/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label
+										className='m-0 cursor-pointer hover:underline'
+										htmlFor='noisinh'
+									>
+										Nơi sinh
+									</label>
+								</td>
+								<td>
+									<input
+										className='w-full p-1 m-1 border-[1px] border-solid border-slate-400 rounded-sm'
+										type='text'
+										id='noisinh'
+										value={updateAccount.noisinh}
+										onChange={(e) =>
+											setUpdateAccount({
+												...updateAccount,
+												noisinh: e.target.value,
+											})
+										}
+									/>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div className='flex justify-center p-2'>
+					<Button
+						width={"w-[100px]"}
+						textColor={"text-[#80BFCD]"}
+						label={"Lưu"}
+						m={"m-0"}
+						onClick={handleUpdateSinhvien}
+					/>
+					<Link
+						className='justify-center items-center flex w-[130px] rounded-sm text-[#80BFCD] mx-4 p-[8px] border-[1px] border-solid border-[#80BFCD] hover:underline'
+						to={linkRoute.SUA_MK}
+					>
+						Sửa mật khẩu
+					</Link>
+				</div>
+			</div>
+		</div>
+	)
 }
 export default Thongtincanhan

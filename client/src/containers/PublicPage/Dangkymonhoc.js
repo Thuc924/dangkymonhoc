@@ -1,312 +1,391 @@
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import * as actions from '../../store/actions'
-import { toast } from 'react-toastify'
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import * as actions from "../../store/actions"
+import { toast } from "react-toastify"
+import { Button } from "../../components"
 
 function Dangkymonhoc() {
-   const navigate = useNavigate()
-   const dispatch = useDispatch()
-   const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
+	const navigate = useNavigate()
+	const dispatch = useDispatch()
 
-   const { monhoctochucs, token } = useSelector((state) => state.monhoctochuc)
+	const date = new Date()
+	const year = date.getFullYear().toString()?.slice(2, 4)
 
-   const { danhsachsvdk } = useSelector((state) => state.dangkymonhoc)
+	const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
 
-   const [msmh, setMSMH] = useState('')
+	const { monhoctochucs } = useSelector((state) => state.monhoctochuc)
 
-   const [listMH, setListMH] = useState([])
+	const { danhsachsvdk } = useSelector((state) => state.dangkymonhoc)
 
-   const [dsMHDK, setDSMHDK] = useState(JSON.parse(localStorage.getItem('mhdk')) || [])
-   useEffect(() => {
-      dispatch(actions.getListMonhoctochuc())
-      dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
-      localStorage.setItem('mhdk', JSON.stringify(dsMHDK) || [])
-      !isLoggedInSinhvien && navigate('/')
-   }, [isLoggedInSinhvien, msmh, dsMHDK?.length, token])
+	const { monhocs } = useSelector((state) => state.monhoc)
 
-   const handleLocMonHoc = () => {
-      const list = monhoctochucs.filter((i) => i.msmh === msmh)
-      setListMH(list)
-   }
+	const { danhsachs } = useSelector((state) => state.monhocnguyenvong)
 
-   const abc = (a) => {
-      var x = []
-      while (a / 10 !== 0) {
-         x.push(a % 10)
-         a = Math.floor(a / 10)
-      }
-      var y = []
-      for (let j = x.length - 1; j >= 0; j--) {
-         y.push(x[j])
-      }
-      return y
-   }
-   const handleAddMHDK = (mh) => {
-      const search = danhsachsvdk?.find((i) => i.msmh === mh.msmh) || dsMHDK?.find((i) => i.msmh === mh.msmh)
-      !search
-         ? setDSMHDK((prev) => [
-              ...prev,
-              {
-                 msmh: mh.msmh,
-                 tenmh: mh.monhoc?.tenmh,
-                 sotinchi: mh.monhoc?.sotinchi,
-                 hocphi: mh.monhoc?.sotinchi * 613000,
-              },
-           ])
-         : toast.error('Đã có môn học trong danh sách đăng ký...!')
-   }
+	const [listMonhoc, setListMonhoc] = useState([])
 
-   const sumSTC = (a) => {
-      let kq = 0
-      for (let i = 0; i < a.length; i++) {
-         kq = kq + (+a[i].sotinchi || +a[i].monhocDK?.sotinchi || 0)
-      }
-      return kq
-   }
+	const [msmh, setMSMH] = useState("")
 
-   const sumHocPhi = (a) => {
-      let kq = 0
-      for (let i = 0; i < a.length; i++) {
-         kq = +kq + +a[i].hocphi
-      }
-      return kq
-   }
+	const [hk, setHK] = useState("")
 
-   const handleRemoveDSDKMH = (mh) => {
-      const newDS = dsMHDK.filter((i) => i.msmh !== mh.msmh)
-      setDSMHDK(newDS)
-   }
+	const [listMH, setListMH] = useState()
 
-   const handleAddMHVaoDSDKMH = () => {
-      dsMHDK.map((i) =>
-         dispatch(actions.addMonhoc({ mssv: sinhvien.mssv, msmh: i.msmh, hocphi: i.hocphi ? i.hocphi : '0' }))
-      )
-      setDSMHDK([])
-   }
-   console.log(dsMHDK)
+	const [monhocSearch, setMonhocSearch] = useState()
 
-   return (
-      <div className="m-1 p-[4px] border-[1px] text-[12px]">
-         <div>
-            <label htmlFor="msmh" className="p-2 font-bold">
-               Lọc theo mã môn học
-            </label>
-            <input
-               id="msmh"
-               type="text"
-               className="border-2 border-black border-none p-2 bg-white"
-               onChange={(e) => setMSMH(e.target.value)}
-            />
-            <button
-               type="submit"
-               className="border-1 border-inherit py-2 px-1 bg-[#F0F0F0] font-bold rounded-sm"
-               onClick={handleLocMonHoc}
-            >
-               Lọc môn học tự chọn
-            </button>
-         </div>
-         <div>
-            <table>
-               <thead className="bg-[#F0F0F0]">
-                  <tr>
-                     <th width={10}>
-                        <input type="checkbox" id="all" />
-                     </th>
-                     <th>Mã môn học</th>
-                     <th>Tên môn học</th>
-                     <th>Mô tả</th>
-                     <th>Số tín chỉ</th>
-                     <th>Học phí</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {listMH.length > 0 &&
-                     listMH.map((item, index) => {
-                        return (
-                           <tr key={index}>
-                              <td width={10}>
-                                 <input
-                                    type="checkbox"
-                                    name="check1"
-                                    defaultValue={1}
-                                    onClick={() => handleAddMHDK(item)}
-                                 />
-                              </td>
-                              <td>{item.msmh}</td>
-                              <td>{item?.monhoc.tenmh}</td>
-                              <td>{item?.monhoc.sotinchi}</td>
-                              <td>{item?.monhoc.sotinchi * 613000}</td>
-                           </tr>
-                        )
-                     })}
-                  {monhoctochucs.filter((i) => i.monhoc?.mskhoa == '0').length > 0 &&
-                     monhoctochucs
-                        .filter((i) => i.monhoc?.mskhoa == '0')
-                        .map((i, index) => {
-                           return (
-                              <tr key={index}>
-                                 <td width={10}>
-                                    <input
-                                       type="checkbox"
-                                       name="check1"
-                                       defaultValue={1}
-                                       onClick={() => handleAddMHDK(i)}
-                                    />
-                                 </td>
-                                 <td>{i.msmh}</td>
-                                 <td>{i?.monhoc.tenmh}</td>
-                                 <td>
-                                    {i?.monhoc.mota == 'BB'
-                                       ? 'Bắc buộc'
-                                       : i?.monhoc.mota == 'TC'
-                                       ? 'Tự chọn'
-                                       : 'Tốt nghiệp'}
-                                 </td>
-                                 <td>{i?.monhoc.sotinchi}</td>
-                                 <td>{i?.monhoc.sotinchi * 613000}</td>
-                              </tr>
-                           )
-                        })}
-                  {monhoctochucs &&
-                     monhoctochucs.filter((i) => i.monhoc?.mskhoa == sinhvien?.mssv?.slice(2, 3)).length > 0 &&
-                     monhoctochucs
-                        .filter((i) => i.monhoc?.mskhoa == sinhvien?.mssv.slice(2, 3))
-                        .map((i, index) => {
-                           return (
-                              <tr key={index}>
-                                 <td width={10}>
-                                    <input
-                                       type="checkbox"
-                                       name="check1"
-                                       defaultValue={1}
-                                       onClick={() => handleAddMHDK(i)}
-                                    />
-                                 </td>
-                                 <td>{i.msmh}</td>
-                                 <td>{i?.monhoc.tenmh}</td>
-                                 <td>
-                                    {i?.monhoc.mota == 'BB'
-                                       ? 'Bắc buộc'
-                                       : i?.monhoc.mota == 'TC'
-                                       ? 'Tự chọn'
-                                       : 'Tốt nghiệp'}
-                                 </td>
-                                 <td>{i?.monhoc.sotinchi}</td>
-                                 <td>{i?.monhoc.sotinchi * 613000}</td>
-                              </tr>
-                           )
-                        })}
-               </tbody>
-            </table>
-         </div>
-         <div>
-            <div className="uppercase text-[14px] font-bold p-2">Danh sách môn học đã thêm</div>
-            <table>
-               <thead className="bg-[#F0F0F0]">
-                  <tr>
-                     <th width={10}>
-                        <input type="checkbox" id="all" />
-                     </th>
-                     <th>Mã môn học</th>
-                     <th>Tên môn học</th>
-                     <th>Số tín chỉ</th>
-                     <th>Học phí</th>
-                     <th>Tình trạng</th>
-                     <th></th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {danhsachsvdk.length > 0 &&
-                     danhsachsvdk.map((item, index) => {
-                        return (
-                           <tr key={index}>
-                              <td width={10}>
-                                 <input type="checkbox" id="all" />
-                              </td>
-                              <td>{item.msmh}</td>
-                              <td>{item?.monhocDK.tenmh}</td>
-                              <td>{item?.monhocDK.sotinchi}</td>
-                              <td>{item.hocphi}</td>
-                              <td className="font-bold">Đã lưu vào CSDL</td>
-                              <td></td>
-                           </tr>
-                        )
-                     })}
-                  {dsMHDK &&
-                     dsMHDK.length > 0 &&
-                     dsMHDK.map((item, index) => {
-                        return (
-                           <tr key={index}>
-                              <td width={10}>
-                                 <input type="checkbox" id="all" />
-                              </td>
-                              <td>{item.msmh}</td>
-                              <td>{item.tenmh}</td>
-                              <td>{item.sotinchi}</td>
-                              <td>{item.hocphi}</td>
-                              <td>Chưa lưu vào CSDL</td>
-                              <td>
-                                 <button
-                                    className="bg-[#F0F0F0] p-2 w-[100px] hover:font-bold"
-                                    onClick={() => handleRemoveDSDKMH(item)}
-                                 >
-                                    Xoá
-                                 </button>
-                              </td>
-                           </tr>
-                        )
-                     })}
-                  {dsMHDK?.length > 0 ? (
-                     <>
-                        <tr>
-                           <td colSpan={2} className="font-bold">
-                              Tổng số tín chỉ
-                           </td>
-                           <td colSpan={5} className="font-bold">
-                              {sumSTC(dsMHDK) + +sumSTC(danhsachsvdk)}
-                           </td>
-                        </tr>
-                        <tr>
-                           <td colSpan={2} className="font-bold">
-                              Tổng tiền
-                           </td>
-                           <td colSpan={5} className="font-bold">
-                              {abc(sumHocPhi(dsMHDK) + sumHocPhi(danhsachsvdk))} đ
-                           </td>
-                        </tr>
-                     </>
-                  ) : (
-                     <>
-                        <tr>
-                           <td colSpan={2} className="font-bold">
-                              Tổng số tín chỉ
-                           </td>
-                           <td colSpan={5} className="font-bold">
-                              {sumSTC(danhsachsvdk)}
-                           </td>
-                        </tr>
-                        <tr>
-                           <td colSpan={2} className="font-bold">
-                              Tổng tiền
-                           </td>
-                           <td colSpan={5} className="font-bold">
-                              {sumHocPhi(danhsachsvdk)} đ
-                           </td>
-                        </tr>
-                     </>
-                  )}
-                  <tr>
-                     <td colSpan={7} className="w-[150px] text-center">
-                        <button className="bg-[#F0F0F0] p-2 hover:font-bold float-right" onClick={handleAddMHVaoDSDKMH}>
-                           Lưu lại trong cơ sở dử liệu
-                        </button>
-                     </td>
-                  </tr>
-               </tbody>
-            </table>
-         </div>
-      </div>
-   )
+	const [msmhNguyevong, setMSMHNguyenvong] = useState()
+
+	// const [MHNV, setMHNV] = useState()
+
+	const [dsMHDK, setDSMHDK] = useState(
+		JSON.parse(localStorage.getItem("mhdk")) || []
+	)
+	useEffect(() => {
+		dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
+		getMHTCC()
+		!msmh && setMonhocSearch()
+		isLoggedInSinhvien &&
+			localStorage.setItem("mhdk", JSON.stringify(dsMHDK) || [])
+		!isLoggedInSinhvien && navigate("/")
+	}, [isLoggedInSinhvien, dsMHDK?.length, msmh])
+	const getMHTCC = () => {
+		const nienKhoa = sinhvien?.mssv?.slice(3, 5)
+		if (+nienKhoa === +year) {
+			let kq = monhoctochucs?.filter((i) => i.mshocky === "HK1")
+			setListMH(kq)
+			setHK("Học kỳ I")
+		} else if (+nienKhoa + 1 === +year) {
+			let kq = monhoctochucs?.filter((i) => i.mshocky === "HK3")
+			setListMH(kq)
+			setHK("Học kỳ I")
+		} else if (+nienKhoa + 2 === +year) {
+			let kq = monhoctochucs?.filter((i) => i.mshocky === "HK5")
+			setListMH(kq)
+			setHK("Học kỳ I")
+		} else if (+nienKhoa + 3 === +year) {
+			let kq = monhoctochucs?.filter((i) => i.mshocky === "HK7")
+			setListMH(kq)
+			setHK("Học kỳ I")
+		}
+	}
+	const handleAddMHDK = (mh) => {
+		const search =
+			danhsachsvdk?.find(
+				(i) => i.msmh === mh.msmh && i.mssv === sinhvien.mssv
+			) ||
+			dsMHDK?.find((i) => i.msmh === mh.msmh && i.mssv === sinhvien.mssv)
+		if (!search) {
+			setDSMHDK((prev) => [
+				...prev,
+				{
+					mssv: sinhvien.mssv,
+					msmh: mh.msmh,
+					tenmh: mh.monhoc?.tenmh || mh.tenmh,
+					sotinchi: mh.monhoc?.sotinchi || mh.sotinchi,
+					hocphi:
+						mh.monhoc?.sotinchi * 613000 || mh.sotinchi * 613000 || 0,
+				},
+			])
+			toast.success("Thêm thành công...!")
+		} else toast.error("Đã có môn học trong danh sách đăng ký...!")
+	}
+	const handleSearchMonhoc = () => {
+		if (!msmh) {
+			toast.error("Bạn chưa nhập mã môn học...!")
+			return
+		}
+		const data = monhocs.filter((i) => i.msmh === msmh)
+		setMonhocSearch(data)
+	}
+	const handleAddMonhocNguyenvong = () => {
+		const data = listMonhoc.find((i) => i.msmh === msmhNguyevong)
+		const a = danhsachs.find((i) => i.msmh === data.msmh)
+		const b = danhsachs.find((i) => i.mssv === sinhvien.mssv)
+		if (a && b) {
+			toast.error("Nguyện vọng đã được thêm...!")
+		} else {
+			dispatch(
+				actions.addMonhocNguyenvong({
+					mssv: sinhvien.mssv,
+					msmh: data.msmh,
+					hocphi: +data.sotinchi * 613000,
+				})
+			)
+			toast.success("Thêm nguyện vọng thành công...!")
+		}
+	}
+	console.log(listMH)
+	console.log(monhocSearch)
+	return (
+		<div className='min-h-[550px]'>
+			<div className='flex justify-between py-2'>
+				<h3 className='p-2 uppercase text-[16px] text-[#355170] m-0'>
+					Danh sách môn học được tổ chức trong {hk} năm học 20{+year - 1} -{" "}
+					20{year}{" "}
+				</h3>
+				<button className='p-2 border-[1px] border-solid rounded-xl border-[#999] hover:underline bg-[#14539a] text-white'>
+					Thêm môn học nguyện vọng
+				</button>
+			</div>
+			<p className='m-0 italic'>
+				Lưu ý: những môn học tự chọn thì chỉ chọn 1 hoặc 1 nhóm môn, không
+				chọn tất cả
+			</p>
+			<div className='flex items-center'>
+				<label
+					htmlFor='ma'
+					className='my-0 mx-1 cursor-pointer hover:underline'
+				>
+					Lọc theo mã môn học
+				</label>
+				<input
+					id='ma'
+					type='text'
+					className='mx-2 border-[1px] border-solid rounded-md p-1 my-2 focus:outline-none focus:border-sky-500 focus:ring-1 text-pink-600 focus:text-pink-600'
+					onChange={(e) => setMSMH(e.target.value)}
+				/>
+				<Button
+					width={"w-[100px]"}
+					label={"Lọc"}
+					m={"m-0"}
+					bg={"bg-[#2D8ECE]"}
+					textColor={"text-white"}
+					rounded={"rounded-xl"}
+					onClick={handleSearchMonhoc}
+				/>
+			</div>
+			<div className='min-h-[400px]'>
+				<table>
+					<thead className='bg-[#2D8ECE] text-white'>
+						<tr>
+							<th></th>
+							<th className='text-center'>Mã môn học</th>
+							<th>Tên môn học</th>
+							<th>Số tín chỉ</th>
+							<th>Học phí</th>
+							<th>Mô tả</th>
+							<th>Song hành</th>
+						</tr>
+					</thead>
+
+					{!listMH &&
+						monhocSearch &&
+						monhocSearch.map((item, index) => {
+							return (
+								<tbody key={index} className='text-[#000080]'>
+									<tr className='hover-btn odd:bg-white even:bg-slate-50'>
+										<td width={10}>
+											<input
+												className='cursor-pointer'
+												type='checkbox'
+												onClick={() => handleAddMHDK(item)}
+											/>
+										</td>
+										<td className='text-center italic'>
+											{item.msmh}
+										</td>
+										<td className='font-bold'>{item.tenmh}</td>
+										<td>{item.sotinchi}</td>
+										<td>{item.sotinchi * 616000}</td>
+										<td>
+											{item.mota === "BB"
+												? "Bắt buộc"
+												: item.mota === "TC"
+												? "Tự chọn"
+												: "Tốt nghiệp"}
+										</td>
+										<td>
+											{item.songhanh === "1"
+												? "Đây là môn song hành"
+												: ""}
+										</td>
+									</tr>
+								</tbody>
+							)
+						})}
+					{!monhocSearch &&
+						listMH?.length > 0 &&
+						listMH
+							?.filter(
+								(i) => i.monhoc?.mskhoa === sinhvien.mssv?.slice(2, 3)
+							)
+							.concat(listMH?.filter((i) => i.monhoc?.mskhoa === "0"))
+							.map((item, index) => {
+								return (
+									<tbody key={index} className='text-[#000080]'>
+										<tr className='hover-btn odd:bg-white even:bg-slate-50'>
+											<td width={10}>
+												<input
+													className='cursor-pointer'
+													type='checkbox'
+													id='all'
+													onClick={() => handleAddMHDK(item)}
+												/>
+											</td>
+											<td className='text-center italic'>
+												{item.msmh}
+											</td>
+											<td className='font-bold'>
+												{item.monhoc?.tenmh}
+											</td>
+											<td>{item.monhoc?.sotinchi}</td>
+											<td>{item.monhoc?.sotinchi * 616000}</td>
+											<td>
+												{item.monhoc?.mota === "BB"
+													? "Bắt buộc"
+													: item.monhoc?.mota === "TC"
+													? "Tự chọn"
+													: "Tốt nghiệp"}
+											</td>
+											<td>
+												{item.monhoc?.songhanh === "1"
+													? "Đây là môn song hành"
+													: ""}
+											</td>
+										</tr>
+									</tbody>
+								)
+							})}
+
+					{listMH &&
+						monhocSearch?.length > 0 &&
+						monhocSearch.map((item, index) => {
+							return (
+								<tbody key={index} className='text-[#000080]'>
+									<tr className='hover-btn odd:bg-white even:bg-slate-50'>
+										<td width={10}>
+											<input
+												className='cursor-pointer'
+												type='checkbox'
+												id='all'
+												onClick={() => handleAddMHDK(item)}
+											/>
+										</td>
+										<td className='text-center italic'>
+											{item.msmh}
+										</td>
+										<td className='font-bold'>{item.tenmh}</td>
+										<td>{item.sotinchi}</td>
+										<td>{item.sotinchi * 616000}</td>
+										<td>
+											{item.mota === "BB"
+												? "Bắt buộc"
+												: item.mota === "TC"
+												? "Tự chọn"
+												: "Tốt nghiệp"}
+										</td>
+										<td>
+											{item.songhanh === "1"
+												? "Đây là môn song hành"
+												: ""}
+										</td>
+									</tr>
+								</tbody>
+							)
+						})}
+					{/* { !listMH &&
+						  monhocSearch &&
+						  monhocSearch.map((item, index) => {
+								return (
+									<tbody key={index} className='text-[#000080]'>
+										<tr className='hover-btn odd:bg-white even:bg-slate-50'>
+											<td width={10}>
+												<input
+													className='cursor-pointer'
+													type='checkbox'
+													id='all'
+													onClick={() => handleAddMHDK(item)}
+												/>
+											</td>
+											<td className='text-center italic'>
+												{item.msmh}
+											</td>
+											<td className='font-bold'>{item.tenmh}</td>
+											<td>{item.sotinchi}</td>
+											<td>{item.sotinchi * 616000}</td>
+											<td>
+												{item.mota === "BB"
+													? "Bắt buộc"
+													: item.mota === "TC"
+													? "Tự chọn"
+													: "Tốt nghiệp"}
+											</td>
+											<td>
+												{item.songhanh === "1"
+													? "Đây là môn song hành"
+													: ""}
+											</td>
+										</tr>
+									</tbody>
+								)
+						  })}
+					{listMH?.length > 0 &&
+						listMH
+							?.filter(
+								(i) => i.monhoc?.mskhoa === sinhvien?.mssv.slice(2, 3)
+							)
+							.concat(listMH?.filter((i) => i.monhoc?.mskhoa === "0"))
+							.map((item, index) => {
+								return (
+									<tbody key={index} className='text-[#000080]'>
+										<tr className='hover-btn odd:bg-white even:bg-slate-50'>
+											<td width={10}>
+												<input
+													className='cursor-pointer'
+													type='checkbox'
+													id='all'
+													onClick={() => handleAddMHDK(item)}
+												/>
+											</td>
+											<td className='text-center italic'>
+												{item.msmh}
+											</td>
+											<td className='font-bold'>
+												{item.monhoc?.tenmh}
+											</td>
+											<td>{item.monhoc?.sotinchi}</td>
+											<td>{item.monhoc?.sotinchi * 616000}</td>
+											<td>
+												{item.monhoc?.mota === "BB"
+													? "Bắt buộc"
+													: item.monhoc?.mota === "TC"
+													? "Tự chọn"
+													: "Tốt nghiệp"}
+											</td>
+											<td>
+												{item.monhoc?.songhanh === "1"
+													? "Đây là môn song hành"
+													: ""}
+											</td>
+										</tr>
+									</tbody>
+								)
+							})} */}
+				</table>
+			</div>
+			<div className='flex items-center'>
+				<label
+					htmlFor='nv'
+					className='my-0 mx-1 cursor-pointer hover:underline'
+				>
+					Thêm môn học nguyện vọng
+				</label>
+				<input
+					onChange={(e) => setMSMHNguyenvong(e.target.value)}
+					id='nv'
+					type='text'
+					className='mx-2 border-[1px] border-solid rounded-md p-1 my-2 focus:outline-none focus:border-sky-500 focus:ring-1 text-pink-600 focus:text-pink-600'
+				/>
+				<Button
+					width={"w-[100px]"}
+					label={"Thêm"}
+					m={"m-0"}
+					bg={"bg-[#2D8ECE]"}
+					textColor={"text-white"}
+					rounded={"rounded-xl"}
+					onClick={handleAddMonhocNguyenvong}
+				/>
+			</div>
+		</div>
+	)
 }
 export default Dangkymonhoc

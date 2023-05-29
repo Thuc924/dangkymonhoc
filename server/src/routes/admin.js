@@ -1,12 +1,9 @@
-import express from 'express'
-import * as adminController from '../controllers/AdminController'
-import veriftToken from '../middlewares/verifyToken'
+import express from "express"
+import * as adminController from "../controllers/AdminController"
 const router = express.Router()
 
-router.get('/', adminController.getOneAdmin)
-router.get('/all', adminController.getAllAdmin)
-router.get('/getone', adminController.getOneAdminByMSQTV)
-router.put('/edit', adminController.editAdmin)
-// router.use(veriftToken)
+router.get("/", adminController.getAllAdmin)
+router.put("/edit", adminController.editAdmin)
+router.get("/getone", adminController.getOneAdminByMSQTV)
 
 export default router
