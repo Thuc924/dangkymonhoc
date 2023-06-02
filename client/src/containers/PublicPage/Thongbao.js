@@ -18,7 +18,7 @@ function Thongbao() {
 	}
 	return (
 		<div className='text-[12px]'>
-			<div className='p-2 uppercase font-bold rounded h-[30px] bg-[#83bfcd] flex items-center'>
+			<div className='p-2 uppercase text-white font-bold rounded h-[30px] bg-[#2D8ECE] flex items-center'>
 				Đăng ký môn học và tổ chức lớp
 			</div>
 			<div className='p-[12px] border-[#ccc] border-[1px] border-solid m-1'>

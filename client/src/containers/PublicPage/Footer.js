@@ -3,7 +3,7 @@ import { linkRoute } from "../../ultils/Common/constant"
 
 function Footer() {
 	return (
-		<div className='w-full'>
+		<footer className='w-full'>
 			<div className='flex justify-between text-[10px] text-[#800000] border-[1px] p-[8px]'>
 				<span>
 					Copyright ©2009 Trường Đại Học Công Nghệ Sài Gòn. Quản lý bởi
@@ -20,7 +20,7 @@ function Footer() {
 					<span>About</span>
 				</div>
 			</div>
-		</div>
+		</footer>
 	)
 }
 export default Footer

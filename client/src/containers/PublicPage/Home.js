@@ -22,13 +22,13 @@ function Home() {
 	return (
 		<div className='min-h-[550px]'>
 			<div>
-				<div className='rounded h-[30px] bg-[#83bfcd] flex items-center'>
+				<div className='rounded h-[30px] bg-[#2D8ECE] flex items-center'>
 					{language === "VI" ? (
-						<span className='p-2 uppercase font-bold text-[12px]'>
+						<span className='p-2 uppercase text-white font-bold text-[12px]'>
 							Thông báo
 						</span>
 					) : (
-						<span className='p-2 uppercase font-bold text-[12px]'>
+						<span className='p-2 uppercase text-white font-bold text-[12px]'>
 							Notification
 						</span>
 					)}

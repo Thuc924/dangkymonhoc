@@ -34,10 +34,8 @@ function ResetMatkhau() {
 			}
 		}
 	}
-	console.log("New pass: ", newPass)
-	console.log("Confrirm pass: ", confirmPass)
 	return (
-		<div className='bg-[#80BFCD] h-[720px] flex justify-center items-center'>
+		<main className='bg-[#80BFCD] h-[720px] flex justify-center items-center'>
 			<div className='w-[300px] h-[300px] bg-[#FFF] border-[#ccc] boder-solid border-[1px] rounded-xl p-3'>
 				<h4 className='text-center uppercase text-[#ecd756]'>
 					Reset Password
@@ -77,7 +75,7 @@ function ResetMatkhau() {
 					Reset Password
 				</button>
 			</div>
-		</div>
+		</main>
 	)
 }
 export default ResetMatkhau

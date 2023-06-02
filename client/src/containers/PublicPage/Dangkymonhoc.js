@@ -22,8 +22,6 @@ function Dangkymonhoc() {
 
 	const { danhsachs } = useSelector((state) => state.monhocnguyenvong)
 
-	const [listMonhoc, setListMonhoc] = useState([])
-
 	const [msmh, setMSMH] = useState("")
 
 	const [hk, setHK] = useState("")
@@ -34,13 +32,13 @@ function Dangkymonhoc() {
 
 	const [msmhNguyevong, setMSMHNguyenvong] = useState()
 
-	// const [MHNV, setMHNV] = useState()
-
 	const [dsMHDK, setDSMHDK] = useState(
 		JSON.parse(localStorage.getItem("mhdk")) || []
 	)
 	useEffect(() => {
 		dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
+		dispatch(actions.getListMonhoc)
+		dispatch(actions.getSinhvienByMSSV())
 		getMHTCC()
 		!msmh && setMonhocSearch()
 		isLoggedInSinhvien &&
@@ -97,34 +95,31 @@ function Dangkymonhoc() {
 		setMonhocSearch(data)
 	}
 	const handleAddMonhocNguyenvong = () => {
-		const data = listMonhoc.find((i) => i.msmh === msmhNguyevong)
-		const a = danhsachs.find((i) => i.msmh === data.msmh)
-		const b = danhsachs.find((i) => i.mssv === sinhvien.mssv)
+		const data = monhocs?.find((i) => i.msmh === msmhNguyevong)
+		const a = danhsachs?.find((i) => i.msmh === data?.msmh)
+		const b = a?.mssv === sinhvien?.mssv
+		console.log(a)
+		console.log(b)
 		if (a && b) {
 			toast.error("Nguyện vọng đã được thêm...!")
 		} else {
 			dispatch(
 				actions.addMonhocNguyenvong({
-					mssv: sinhvien.mssv,
-					msmh: data.msmh,
-					hocphi: +data.sotinchi * 613000,
+					mssv: sinhvien?.mssv,
+					msmh: data?.msmh,
+					hocphi: +data?.sotinchi * 613000,
 				})
 			)
 			toast.success("Thêm nguyện vọng thành công...!")
 		}
 	}
-	console.log(listMH)
-	console.log(monhocSearch)
 	return (
-		<div className='min-h-[550px]'>
+		<main className='min-h-[550px]'>
 			<div className='flex justify-between py-2'>
 				<h3 className='p-2 uppercase text-[16px] text-[#355170] m-0'>
 					Danh sách môn học được tổ chức trong {hk} năm học 20{+year - 1} -{" "}
 					20{year}{" "}
 				</h3>
-				<button className='p-2 border-[1px] border-solid rounded-xl border-[#999] hover:underline bg-[#14539a] text-white'>
-					Thêm môn học nguyện vọng
-				</button>
 			</div>
 			<p className='m-0 italic'>
 				Lưu ý: những môn học tự chọn thì chỉ chọn 1 hoặc 1 nhóm môn, không
@@ -282,84 +277,6 @@ function Dangkymonhoc() {
 								</tbody>
 							)
 						})}
-					{/* { !listMH &&
-						  monhocSearch &&
-						  monhocSearch.map((item, index) => {
-								return (
-									<tbody key={index} className='text-[#000080]'>
-										<tr className='hover-btn odd:bg-white even:bg-slate-50'>
-											<td width={10}>
-												<input
-													className='cursor-pointer'
-													type='checkbox'
-													id='all'
-													onClick={() => handleAddMHDK(item)}
-												/>
-											</td>
-											<td className='text-center italic'>
-												{item.msmh}
-											</td>
-											<td className='font-bold'>{item.tenmh}</td>
-											<td>{item.sotinchi}</td>
-											<td>{item.sotinchi * 616000}</td>
-											<td>
-												{item.mota === "BB"
-													? "Bắt buộc"
-													: item.mota === "TC"
-													? "Tự chọn"
-													: "Tốt nghiệp"}
-											</td>
-											<td>
-												{item.songhanh === "1"
-													? "Đây là môn song hành"
-													: ""}
-											</td>
-										</tr>
-									</tbody>
-								)
-						  })}
-					{listMH?.length > 0 &&
-						listMH
-							?.filter(
-								(i) => i.monhoc?.mskhoa === sinhvien?.mssv.slice(2, 3)
-							)
-							.concat(listMH?.filter((i) => i.monhoc?.mskhoa === "0"))
-							.map((item, index) => {
-								return (
-									<tbody key={index} className='text-[#000080]'>
-										<tr className='hover-btn odd:bg-white even:bg-slate-50'>
-											<td width={10}>
-												<input
-													className='cursor-pointer'
-													type='checkbox'
-													id='all'
-													onClick={() => handleAddMHDK(item)}
-												/>
-											</td>
-											<td className='text-center italic'>
-												{item.msmh}
-											</td>
-											<td className='font-bold'>
-												{item.monhoc?.tenmh}
-											</td>
-											<td>{item.monhoc?.sotinchi}</td>
-											<td>{item.monhoc?.sotinchi * 616000}</td>
-											<td>
-												{item.monhoc?.mota === "BB"
-													? "Bắt buộc"
-													: item.monhoc?.mota === "TC"
-													? "Tự chọn"
-													: "Tốt nghiệp"}
-											</td>
-											<td>
-												{item.monhoc?.songhanh === "1"
-													? "Đây là môn song hành"
-													: ""}
-											</td>
-										</tr>
-									</tbody>
-								)
-							})} */}
 				</table>
 			</div>
 			<div className='flex items-center'>
@@ -385,7 +302,7 @@ function Dangkymonhoc() {
 					onClick={handleAddMonhocNguyenvong}
 				/>
 			</div>
-		</div>
+		</main>
 	)
 }
 export default Dangkymonhoc

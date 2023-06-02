@@ -122,7 +122,7 @@ function SidebarAdmin() {
 						</Link>
 					</li>
 					<li>
-						<Link className='app-menu__item' to={linkRoute.DS_NV}>
+						<Link className='app-menu__item' to={linkRoute.LOPHOC_AD}>
 							<i className='app-menu__icon bx bx-task' />
 							<span className='app-menu__label'>
 								Quản lý lớp học được tổ chức

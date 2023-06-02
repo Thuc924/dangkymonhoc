@@ -80,7 +80,7 @@ function LoginUser() {
 		setShowIcon(false)
 	}
 	return (
-		<div className='flex justify-center items-center min-h-[500px]'>
+		<main className='flex justify-center items-center min-h-[500px]'>
 			{language === "VI" ? (
 				<div className='w-[400px] border-[1px] border-solid p-3 rounded-xl'>
 					<h4 className='uppercase text-center'>Đăng nhập</h4>
@@ -225,7 +225,7 @@ function LoginUser() {
 					</div>
 				</div>
 			)}
-		</div>
+		</main>
 	)
 }
 export default LoginUser

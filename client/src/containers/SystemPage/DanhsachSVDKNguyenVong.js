@@ -1,11 +1,11 @@
 import * as actions from "../../store/actions"
 import { compareValues } from "../../ultils/func"
 import { linkRoute } from "../../ultils/Common/constant"
+import { Button, ModelLophoc } from "../../components"
 
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { Button } from "../../components"
 import { toast } from "react-toastify"
 
 function DanhSachSVDKNguyenVong() {
@@ -19,13 +19,17 @@ function DanhSachSVDKNguyenVong() {
 
 	const [msmh, setMSMH] = useState("")
 
+	const [showModel, setShowModel] = useState(false)
+
 	useEffect(() => {
 		!isLoggedInAdmin && navigate(linkRoute.LOGIN_AD)
+		// dispatch(actions.createLopHoc())
 		setTimeout(() => {
 			dispatch(actions.getAllDSNguyenVong())
 		}, 1000)
 		handleMHNV()
 	}, [isLoggedInAdmin])
+	console.log(danhsachs.filter((i) => i.msmh === msmh).length)
 	const handleMHNV = () => {
 		let data = []
 		for (let i = 0; i < danhsachs.length; i++) {
@@ -43,6 +47,7 @@ function DanhSachSVDKNguyenVong() {
 		}, 1000)
 	}
 	const handleLapLop = () => {
+		setShowModel(true)
 		const length = danhsachs.filter((i) => i.msmh === msmh).length
 		if (length < 3) toast.error("Không đủ sinh viên để lập lớp...!")
 		else {
@@ -174,6 +179,12 @@ function DanhSachSVDKNguyenVong() {
 					</div>
 				</div>
 			</main>
+			{showModel && (
+				<ModelLophoc
+					setShowModel={setShowModel}
+					danhsach={danhsachs.filter((i) => i.msmh === msmh)}
+				/>
+			)}
 			{/* {show && <ModalDetailDKMH setShow={setShow} mssv={mssv} sumHocPhi={sumHocPhi} />} */}
 		</div>
 	)

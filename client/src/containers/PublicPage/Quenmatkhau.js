@@ -23,7 +23,7 @@ function Quenmatkhau() {
 		}
 	}
 	return (
-		<div className='flex justify-center items-center m-1 min-h-[550px]'>
+		<main className='flex justify-center items-center m-1 min-h-[550px]'>
 			{language === "VI" ? (
 				<div className='w-[500px] border-[1px] border-solid p-4 rounded-sm'>
 					<h4 className='uppercase text-center'>Quên mật khẩu</h4>
@@ -85,7 +85,7 @@ function Quenmatkhau() {
 					</div>
 				</div>
 			)}
-		</div>
+		</main>
 	)
 }
 export default Quenmatkhau

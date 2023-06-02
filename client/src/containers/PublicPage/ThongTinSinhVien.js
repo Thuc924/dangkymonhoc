@@ -12,7 +12,7 @@ function ThongTinSinhVien() {
 		!isLoggedInSinhvien && navigate("/")
 	}, [isLoggedInSinhvien])
 	return (
-		<div className='m-1 min-h-[500px] bg-[#dbdbdb]'>
+		<main className='m-1 min-h-[500px] bg-[#dbdbdb]'>
 			<h4 className='text-center font-bold uppercase pt-4'>
 				Thông tin của sinh viên
 			</h4>
@@ -102,7 +102,7 @@ function ThongTinSinhVien() {
 					Cập nhật mật khẩu
 				</Link>
 			</div>
-		</div>
+		</main>
 	)
 }
 export default ThongTinSinhVien

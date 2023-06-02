@@ -40,9 +40,8 @@ function XemHocPhi() {
 		}
 		return kq
 	}
-	console.log(sinhvien)
 	return (
-		<div className='text-[12px]'>
+		<main className='text-[12px]'>
 			<div className='flex justify-center'>
 				<div className='w-[400px] h-[180px] border-8 rounded-md border-[#7fc1ed] my-[32px] flex p-2'>
 					<ul className='w-[150px]'>
@@ -146,7 +145,7 @@ function XemHocPhi() {
 			<div>
 				<img src={imgs.ghichuhocphi} className='w-full p-2' />
 			</div>
-		</div>
+		</main>
 	)
 }
 export default XemHocPhi

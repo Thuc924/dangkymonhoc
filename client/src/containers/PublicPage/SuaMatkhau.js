@@ -61,7 +61,7 @@ function SuaMatkhau() {
 	}
 
 	return (
-		<div className='min-h-[500px]'>
+		<main className='min-h-[500px]'>
 			<h4 className='text-center my-4 uppercase'>
 				Cập nhật mật khẩu của bạn
 			</h4>
@@ -101,7 +101,7 @@ function SuaMatkhau() {
 					label={"Lưu thay đổi"}
 				/>
 			</div>
-		</div>
+		</main>
 	)
 }
 export default SuaMatkhau

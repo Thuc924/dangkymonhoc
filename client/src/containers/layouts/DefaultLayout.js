@@ -9,8 +9,8 @@ function DefaultLayout({ children }) {
 	const [language, setLanguage] = useState("VI")
 	return (
 		<languageContext.Provider value={language}>
-			<div className='m-auto shadow-xl m-0 w-[1050px] bg-white shadow-yellow-700'>
-				<ul className='flex p-2 bg-[#80BFCD] text-white m-0'>
+			<div className='m-auto m-0 w-[1050px] bg-white'>
+				<ul className='flex p-2 bg-[#2D8ECE] text-white m-0'>
 					<li
 						className='p-1 cursor-pointer hover:text-[#993333] hover:underline'
 						onClick={() => setLanguage("VI")}
@@ -30,7 +30,7 @@ function DefaultLayout({ children }) {
 				</ul>
 				<Header />
 				<Nav />
-				<div>{children}</div>
+				<article>{children}</article>
 				<Footer />
 			</div>
 		</languageContext.Provider>

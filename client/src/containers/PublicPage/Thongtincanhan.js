@@ -29,7 +29,7 @@ function Thongtincanhan() {
 		toast.success("Cập nhật thành công...!")
 	}
 	return (
-		<div className='m-1 min-h-[500px]'>
+		<main className='m-1 min-h-[500px]'>
 			<div className='p-2'>
 				<h4 className='text-center uppercase'>
 					Cập nhật thông tin tài khoản
@@ -179,7 +179,7 @@ function Thongtincanhan() {
 					</Link>
 				</div>
 			</div>
-		</div>
+		</main>
 	)
 }
 export default Thongtincanhan

@@ -8,7 +8,7 @@ function Nav() {
 
 	const { isLoggedInSinhvien } = useSelector((state) => state.auth)
 	return (
-		<>
+		<nav>
 			{language === "VI" ? (
 				<div className='h-full p-2 bg-[#dbdbdb] border-t-8 border-[#fe8606] rounded-t font-bold h-[42px] flex items-center uppercase'>
 					<NavChild label={"TRANG CHỦ"} to='/' />
@@ -46,7 +46,7 @@ function Nav() {
 					)}
 				</div>
 			)}
-		</>
+		</nav>
 	)
 }
 

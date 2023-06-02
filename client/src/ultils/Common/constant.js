@@ -30,6 +30,7 @@ import {
 	AddMonhoctochuc,
 	DanhsachSVDKMH,
 	DanhsachSVDKNguyenVong,
+	Lophoc,
 } from "../../containers/SystemPage"
 import AddLophoc from "../../containers/SystemPage/AddLophoc"
 import ThongtinQTV from "../../containers/SystemPage/ThongtinQuanTriVien"
@@ -63,6 +64,7 @@ export const linkRoute = {
 	DS_SV: "/admin/danhsachsvdangky",
 	TT_ADMIN: "/admin/thongtinadmin",
 	DS_NV: "/admin/danhsachnguyenvong",
+	LOPHOC_AD: "/admin/lophocs",
 }
 export const pathRoutes = [
 	{
@@ -256,6 +258,11 @@ export const pathRoutes = [
 	{
 		path: `${linkRoute.TT_ADMIN}/getone/msqtv=:msqtv`,
 		component: ThongtinQTV,
+		layout: "Admin",
+	},
+	{
+		path: linkRoute.LOPHOC_AD,
+		component: Lophoc,
 		layout: "Admin",
 	},
 ]

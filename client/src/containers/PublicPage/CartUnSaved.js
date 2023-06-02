@@ -70,7 +70,7 @@ function CartUnSaved() {
 		setShowDetail(true)
 	}
 	return (
-		<div className='min-h-[550px]'>
+		<main className='min-h-[550px]'>
 			<h4 className='uppercase text-center p-2'>
 				Thông tin môn học đã thêm
 			</h4>
@@ -158,7 +158,7 @@ function CartUnSaved() {
 					/>
 				)}
 			</table>
-		</div>
+		</main>
 	)
 }
 export default CartUnSaved

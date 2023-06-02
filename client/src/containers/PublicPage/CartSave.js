@@ -32,7 +32,7 @@ function CartSave() {
 		setShowDetail(true)
 	}
 	return (
-		<div className='min-h-[550px]'>
+		<main className='min-h-[550px]'>
 			<h4 className='uppercase text-center p-2'>Thông tin môn học đã lưu</h4>
 			<Cart />
 			<div>
@@ -94,7 +94,7 @@ function CartSave() {
 					)}
 				</table>
 			</div>
-		</div>
+		</main>
 	)
 }
 export default CartSave

@@ -8,6 +8,7 @@ import hockyRouter from "./hocky"
 import monhoctochucRouter from "./monhoctochuc"
 import dangkymonhocRouter from "./dangkymonhoc"
 import dangkynguyenvongRouter from "./monhocnguyenvong"
+import lophocRouter from "./lophoc"
 
 const initRoutes = (app) => {
 	app.use("/api/v1/auth", authRouter)
@@ -20,6 +21,7 @@ const initRoutes = (app) => {
 	app.use("/monhoctochucs", monhoctochucRouter)
 	app.use("/dangkymonhocs", dangkymonhocRouter)
 	app.use("/dangkynguyenvong", dangkynguyenvongRouter)
+	app.use("/lophoc", lophocRouter)
 	return app.use("/", (req, res) => {
 		res.send("Server on....")
 	})

@@ -13,6 +13,7 @@ import monhoctochucReducer from "./monhoctochucReducer"
 import dangKyMonhoc from "./dangkymonhocReducer"
 import adminReducer from "./adminReducer"
 import monhocnguyenvongReducer from "./monhocnguyenvongReducer"
+import lophocReducer from "./lophocReducer"
 
 const commonConfig = {
 	storage,
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
 	monhoctochuc: monhoctochucReducer,
 	dangkymonhoc: dangKyMonhoc,
 	monhocnguyenvong: monhocnguyenvongReducer,
+	lophoc: lophocReducer,
 })
 
 export default rootReducer

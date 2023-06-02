@@ -30,7 +30,7 @@ function Header() {
 	}, [isLoggedInSinhvien, listMH?.length, list?.length, token])
 
 	return (
-		<div className='mb-1'>
+		<header className='mb-1'>
 			{language === "VI" ? (
 				<div className='flex justify-between'>
 					<Link to='/'>
@@ -91,7 +91,7 @@ function Header() {
 					)}
 				</div>
 			)}
-		</div>
+		</header>
 	)
 }
 
