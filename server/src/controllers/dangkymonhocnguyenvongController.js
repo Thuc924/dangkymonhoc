@@ -23,24 +23,6 @@ export const add = async (req, res) => {
 		})
 	}
 }
-export const getAllDSByMSSV = async (req, res) => {
-	const { mssv } = req.query
-	try {
-		if (!mssv) {
-			return res.status(400).json({
-				err: 1,
-				msg: "Missing query MSSV...!",
-			})
-		}
-		const response = await dangkymonhocnguyenvongService.getAllSV({ mssv })
-		return res.status(200).json(response)
-	} catch (error) {
-		return res.status(500).json({
-			err: -1,
-			msg: " Fail of hocky controller" + error,
-		})
-	}
-}
 export const getAll = async (req, res) => {
 	try {
 		const response = await dangkymonhocnguyenvongService.getAllDS()
@@ -53,11 +35,11 @@ export const getAll = async (req, res) => {
 	}
 }
 export const deleteMonhocInDSDKMH = async (req, res) => {
+	const { mssv } = req.query
 	try {
-		const { msmh } = req.query
-		if (msmh) {
+		if (mssv) {
 			const response =
-				await dangkymonhocnguyenvongService.DeleteMonhocInDSDKMH(msmh)
+				await dangkymonhocnguyenvongService.DeleteMonhocInDSDKMH(mssv)
 			return res.status(200).json(response)
 		}
 	} catch (error) {

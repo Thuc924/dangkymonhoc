@@ -1,6 +1,7 @@
 import { sumHocPhi } from "../ultils/func"
 
 function CartInfo({ list }) {
+	console.log(list)
 	return (
 		<div className='model-cart p-2 rounded-sm'>
 			<h4 className='text-center uppercase'>Thông tin môn học đã thêm</h4>
@@ -41,7 +42,9 @@ function CartInfo({ list }) {
 			)}
 
 			{list && list.length > 0 && (
-				<div className='text-right p-2'>Tổng tiền: {sumHocPhi(list)} </div>
+				<div className='text-right p-2'>
+					Tổng tiền: {sumHocPhi(list)} đ{" "}
+				</div>
 			)}
 		</div>
 	)

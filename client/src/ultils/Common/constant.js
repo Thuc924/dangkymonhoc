@@ -5,14 +5,14 @@ import {
 	LoginAdmin,
 	Dangkymonhoc,
 	XemHocPhi,
-	Thongtincanhan,
 	ThongTinSinhVien,
 	Quenmatkhau,
 	ResetMatkhau,
 	SuaMatkhau,
 	PageNotFound404,
-	CartSave,
-	CartUnSaved,
+	PhieuDKMH,
+	KetQuaDKMH,
+	XemDiem,
 } from "../../containers/PublicPage"
 import LoginUser from "../../containers/PublicPage/LoginUser"
 import {
@@ -31,6 +31,9 @@ import {
 	DanhsachSVDKMH,
 	DanhsachSVDKNguyenVong,
 	Lophoc,
+	Giangvien,
+	AddGiangvien,
+	Hocphi,
 } from "../../containers/SystemPage"
 import AddLophoc from "../../containers/SystemPage/AddLophoc"
 import ThongtinQTV from "../../containers/SystemPage/ThongtinQuanTriVien"
@@ -40,10 +43,10 @@ export const linkRoute = {
 	THONGTIN_SV: "/thongtin",
 	QUEN_MK: "/forgotpass",
 	HOCPHI_SV: "/hocphi",
-	CAPNHAT_SV: "/capnhattaikhoan",
 	LOGIN_SV: "/login",
-	CARTSAVED_SV: "/cart-saved",
-	CARTUNSAVE_SV: "/cart-unsave",
+	KQ_DKMH: "/ketquadangky",
+	PHIEU_DKMH: "/phieudangky",
+	DIEM_SV: "/xemdiem",
 	SUA_MK: "/suamatkhau",
 	RESET_MK: "/resetpass",
 	PAGE_NOT_FOUND: "/404",
@@ -55,6 +58,8 @@ export const linkRoute = {
 	MONHOC_ADD_AD: "/admin/monhocs/add",
 	KHOA_ADMIN: "/admin/khoas",
 	KHOA_ADD_AD: "/admin/khoas/add",
+	GV_ADMIN: "/admin/giangvien",
+	ADD_GV_ADMIN: "/admin/giangvien/add",
 	LOP_ADMIN: "/admin/lops",
 	LOP_ADD_AD: "/admin/lops/add",
 	MHTC_ADMIN: "/admin/monhoctochucs",
@@ -65,6 +70,7 @@ export const linkRoute = {
 	TT_ADMIN: "/admin/thongtinadmin",
 	DS_NV: "/admin/danhsachnguyenvong",
 	LOPHOC_AD: "/admin/lophocs",
+	HOCPHI_AD: "/admin/hocphis",
 }
 export const pathRoutes = [
 	{
@@ -74,6 +80,7 @@ export const pathRoutes = [
 	{
 		path: linkRoute.LOGIN_SV,
 		component: LoginUser,
+		layout: null,
 	},
 	{
 		path: `${linkRoute.LOGIN_SV}${linkRoute.PAGE_NOT_FOUND}`,
@@ -96,24 +103,25 @@ export const pathRoutes = [
 		component: XemHocPhi,
 	},
 	{
-		path: linkRoute.CAPNHAT_SV,
-		component: Thongtincanhan,
-	},
-	{
 		path: linkRoute.THONGTIN_SV,
 		component: ThongTinSinhVien,
 	},
 	{
-		path: linkRoute.CARTSAVED_SV,
-		component: CartSave,
+		path: linkRoute.KQ_DKMH,
+		component: KetQuaDKMH,
 	},
 	{
-		path: linkRoute.CARTUNSAVE_SV,
-		component: CartUnSaved,
+		path: linkRoute.PHIEU_DKMH,
+		component: PhieuDKMH,
+	},
+	{
+		path: linkRoute.DIEM_SV,
+		component: XemDiem,
 	},
 	{
 		path: linkRoute.QUEN_MK,
 		component: Quenmatkhau,
+		layout: null,
 	},
 	{
 		path: linkRoute.SUA_MK,
@@ -196,6 +204,16 @@ export const pathRoutes = [
 		layout: "Admin",
 	},
 	{
+		path: linkRoute.GV_ADMIN,
+		component: Giangvien,
+		layout: "Admin",
+	},
+	{
+		path: linkRoute.ADD_GV_ADMIN,
+		component: AddGiangvien,
+		layout: "Admin",
+	},
+	{
 		path: `${linkRoute.KHOA_ADMIN}/remove/mskhoa=:mskhoa`,
 		component: Khoa,
 		layout: "Admin",
@@ -263,6 +281,11 @@ export const pathRoutes = [
 	{
 		path: linkRoute.LOPHOC_AD,
 		component: Lophoc,
+		layout: "Admin",
+	},
+	{
+		path: linkRoute.HOCPHI_AD,
+		component: Hocphi,
 		layout: "Admin",
 	},
 ]

@@ -14,11 +14,6 @@ module.exports = (sequelize, DataTypes) => {
 				targetKey: "mslop",
 				as: "lop",
 			})
-			Sinhvien.belongsTo(models.Lop, {
-				foreignKey: "mssv",
-				targetKey: "mssv",
-				as: "sinhvien",
-			})
 			Sinhvien.hasMany(models.PhieuDKMH, {
 				foreignKey: "mssv",
 				as: "Sinhvien",

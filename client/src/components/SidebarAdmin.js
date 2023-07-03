@@ -86,6 +86,12 @@ function SidebarAdmin() {
 						</Link>
 					</li>
 					<li>
+						<Link className='app-menu__item' to={linkRoute.GV_ADMIN}>
+							<i className='app-menu__icon bx bx-task' />
+							<span className='app-menu__label'>Quản lý giảng viên</span>
+						</Link>
+					</li>
+					<li>
 						<Link className='app-menu__item' to={linkRoute.LOP_ADMIN}>
 							<i className='app-menu__icon bx bx-task' />
 							<span className='app-menu__label'>Quản lý lớp</span>
@@ -122,11 +128,9 @@ function SidebarAdmin() {
 						</Link>
 					</li>
 					<li>
-						<Link className='app-menu__item' to={linkRoute.LOPHOC_AD}>
+						<Link className='app-menu__item' to={linkRoute.HOCPHI_AD}>
 							<i className='app-menu__icon bx bx-task' />
-							<span className='app-menu__label'>
-								Quản lý lớp học được tổ chức
-							</span>
+							<span className='app-menu__label'>Quản lý học phí</span>
 						</Link>
 					</li>
 				</ul>

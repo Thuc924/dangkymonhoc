@@ -9,6 +9,5 @@ router.get("/", dangkymonhocnguyenvongController.getAll)
 
 router.post("/create", dangkymonhocnguyenvongController.add)
 router.delete("/remove", dangkymonhocnguyenvongController.deleteMonhocInDSDKMH)
-router.get("/all", dangkymonhocnguyenvongController.getAllDSByMSSV)
 
 export default router

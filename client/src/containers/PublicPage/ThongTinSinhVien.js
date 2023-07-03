@@ -1,107 +1,204 @@
-import { useEffect } from "react"
+import * as actions from "../../store/actions"
+import { linkRoute } from "../../ultils/Common/constant"
+
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
-import { linkRoute } from "../../ultils/Common/constant"
+import { toast } from "react-toastify"
 function ThongTinSinhVien() {
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
 
-	const { isLoggedInSinhvien } = useSelector((state) => state.auth)
+	const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
 	const { currentSinhvien } = useSelector((state) => state.sinhvien)
+
+	const [showBtnInEmail, setShowBtnInEmail] = useState(false)
+	const [showBtnInNumber, setShowBtnInNumber] = useState(false)
+	const [enableInputEmail, setEnableInputEmail] = useState(false)
+	const [enableInputSodienthoai, setEnableInputSodienthoai] = useState(false)
+
+	const [updateAccount, setUpdateAccount] = useState(currentSinhvien)
 	useEffect(() => {
-		!isLoggedInSinhvien && navigate("/")
+		!isLoggedInSinhvien && navigate(linkRoute.LOGIN_SV)
+		dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
+		dispatch(actions.getSinhvienByMSSV())
 	}, [isLoggedInSinhvien])
+	const handleShowBtnInEmail = () => {
+		setShowBtnInEmail(true)
+		setEnableInputEmail(true)
+	}
+	const handleHiddenBtnInEmail = () => {
+		setShowBtnInEmail(false)
+		setEnableInputEmail(false)
+	}
+	const handleShowBtnInNumber = () => {
+		setShowBtnInNumber(true)
+		setEnableInputSodienthoai(true)
+	}
+	const handleHiddenBtnInNumber = () => {
+		setShowBtnInNumber(false)
+		setEnableInputSodienthoai(false)
+	}
+
+	const handleUpdateAccount = () => {
+		dispatch(actions.updateSinhvien(updateAccount))
+		toast.success("Cập nhật thành công...!")
+		setShowBtnInNumber(false)
+		setShowBtnInEmail(false)
+		setEnableInputEmail(false)
+		setEnableInputSodienthoai(false)
+	}
+
 	return (
-		<main className='m-1 min-h-[500px] bg-[#dbdbdb]'>
-			<h4 className='text-center font-bold uppercase pt-4'>
-				Thông tin của sinh viên
-			</h4>
-			<div className='p-4 flex w-full justify-center'>
-				<div className='w-[30%] bg-[#888] flex flex-col items-center p-2'>
-					<img
-						className='w-[100px] h-[150px] rounded-sm'
-						src={
-							currentSinhvien?.avatar &&
-							require(`../../assets/images/${currentSinhvien?.avatar}`)
-						}
-						alt='Avatar Sinh vien'
-					/>
-					<p className='m-0 p-1 uppercase font-bold text-[16px]'>
-						{currentSinhvien?.tensv}
-					</p>
-					<p className='m-0 p-1 text-[12px] italic'>
-						{currentSinhvien?.mssv}
-					</p>
-				</div>
-				<div className='bg-[#999] p-2'>
-					<table border={0}>
-						<thead>
-							<tr>
-								<td width={200} className='font-bold'>
-									Nơi sinh
-								</td>
-								<td width={300} className='italic'>
-									{currentSinhvien?.noisinh}
-								</td>
-							</tr>
-							<tr>
-								<td width={200} className='font-bold'>
-									Địa chỉ hiện tại
-								</td>
-								<td width={300} className='italic'>
-									{currentSinhvien?.diachi}
-								</td>
-							</tr>
-							<tr>
-								<td width={200} className='font-bold'>
-									Lớp
-								</td>
-								<td width={300} className='italic'>
-									{currentSinhvien?.mslop}
-								</td>
-							</tr>
-							<tr>
-								<td width={200} className='font-bold'>
-									Ngày sinh
-								</td>
-								<td width={300} className='italic'>
-									{currentSinhvien?.ngaysinh}
-								</td>
-							</tr>
-							<tr>
-								<td width={200} className='font-bold'>
-									Số điện thoại
-								</td>
-								<td width={300} className='italic'>
-									{currentSinhvien?.sodienthoai}
-								</td>
-							</tr>
-							<tr>
-								<td width={200} className='font-bold'>
-									Email
-								</td>
-								<td width={300} className='italic'>
-									{currentSinhvien?.email}
-								</td>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>
-			<div className='flex justify-center'>
-				<Link
-					to={linkRoute.CAPNHAT_SV}
-					className='p-2 border-[1px] rounded-sm text-white border-black border-solid mx-[4px] bg-[#80BFCD] hover:underline'
-				>
-					Sửa thông tin cá nhân
-				</Link>
-				<Link
-					to={linkRoute.SUA_MK}
-					className='p-2 border-[1px] rounded-sm text-white border-black border-solid mx-[1px] bg-[#FF0000] hover:underline'
-				>
-					Cập nhật mật khẩu
-				</Link>
-			</div>
+		<main className='w-full px-4 flex'>
+			{sinhvien && (
+				<>
+					<div className='w-[30%] my-4 border-solid border-r-2 border-black text-center'>
+						<img
+							className='rounded-full w-[200px] h-[200px] m-auto'
+							src={
+								sinhvien?.avatar &&
+								require(`../../assets/images/${sinhvien?.avatar}`)
+							}
+						/>
+						<p className='my-3 text-[22px] font-bold'>{sinhvien?.mssv}</p>
+						<Link
+							to={linkRoute.SUA_MK}
+							className='hover:underline text-[Navy] font-bold'
+						>
+							Thay đổi mật khẩu
+						</Link>
+					</div>
+					<div className='w-full p-4'>
+						<p className='border-b-2 border-solid w-[80%] text-[26px] py-[10px] text-[#333333] uppercase'>
+							Thông tin cá nhân
+						</p>
+						<div className='flex flex-col w-[60%] text-[16px] pt-[16px] pb-[20px]'>
+							<label className='font-bold'>Họ và tên</label>
+							<input
+								disabled
+								className='w-full py-[4px] bg-transparent border-t-0 border-r-0 border-l-0 border-b-2 border-solid border-[#0000000d]'
+								type={"text"}
+								value={currentSinhvien?.tensv}
+							/>
+						</div>
+						<div className='flex flex-col w-[60%] text-[16px] pt-[16px] pb-[20px]'>
+							<label className='font-bold'>Lớp</label>
+							<input
+								disabled
+								className='w-full py-[4px] bg-transparent border-t-0 border-r-0 border-l-0 border-b-2 border-solid border-[#0000000d]'
+								type={"text"}
+								value={sinhvien.mslop}
+							/>
+						</div>
+						<div className='flex flex-col w-[80%] text-[16px] my-4'>
+							<label className='font-bold'>Email</label>
+							<div className='flex w-full'>
+								{!enableInputEmail ? (
+									<input
+										disabled
+										className='w-[75%] py-[4px] bg-transparent border-t-0 border-r-0 border-l-0 border-b-2 border-solid border-[#0000000d]'
+										type={"text"}
+										value={updateAccount?.email}
+									/>
+								) : (
+									<input
+										onChange={(e) => {
+											setUpdateAccount({
+												...updateAccount,
+												email: e.target.value,
+											})
+										}}
+										className='w-[75%] py-[4px] bg-transparent border-t-0 border-r-0 border-l-0 border-b-2 border-solid border-[#0000000d]'
+										type={"text"}
+										value={updateAccount?.email}
+									/>
+								)}
+								{showBtnInEmail ? (
+									<>
+										<button
+											onClick={handleUpdateAccount}
+											className='mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-black bg-[red] hover:bg-black hover:text-[red]'
+										>
+											Lưu
+										</button>
+										<button
+											onClick={handleHiddenBtnInEmail}
+											className='mx-1 text-center w-[70px] border-[1px] border-solid border-[#000000d] rounded-3xl p-2 cursor-pointer hover:border-[#0000008a] text-black bg-[gray] hover:bg-black hover:text-[gray]'
+										>
+											Huỷ
+										</button>
+									</>
+								) : (
+									<button
+										onClick={handleShowBtnInEmail}
+										className='text-center w-[110px] border-[1px] border-solid border-[#000000d] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]'
+									>
+										Chỉnh sửa
+									</button>
+								)}
+							</div>
+						</div>
+						<div className='flex flex-col w-[80%] text-[16px] my-4'>
+							<label className='font-bold'>Số điện thoại</label>
+							<div className='flex w-full'>
+								{!enableInputSodienthoai ? (
+									<input
+										disabled
+										className='w-[75%] py-[4px] bg-transparent border-t-0 border-r-0 border-l-0 border-b-2 border-solid border-[#0000000d]'
+										type={"text"}
+										value={updateAccount?.sodienthoai}
+									/>
+								) : (
+									<input
+										onChange={(e) => {
+											setUpdateAccount({
+												...updateAccount,
+												sodienthoai: e.target.value,
+											})
+										}}
+										className='w-[75%] py-[4px] bg-transparent border-t-0 border-r-0 border-l-0 border-b-2 border-solid border-[#0000000d]'
+										type={"number"}
+										value={updateAccount?.sodienthoai}
+									/>
+								)}
+								{showBtnInNumber ? (
+									<>
+										<button
+											onClick={handleUpdateAccount}
+											className='mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-black bg-[red] hover:bg-black hover:text-[red]'
+										>
+											Lưu
+										</button>
+										<button
+											onClick={handleHiddenBtnInNumber}
+											className='mx-1 text-center w-[70px] border-[1px] border-solid border-[#000000d] rounded-3xl p-2 cursor-pointer hover:border-[#0000008a] text-black bg-[gray] hover:bg-black hover:text-[gray]'
+										>
+											Huỷ
+										</button>
+									</>
+								) : (
+									<button
+										onClick={handleShowBtnInNumber}
+										className='text-center w-[110px] border-[1px] border-solid border-[#000000d] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]'
+									>
+										Chỉnh sửa
+									</button>
+								)}
+							</div>
+						</div>
+						<div className='border-b-2 border-solid border-[#0000000d] flex flex-col w-[60%] text-[16px] pt-[16px] pb-[20px]'>
+							<label className='font-bold'>Địa chỉ</label>
+							<input
+								disabled
+								className='w-full py-[4px] bg-transparent'
+								type={"text"}
+								value={sinhvien?.diachi}
+							/>
+						</div>
+					</div>
+				</>
+			)}
 		</main>
 	)
 }

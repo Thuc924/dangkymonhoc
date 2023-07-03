@@ -24,7 +24,6 @@ function Monhoctochuc() {
 	const [khoa, setKhoa] = useState({ mskhoa: "" })
 
 	const [hocky, setHocky] = useState({ mshocky: "" })
-
 	useEffect(() => {
 		!isLoggedInAdmin && navigate(linkRoute.LOGIN_AD)
 
@@ -143,55 +142,38 @@ function Monhoctochuc() {
 								>
 									<thead>
 										<tr>
-											<th width={10}>
-												<input type='checkbox' id='all' />
-											</th>
-											<th width={50}>Mã số môn học</th>
+											<th width={50}>Mã môn học</th>
 											<th width={100}>Tên môn học</th>
+											<th width={50}>Mã lớp học</th>
 											<th width={50}>Học kỳ</th>
-											<th width={50}>Khoa</th>
-											<th width={50}>Tính năng</th>
+											<th width={50}>Sĩ số</th>
+											<th width={50}>Thứ</th>
+											<th width={50}>Tiết BD</th>
+											<th width={50}> Số tiết</th>
+											<th width={50}>Phòng</th>
+											<th width={50}>Giảng viên</th>
+											<th width={50}>Thời gian học</th>
 										</tr>
 									</thead>
 									{!hocky.mshocky &&
 										!khoa.mskhoa &&
 										monhoctochucs
-											.sort(compareValues("tenmh", "desc"))
+											?.sort(compareValues("tenmh", "desc"))
 											.map((item, index) => {
 												return (
 													<tbody key={index}>
 														<tr>
-															<td width={10}>
-																<input
-																	type='checkbox'
-																	name='check1'
-																	defaultValue={1}
-																/>
-															</td>
 															<td>{item.msmh}</td>
-															<td>{item.monhoc?.tenmh}</td>
-															<td>{item.hockies?.tenhocky}</td>
-															<td>
-																{
-																	khoas.find(
-																		(i) =>
-																			i.mskhoa ===
-																			item.monhoc?.mskhoa
-																	)?.tenkhoa
-																}
-															</td>
-															<td>
-																<button
-																	className='btn btn-primary btn-sm trash'
-																	type='button'
-																	title='Xóa'
-																	onClick={() =>
-																		handleRemoveMHTC(item)
-																	}
-																>
-																	<i className='fas fa-trash-alt' />
-																</button>
-															</td>
+															<td>{item.tenmh}</td>
+															<td>{item.mslophoc}</td>
+															<td>{item.mshocky}</td>
+															<td>{item.siso}</td>
+															<td>{item.thu}</td>
+															<td>{item.tietbd}</td>
+															<td>{item.sotiet}</td>
+															<td>{item.phong}</td>
+															<td>{item.tengiangvien}</td>
+															<td>{`${item.ngaybd} - ${item.ngaykt}`}</td>
 														</tr>
 													</tbody>
 												)
@@ -200,42 +182,22 @@ function Monhoctochuc() {
 										!khoa.mskhoa &&
 										monhoctochucs
 											.filter((i) => i.mshocky === hocky.mshocky)
-											.sort(compareValues("tenmh", "desc"))
-											.map((mh, index) => {
+											?.sort(compareValues("tenmh", "desc"))
+											.map((item, index) => {
 												return (
 													<tbody key={index}>
 														<tr>
-															<td width={10}>
-																<input
-																	type='checkbox'
-																	name='check1'
-																	defaultValue={1}
-																/>
-															</td>
-															<td>{mh.msmh}</td>
-															<td>{mh.monhoc?.tenmh}</td>
-															<td>{mh.hockies?.tenhocky}</td>
-															<td>
-																{
-																	khoas.find(
-																		(i) =>
-																			i.mskhoa ===
-																			mh.monhoc?.mskhoa
-																	)?.tenkhoa
-																}
-															</td>
-															<td>
-																<button
-																	className='btn btn-primary btn-sm trash'
-																	type='button'
-																	title='Xóa'
-																	onClick={() =>
-																		handleRemoveMHTC(mh)
-																	}
-																>
-																	<i className='fas fa-trash-alt' />
-																</button>
-															</td>
+															<td>{item.msmh}</td>
+															<td>{item.tenmh}</td>
+															<td>{item.mslophoc}</td>
+															<td>{item.mshocky}</td>
+															<td>{item.siso}</td>
+															<td>{item.thu}</td>
+															<td>{item.tietbd}</td>
+															<td>{item.sotiet}</td>
+															<td>{item.phong}</td>
+															<td>{item.tengiangvien}</td>
+															<td>{`${item.ngaybd} - ${item.ngaykt}`}</td>
 														</tr>
 													</tbody>
 												)
@@ -243,44 +205,22 @@ function Monhoctochuc() {
 									{!hocky.mshocky &&
 										khoa.mskhoa &&
 										monhoctochucs
-											.filter(
-												(i) => i.monhoc?.mskhoa === khoa.mskhoa
-											)
-											.map((mh) => {
+											.filter((i) => i.mskhoa === khoa.mskhoa)
+											.map((item, index) => {
 												return (
-													<tbody key={mh.id}>
+													<tbody key={index}>
 														<tr>
-															<td width={10}>
-																<input
-																	type='checkbox'
-																	name='check1'
-																	defaultValue={1}
-																/>
-															</td>
-															<td>{mh.msmh}</td>
-															<td>{mh.monhoc?.tenmh}</td>
-															<td>{mh.hockies?.tenhocky}</td>
-															<td>
-																{
-																	khoas.find(
-																		(i) =>
-																			i.mskhoa ===
-																			mh.monhoc?.mskhoa
-																	)?.tenkhoa
-																}
-															</td>
-															<td>
-																<button
-																	className='btn btn-primary btn-sm trash'
-																	type='button'
-																	title='Xóa'
-																	onClick={() =>
-																		handleRemoveMHTC(mh)
-																	}
-																>
-																	<i className='fas fa-trash-alt' />
-																</button>
-															</td>
+															<td>{item.msmh}</td>
+															<td>{item.tenmh}</td>
+															<td>{item.mslophoc}</td>
+															<td>{item.mshocky}</td>
+															<td>{item.siso}</td>
+															<td>{item.thu}</td>
+															<td>{item.tietbd}</td>
+															<td>{item.sotiet}</td>
+															<td>{item.phong}</td>
+															<td>{item.tengiangvien}</td>
+															<td>{`${item.ngaybd} - ${item.ngaykt}`}</td>
 														</tr>
 													</tbody>
 												)
@@ -290,44 +230,22 @@ function Monhoctochuc() {
 										khoa.mskhoa &&
 										monhoctochucs
 											.filter((i) => i.mshocky === hocky.mshocky)
-											.filter(
-												(i) => i.monhoc?.mskhoa === khoa.mskhoa
-											)
+											.filter((i) => i.mskhoa === khoa.mskhoa)
 											.map((item, index) => {
 												return (
 													<tbody key={index}>
 														<tr>
-															<td width={10}>
-																<input
-																	type='checkbox'
-																	name='check1'
-																	defaultValue={1}
-																/>
-															</td>
 															<td>{item.msmh}</td>
-															<td>{item.monhoc?.tenmh}</td>
-															<td>{item.hockies?.tenhocky}</td>
-															<td>
-																{
-																	khoas.find(
-																		(i) =>
-																			i.mskhoa ===
-																			item.monhoc?.mskhoa
-																	)?.tenkhoa
-																}
-															</td>
-															<td>
-																<button
-																	className='btn btn-primary btn-sm trash'
-																	type='button'
-																	title='Xóa'
-																	onClick={() =>
-																		handleRemoveMHTC(item)
-																	}
-																>
-																	<i className='fas fa-trash-alt' />
-																</button>
-															</td>
+															<td>{item.tenmh}</td>
+															<td>{item.mslophoc}</td>
+															<td>{item.mshocky}</td>
+															<td>{item.siso}</td>
+															<td>{item.thu}</td>
+															<td>{item.tietbd}</td>
+															<td>{item.sotiet}</td>
+															<td>{item.phong}</td>
+															<td>{item.tengiangvien}</td>
+															<td>{`${item.ngaybd} - ${item.ngaykt}`}</td>
 														</tr>
 													</tbody>
 												)

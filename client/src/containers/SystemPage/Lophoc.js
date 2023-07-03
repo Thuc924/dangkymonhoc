@@ -12,16 +12,15 @@ function Lophoc() {
 	const dispatch = useDispatch()
 	const { isLoggedInAdmin } = useSelector((state) => state.auth)
 
-	const { lophocs } = useSelector((state) => state.lophoc)
+	const { lophocs, token } = useSelector((state) => state.lophoc)
 	const [danhsachLophoc, setDanhsachLophoc] = useState([])
 
-	const [mslophoc, setMSLH] = useState("")
-
+	const [tenlophoc, setTenLopHoc] = useState("")
 	useEffect(() => {
 		!isLoggedInAdmin && navigate(linkRoute.LOGIN_AD)
 		dispatch(actions.getListLophoc())
 		handleMHNV()
-	}, [isLoggedInAdmin, lophocs.length])
+	}, [isLoggedInAdmin, lophocs.length, token])
 	const handleMHNV = () => {
 		let data = []
 		for (let i = 0; i < lophocs.length; i++) {
@@ -29,23 +28,21 @@ function Lophoc() {
 				if (lophocs[i].mslophoc == lophocs[j].mslophoc) {
 					let data1 = lophocs.slice(i, j)
 					let data2 = lophocs.slice(j + 1, lophocs.length)
-
 					data = data1.concat(data2)
 				}
 			}
 		}
-		console.log(data)
-		setTimeout(() => {
-			setDanhsachLophoc(data)
-		}, 1000)
+		setDanhsachLophoc(data)
 	}
-	const handleLapLop = () => {
-		const length = lophocs.filter((i) => i.mslophoc === mslophoc).length
-		if (length < 3) toast.error("Không đủ sinh viên để lập lớp...!")
-		else {
-		}
+	const a = (arr, key) => {
+		const init = []
+		return arr.reduce((obj, item) => {
+			return {
+				...obj,
+				[item[key]]: [item["mslophoc"]],
+			}
+		}, init)
 	}
-	// console.log(lophocs.map((i) => i).length)
 	return (
 		<div className='app sidebar-mini rtl'>
 			<main className='app-content'>
@@ -65,34 +62,50 @@ function Lophoc() {
 							<div className='tile-body'>
 								<div className='flex'>
 									<div className='form-group col-md-3'>
-										<select
-											className='form-control'
-											id='mskhoa'
-											onChange={(e) => setMSLH(e.target.value)}
-											required
-										>
-											<option value={""}>-- Chọn lớp học --</option>
-											{danhsachLophoc.map((item, index) => {
-												return (
-													<option
-														key={index}
-														value={item.mslophoc}
-													>
-														({item.mslophoc}) - {item.tenlophoc}
-													</option>
-												)
-											})}
-										</select>
+										{lophocs.length > 0 ? (
+											<select
+												className='form-control'
+												id='mskhoa'
+												onChange={(e) =>
+													setTenLopHoc(e.target.value)
+												}
+												required
+											>
+												<option value={""}>
+													-- Chọn lớp học --
+												</option>
+												{Object.keys(a(lophocs, "tenlophoc")).map(
+													(item, index) => {
+														return (
+															<option key={index} value={item}>
+																{item}
+															</option>
+														)
+													}
+												)}
+											</select>
+										) : (
+											<select
+												className='form-control'
+												id='mskhoa'
+												required
+												disabled
+											>
+												<option value={""}>
+													-- Chọn lớp học --
+												</option>
+											</select>
+										)}
 									</div>
 								</div>
 								<div className='italic p-2 text-[16px] flex justify-between items-center'>
-									{mslophoc && (
+									{tenlophoc && (
 										<span>
 											Tổng số sinh viên của lớp{" "}
-											<span className='font-bold'>{mslophoc}</span>:{" "}
+											<span className='font-bold'>{tenlophoc}</span>:{" "}
 											{
 												lophocs.filter(
-													(i) => i.mslophoc === mslophoc
+													(i) => i.tenlophoc === tenlophoc
 												).length
 											}
 										</span>
@@ -114,9 +127,9 @@ function Lophoc() {
 										</tr>
 									</thead>
 
-									{!mslophoc
+									{!tenlophoc
 										? lophocs
-												.sort(compareValues("mssv", "desc"))
+												// .sort(compareValues("tenlophoc", "desc"))
 												.map((item, index) => {
 													return (
 														<tbody key={index}>
@@ -130,8 +143,8 @@ function Lophoc() {
 													)
 												})
 										: lophocs
-												.filter((i) => i.mslophoc === mslophoc)
-												.sort(compareValues("mssv", "desc"))
+												.filter((i) => i.tenlophoc === tenlophoc)
+												// .sort(compareValues("tenlophoc", "desc"))
 												.map((item, index) => {
 													return (
 														<tbody key={index}>

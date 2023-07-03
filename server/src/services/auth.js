@@ -42,8 +42,7 @@ export const loginSinhvien = ({ mssv, matkhau }) =>
 				where: { mssv },
 				raw: true,
 			})
-			const isCorrectPassword =
-				response && bcrypt.compareSync(matkhau, response.matkhau)
+			const isCorrectPassword = response && matkhau === response.matkhau
 
 			const token =
 				isCorrectPassword &&
@@ -114,7 +113,7 @@ export const resetPass = ({ email, newPass }) =>
 				await db.Sinhvien.update(
 					{
 						...response,
-						matkhau: hashPassword(newPass),
+						matkhau: newPass,
 					},
 					{ where: { email } }
 				)

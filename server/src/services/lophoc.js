@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 import { v4 } from "uuid"
 require("dotenv").config()
 
-export const createLophoc = ({ mslophoc, tenlophoc, mssv }) =>
+export const createLophoc = ({ mslophoc, tenlophoc, mssv, ngaybd, ngaykt }) =>
 	new Promise(async (resolve, reject) => {
 		try {
 			const response = await db.Lop.create({
@@ -11,6 +11,8 @@ export const createLophoc = ({ mslophoc, tenlophoc, mssv }) =>
 				mslophoc,
 				tenlophoc,
 				mssv,
+				ngaybd,
+				ngaykt,
 			})
 			// resolve(response)
 			const token =

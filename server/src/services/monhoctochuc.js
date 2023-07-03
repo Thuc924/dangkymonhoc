@@ -3,22 +3,47 @@ import jwt from "jsonwebtoken"
 import { v4 } from "uuid"
 require("dotenv").config()
 
-export const addMHTC = ({ msmh, mshocky }) =>
+export const addMHTC = ({
+	msmh,
+	tenmh,
+	mslophoc,
+	mshocky,
+	mskhoa,
+	siso,
+	phanTramQT,
+	phanTramGK,
+	thu,
+	tietbd,
+	sotiet,
+	phong,
+	tengiangvien,
+	ngaybd,
+	ngaykt,
+}) =>
 	new Promise(async (resolve, reject) => {
 		try {
-			const response = await db.Monhoctochuc.findOrCreate({
-				where: { msmh },
-				defaults: {
-					id: v4(),
-					msmh,
-					mshocky,
-				},
+			const response = await db.Monhoctochuc.create({
+				id: v4(),
+				msmh: msmh,
+				tenmh,
+				mslophoc,
+				mshocky,
+				mskhoa,
+				siso,
+				phanTramQT,
+				phanTramGK,
+				thu,
+				tietbd,
+				sotiet,
+				phong,
+				tengiangvien,
+				ngaybd,
+				ngaykt,
 			})
-			resolve(response)
 			const token =
 				response[1] &&
 				jwt.sign(
-					{ msmh: response[0].msmh, mshocky: response[0].mshocky },
+					{ msmh: response[0].msmh, mslophoc: response[0].mslophoc },
 					process.env.SECRET_KEY,
 					{
 						expiresIn: "2d",
@@ -26,7 +51,7 @@ export const addMHTC = ({ msmh, mshocky }) =>
 				)
 			resolve({
 				err: token ? 0 : 2,
-				msg: token ? "Add is successfully !" : "MSMH has been aldready !",
+				msg: token ? "Add is successfully !" : "Thu has been aldready !",
 				token: token || null,
 			})
 		} catch (error) {
@@ -37,24 +62,18 @@ export const getAll = () =>
 	new Promise(async (resolve, reject) => {
 		try {
 			const response = await db.Monhoctochuc.findAll({
-				nest: true,
 				raw: true,
+				nest: true,
 				include: [
 					{
 						model: db.Monhoc,
-						as: "monhoc",
-						attributes: [
-							"tenmh",
-							"mskhoa",
-							"sotinchi",
-							"mota",
-							"songhanh",
-						],
+						as: "monhocTC",
+						attributes: ["sotinchi"],
 					},
 					{
-						model: db.Hocky,
-						as: "hockies",
-						attributes: ["tenhocky"],
+						model: db.Khoa,
+						as: "Khoa",
+						attributes: ["tenkhoa"],
 					},
 				],
 			})

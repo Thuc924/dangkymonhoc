@@ -25,12 +25,12 @@ export const apiGetAllNguyenVong = () =>
 			reject(error)
 		}
 	})
-export const apiDeleteMonHocInDSDKMH = (msmh) =>
+export const apiDeleteMonHocInDSMHNV = (mssv) =>
 	new Promise(async (resolve, reject) => {
 		try {
 			const response = await axiosConfig({
 				method: "delete",
-				url: `/dangkymonhocs/remove?msmh=${msmh}`,
+				url: `/dangkynguyenvong/remove?mssv=${mssv}`,
 			})
 			resolve(response)
 		} catch (error) {

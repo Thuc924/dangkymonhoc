@@ -1,14 +1,7 @@
 import * as dangkymonhocService from "../services/dangkymonhoc"
 
 export const add = async (req, res) => {
-	const { mssv, msmh, hocphi } = req.body
 	try {
-		if (!mssv || !msmh || !hocphi) {
-			return res.status(400).json({
-				err: 1,
-				msg: "Missing input...!",
-			})
-		}
 		const response = await dangkymonhocService.addMonhocInDSDKMH(req.body)
 		return res.status(200).json(response)
 	} catch (error) {
@@ -51,7 +44,9 @@ export const deleteMonhocInDSDKMH = async (req, res) => {
 	try {
 		const { msmh } = req.query
 		if (msmh) {
-			const response = await dangkymonhocService.DeleteMonhocInDSDKMH(msmh)
+			const response = await dangkymonhocService.DeleteMonhocInDSDKMH(
+				req.query
+			)
 			return res.status(200).json(response)
 		}
 	} catch (error) {

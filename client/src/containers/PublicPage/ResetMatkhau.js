@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { ResetPassWord } from "../../store/actions/auth"
+import { Button } from "../../components"
 
 function ResetMatkhau() {
 	const navigate = useNavigate()
@@ -13,7 +14,7 @@ function ResetMatkhau() {
 
 	const [params] = useSearchParams()
 	const [email, setEmail] = useState({ email: params.get("email") })
-	console.log(email.email.slice(0))
+	console.log(email.email?.slice(0))
 	const handleSubmitChangePassword = () => {
 		if (!newPass || !confirmPass)
 			toast.error("Vui lòng nhập đầy đủ  thông tin...!")
@@ -24,7 +25,7 @@ function ResetMatkhau() {
 				toast.error("Mật khẩu không khớp...!")
 			else {
 				if (
-					dispatch(actions.ResetPassWord(email.email.slice(0), newPass))
+					dispatch(actions.ResetPassWord(email.email?.slice(0), newPass))
 				) {
 					toast.success("Thay đổi mật khẩu thành công...!")
 					setTimeout(() => {
@@ -35,9 +36,19 @@ function ResetMatkhau() {
 		}
 	}
 	return (
-		<main className='bg-[#80BFCD] h-[720px] flex justify-center items-center'>
-			<div className='w-[300px] h-[300px] bg-[#FFF] border-[#ccc] boder-solid border-[1px] rounded-xl p-3'>
-				<h4 className='text-center uppercase text-[#ecd756]'>
+		<main className='h-[755px] flex justify-center items-center'>
+			<div className='w-full h-full'>
+				<img
+					className='w-full h-full'
+					src={require("../../assets/images/dai-hoc-cong-nghe-sai-gon-1.webp")}
+				/>
+			</div>
+			<div className='fixed w-[400px] min-h-[300px] bg-[#FFF] border-[#ccc] boder-solid border-[1px] rounded-xl p-4'>
+				<img
+					className='w-[80px] h-[80px] flex m-auto'
+					src={require("../../assets/images/Logo_STU.png")}
+				/>
+				<h4 className='text-center uppercase text-[32px] p-2'>
 					Reset Password
 				</h4>
 				<div className='flex- flex-col'>
@@ -68,12 +79,14 @@ function ResetMatkhau() {
 						}
 					/>
 				</div>
-				<button
-					className='w-full border-[1px] border-solid p-2 mt-[8px] bg-[#ecd756] text-[#5a53bc] rounded-sm'
+				<Button
+					label={"Reset Password"}
+					m={"mt-[8px]"}
+					bg={"bg-gradient-to-r from-sky-500 to-indigo-500"}
 					onClick={handleSubmitChangePassword}
-				>
-					Reset Password
-				</button>
+					width={"w-full"}
+					rounded={"rounded-sm"}
+				/>
 			</div>
 		</main>
 	)

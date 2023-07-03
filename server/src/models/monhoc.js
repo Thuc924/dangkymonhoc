@@ -14,13 +14,17 @@ module.exports = (sequelize, DataTypes) => {
 				targetKey: "mskhoa",
 				as: "khoaMH",
 			})
-			Monhoc.hasOne(models.Monhoctochuc, {
-				foreignKey: { name: "msmh", unique: false },
-				as: "monhoc",
-			})
+			// Monhoc.hasOne(models.Monhoctochuc, {
+			// 	foreignKey: { name: "msmh", unique: false },
+			// 	as: "monhoc",
+			// })
 			Monhoc.hasMany(models.PhieuDKMH, {
 				foreignKey: "msmh",
 				as: "monhocDK",
+			})
+			Monhoc.hasMany(models.Monhoctochuc, {
+				foreignKey: "msmh",
+				as: "monhocTC",
 			})
 		}
 	}

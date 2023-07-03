@@ -77,7 +77,6 @@ function Lop() {
 												<input type='checkbox' id='all' />
 											</th>
 											<th width={150}>Mã số lớp</th>
-											<th width={150}>Tên lớp</th>
 											<th width={150}>Khoa</th>
 											<th width={100}>Tính năng</th>
 										</tr>
@@ -96,7 +95,6 @@ function Lop() {
 															/>
 														</td>
 														<td>{lop.mslop}</td>
-														<td>{lop.tenlop}</td>
 														<td>{lop.khoa?.tenkhoa}</td>
 														<td>
 															<button

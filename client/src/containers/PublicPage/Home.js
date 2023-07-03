@@ -1,28 +1,34 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
 import { Gioithieu } from "../../components"
 import { linkRoute } from "../../ultils/Common/constant"
-import { languageContext } from "../layouts/DefaultLayout"
 import { Thongbao } from "../PublicPage"
 import * as actions from "../../store/actions"
 
 function Home() {
-	const language = useContext(languageContext)
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
+
 	useEffect(() => {
 		dispatch(actions.getListMonhoctochuc())
 		dispatch(actions.getListMonhoc())
 		dispatch(actions.getAllDSNguyenVong())
-		!isLoggedInSinhvien && navigate(linkRoute.HOME_SV)
+		// isLoggedInSinhvien &&
+		// 	setTimeout(() => {
+		// 		dispatch(actions.getSinhvienByMSSV())
+		// 	}, 100)
+		dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
+
+		!isLoggedInSinhvien && navigate(linkRoute.LOGIN_SV)
 	}, [isLoggedInSinhvien])
+
 	return (
-		<div className='min-h-[550px]'>
-			<div>
-				<div className='rounded h-[30px] bg-[#2D8ECE] flex items-center'>
+		<main className='min-h-[550px]'>
+			{/* <div>
+				<div className='bg-gradient-to-r from-sky-500 to-indigo-500 rounded h-[30px] bg-[#2D8ECE] flex items-center'>
 					{language === "VI" ? (
 						<span className='p-2 uppercase text-white font-bold text-[12px]'>
 							Thông báo
@@ -37,8 +43,18 @@ function Home() {
 					<Gioithieu />
 					<Thongbao />
 				</div>
+			</div> */}
+			<div>
+				<img
+					className='w-full min-h-[350px] rounded-sm cover'
+					src={require("../../assets/images/banner.jpeg")}
+				/>
 			</div>
-		</div>
+			<div>
+				<h2>Liên hệ</h2>
+				<div></div>
+			</div>
+		</main>
 	)
 }
 

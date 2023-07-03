@@ -18,6 +18,12 @@ module.exports = {
 			tenlophoc: {
 				type: Sequelize.STRING,
 			},
+			ngaybd: {
+				type: Sequelize.STRING,
+			},
+			ngaykt: {
+				type: Sequelize.STRING,
+			},
 			createdAt: {
 				allowNull: false,
 				type: Sequelize.DATE,

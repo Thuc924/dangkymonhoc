@@ -558,12 +558,7 @@ input[type="button"] {
 	width: 50px;
 	height: 50px;
 }
-.avatar-sinhvien {
-	width: 40px;
-	height: 40px;
-	border-radius: 50%;
-	cursor: pointer;
-}
+
 .sinhvien {
 	position: relative;
 }
@@ -592,7 +587,7 @@ input[type="button"] {
 	position: absolute;
 	width: 15px;
 	height: 15px;
-	bottom: 44%;
+	bottom: 54%;
 	right: 4%;
 	background-color: red;
 	color: white;
@@ -629,6 +624,69 @@ input[type="button"] {
 	bottom: 12px;
 	cursor: pointer;
 }
-.nav-bar a.active {
-	color: #993333;
+.top-page {
+	background-image: var(--background-color);
+}
+
+.sinhvien-draw {
+	display: none;
+	position: absolute;
+	right: 26px;
+	top: 82px;
+	padding: 12px;
+	width: 230px;
+	min-height: 100px;
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 6px;
+	animation: showDraw linear 0.2s;
+	z-index: 1;
+}
+.sinhvien-draw::after {
+	content: "";
+	position: absolute;
+	top: -16px;
+	width: 100%;
+	height: 20px;
+}
+.avatar:hover .sinhvien-draw {
+	display: block;
+}
+@keyframes showDraw {
+	from {
+		right: 0;
+	}
+	to {
+		right: 26px;
+	}
+}
+.hand-down {
+	padding: 0 10px;
+	color: black;
+	font-size: 22px;
+	position: relative;
+	top: 0;
+	animation-name: handDownAni;
+	animation-duration: 0.7s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+}
+@keyframes handDownAni {
+	from {
+		top: -3px;
+	}
+	to {
+		top: 3px;
+	}
+}
+.bg-web {
+	position: relative;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: url("../images/dai-hoc-cong-nghe-sai-gon-1.webp");
+	background-repeat: repeat-y;
 }

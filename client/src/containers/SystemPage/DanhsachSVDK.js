@@ -5,41 +5,80 @@ import { linkRoute } from "../../ultils/Common/constant"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import { ModelNhapDiem } from "../../components"
 
 function DanhsachSVDKMH() {
 	const navigate = useNavigate()
 	const dispatch = useDispatch()
 	const { danhsachs } = useSelector((state) => state.dangkymonhoc)
+
 	const { isLoggedInAdmin } = useSelector((state) => state.auth)
+
 	const { khoas } = useSelector((state) => state.khoa)
+
 	const { monhoctochucs } = useSelector((state) => state.monhoctochuc)
+
+	const { dsdiem, token } = useSelector((state) => state.diem)
+
 	const { hockys } = useSelector((state) => state.hocky)
 
+	const { dshocphi } = useSelector((state) => state.hocphi)
+
+	const { lops } = useSelector((state) => state.lop)
+
+	const [showModel, setShowModel] = useState(false)
+
 	const [dsmhBykhoa, setDSMHByKhoa] = useState([])
+
 	const [hocky, setHocky] = useState({ mshocky: "" })
+
 	const [khoa, setKhoa] = useState({ mskhoa: "" })
+
 	const [mhByHK, setMHByHK] = useState([])
+
 	const [monhoc, setMonhoc] = useState("")
 
+	const [lophoc, setLophoc] = useState("")
+
+	const [listMonhoc, setListMH] = useState()
+
+	const [diemMh, setDiemMH] = useState()
+
 	useEffect(() => {
-		dispatch(actions.getAllDSMH())
+		dispatch(actions.getAllDSMHDK())
 		dispatch(actions.getListKhoa())
 		dispatch(actions.getListMonhoctochuc())
 		dispatch(actions.getListHocky())
+		dispatch(actions.getListLop())
+		dispatch(actions.getListHocPhi())
+		dispatch(actions.getAllDSDiem())
+		// get()
 		!isLoggedInAdmin && navigate(linkRoute.LOGIN_AD)
-	}, [isLoggedInAdmin])
+	}, [isLoggedInAdmin, danhsachs.length, token])
+
+	const list = dsmhBykhoa?.reduce((acc, item) => {
+		const currentItem = acc?.find((ac) => ac.msmh === item.msmh)
+		if (!currentItem) acc.push(item)
+		return acc
+	}, [])
 
 	const handleChangeHocKy = (e) => {
 		const list = monhoctochucs.filter((i) => i.mshocky == e.target.value)
 		setMHByHK(list)
 		setHocky({ mshocky: e.target.value })
 	}
+
 	const handleChangeKhoa = (e) => {
-		const list = mhByHK.filter((i) => i.monhoc?.mskhoa == e.target.value)
+		const list = mhByHK.filter((i) => i.mskhoa == e.target.value)
 		setDSMHByKhoa(list)
 		setKhoa({ mskhoa: e.target.value })
 	}
 
+	const handleCloseModel = (e) => {
+		if (e.keyCode === 27) setShowModel(false)
+	}
+	console.log(!dshocphi.find((i) => i.mssv === "DH52300123"))
 	return (
 		<div className='app sidebar-mini rtl'>
 			<main className='app-content'>
@@ -135,15 +174,52 @@ function DanhsachSVDKMH() {
 												<option value={""}>
 													-- Chọn môn học --
 												</option>
-												{dsmhBykhoa &&
-													dsmhBykhoa.length > 0 &&
-													dsmhBykhoa.map((item, index) => {
+												{list &&
+													list.length > 0 &&
+													list.map((item, index) => {
 														return (
 															<option
 																key={index}
 																value={item.msmh}
 															>
-																{item.monhoc?.tenmh}
+																{item.tenmh}
+															</option>
+														)
+													})}
+											</select>
+										)}
+									</div>
+									<div className='form-group col-md-3'>
+										{!monhoc ? (
+											<select
+												disabled
+												className='form-control'
+												id='mskhoa'
+												required
+											>
+												<option value={""}>
+													-- Chọn lớp học --
+												</option>
+											</select>
+										) : (
+											<select
+												className='form-control'
+												id='mskhoa'
+												required
+												onChange={(e) => setLophoc(e.target.value)}
+											>
+												<option value={""}>
+													-- Chọn môn học --
+												</option>
+												{lops &&
+													lops.length > 0 &&
+													lops.map((item, index) => {
+														return (
+															<option
+																key={index}
+																value={item.mslop}
+															>
+																{item.mslop}
 															</option>
 														)
 													})}
@@ -151,14 +227,19 @@ function DanhsachSVDKMH() {
 										)}
 									</div>
 								</div>
-								<div className='italic p-2 text-[16px]'>
+								<div className='italic p-2 text-[16px] flex items-center justify-between'>
 									{monhoc && (
 										<span>
 											Tổng số sinh viên đăng ký môn{" "}
-											<span className='font-bold'>{monhoc}</span>:{" "}
+											<span className='font-bold'>{monhoc}</span> của
+											lớp <span className='font-bold'>{lophoc}</span>
+											:{" "}
 											{
-												danhsachs.filter((i) => i.msmh === monhoc)
-													.length
+												danhsachs.filter(
+													(i) =>
+														i.msmh === monhoc &&
+														i.mslophoc === lophoc
+												).length
 											}
 										</span>
 									)}
@@ -177,14 +258,18 @@ function DanhsachSVDKMH() {
 											<th width={150}>Tên sinh viên</th>
 											<th width={150}>Mã số môn học đã đăng ký</th>
 											<th width={150}>Tên môn học đã đăng ký</th>
-											<th width={100}>Học phí</th>
+											<th width={150}>Chức năng</th>
 										</tr>
 									</thead>
-									{monhoc
+									{lophoc
 										? danhsachs &&
 										  danhsachs.length > 0 &&
 										  danhsachs
-												.filter((i) => i.msmh === monhoc)
+												.filter(
+													(i) =>
+														i.msmh === monhoc &&
+														i.mslophoc === lophoc
+												)
 												.sort(compareValues("mssv", "desc"))
 												.map((item, index) => {
 													return (
@@ -195,7 +280,44 @@ function DanhsachSVDKMH() {
 																<td>{item.Sinhvien.tensv}</td>
 																<td>{item.msmh}</td>
 																<td>{item.monhocDK.tenmh}</td>
-																<td>{item.hocphi}</td>
+																<td>
+																	{!dshocphi.find(
+																		(i) =>
+																			i.mssv === item.mssv
+																	) ? (
+																		<button
+																			disabled
+																			className='text-center w-[130px] border-[1px] border-solid border-[#000000d] text-[#0000008a] bg-white rounded-3xl p-2 cursor-pointer'
+																		>
+																			Chưa đóng học phí
+																		</button>
+																	) : dsdiem.find(
+																			(i) =>
+																				i.msmh ===
+																					item.msmh &&
+																				i.mssv === item.mssv
+																	  ) ? (
+																		<button
+																			disabled
+																			className='text-center w-[130px] border-[1px] border-solid border-[#000000d] text-[#0000008a] bg-white rounded-3xl p-2 cursor-pointer'
+																		>
+																			Đã nhập điểm
+																		</button>
+																	) : (
+																		<button
+																			onClick={() => {
+																				setShowModel(true)
+																				setDiemMH(item)
+																			}}
+																			onKeyDown={(e) =>
+																				handleCloseModel(e)
+																			}
+																			className='text-center w-[130px] border-[1px] border-solid border-[#000000d] text-[#0000008a] bg-white rounded-3xl p-2 cursor-pointer hover:border-[#0000008a] hover:text-[#000000ad]'
+																		>
+																			Nhập điểm
+																		</button>
+																	)}
+																</td>
 															</tr>
 														</tbody>
 													)
@@ -213,7 +335,44 @@ function DanhsachSVDKMH() {
 																<td>{item.Sinhvien.tensv}</td>
 																<td>{item.msmh}</td>
 																<td>{item.monhocDK.tenmh}</td>
-																<td>{item.hocphi}</td>
+																<td className='text-center'>
+																	{!dshocphi.find(
+																		(i) =>
+																			i.mssv === item.mssv
+																	) ? (
+																		<button
+																			disabled
+																			className='text-center w-[130px] border-[1px] border-solid border-[#000000d] text-[#0000008a] bg-white rounded-3xl p-2 cursor-pointer'
+																		>
+																			Chưa đóng học phí
+																		</button>
+																	) : dsdiem.find(
+																			(i) =>
+																				i.msmh ===
+																					item.msmh &&
+																				i.mssv === item.mssv
+																	  ) ? (
+																		<button
+																			disabled
+																			className='text-center w-[130px] border-[1px] border-solid border-[#000000d] text-[#0000008a] bg-white rounded-3xl p-2 cursor-pointer'
+																		>
+																			Đã nhập điểm
+																		</button>
+																	) : (
+																		<button
+																			onClick={() => {
+																				setShowModel(true)
+																				setDiemMH(item)
+																			}}
+																			onKeyDown={(e) =>
+																				handleCloseModel(e)
+																			}
+																			className='text-center w-[130px] border-[1px] border-solid border-[#000000d] text-[#0000008a] bg-white rounded-3xl p-2 cursor-pointer hover:border-[#0000008a] hover:text-[#000000ad]'
+																		>
+																			Nhập điểm
+																		</button>
+																	)}
+																</td>
 															</tr>
 														</tbody>
 													)
@@ -224,7 +383,9 @@ function DanhsachSVDKMH() {
 					</div>
 				</div>
 			</main>
-			{/* {show && <ModalDetailDKMH setShow={setShow} mssv={mssv} sumHocPhi={sumHocPhi} />} */}
+			{showModel && (
+				<ModelNhapDiem monhoc={diemMh} setShowModel={setShowModel} />
+			)}
 		</div>
 	)
 }

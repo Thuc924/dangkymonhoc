@@ -21,7 +21,9 @@ export function compareValues(key, order = "asc") {
 export const sumSTC = (a) => {
 	let kq = 0
 	for (let i = 0; i < a?.length; i++) {
-		kq = kq + (+a[i].sotinchi || +a[i].monhocDK?.sotinchi || 0)
+		// console.log("KQ: ", kq)
+		// console.log("A[i]: ", +a[i]?.monhocTC.sotinchi)
+		kq += +a[i].monhocTC?.sotinchi || +a[i].monhocDK?.sotinchi
 	}
 	return kq
 }

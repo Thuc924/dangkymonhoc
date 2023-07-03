@@ -14,7 +14,6 @@ function DanhSachSVDKNguyenVong() {
 	const { isLoggedInAdmin } = useSelector((state) => state.auth)
 
 	const { danhsachs } = useSelector((state) => state.monhocnguyenvong)
-
 	const [danhsachMHNV, setDanhSachMHNV] = useState([])
 
 	const [msmh, setMSMH] = useState("")
@@ -24,12 +23,9 @@ function DanhSachSVDKNguyenVong() {
 	useEffect(() => {
 		!isLoggedInAdmin && navigate(linkRoute.LOGIN_AD)
 		// dispatch(actions.createLopHoc())
-		setTimeout(() => {
-			dispatch(actions.getAllDSNguyenVong())
-		}, 1000)
+		dispatch(actions.getAllDSNguyenVong())
 		handleMHNV()
 	}, [isLoggedInAdmin])
-	console.log(danhsachs.filter((i) => i.msmh === msmh).length)
 	const handleMHNV = () => {
 		let data = []
 		for (let i = 0; i < danhsachs.length; i++) {
@@ -42,15 +38,13 @@ function DanhSachSVDKNguyenVong() {
 				}
 			}
 		}
-		setTimeout(() => {
-			setDanhSachMHNV(data)
-		}, 1000)
+		setDanhSachMHNV(data)
 	}
 	const handleLapLop = () => {
-		setShowModel(true)
 		const length = danhsachs.filter((i) => i.msmh === msmh).length
-		if (length < 3) toast.error("Không đủ sinh viên để lập lớp...!")
+		if (length < 2) toast.error("Không đủ sinh viên để lập lớp...!")
 		else {
+			setShowModel(true)
 		}
 	}
 	return (
@@ -81,7 +75,7 @@ function DanhSachSVDKNguyenVong() {
 											required
 										>
 											<option value={""}>-- Chọn môn học --</option>
-											{danhsachMHNV.map((item, index) => {
+											{danhsachs.map((item, index) => {
 												return (
 													<option key={index} value={item.msmh}>
 														({item.msmh}) - {item.monhocDK?.tenmh}
@@ -125,6 +119,7 @@ function DanhSachSVDKNguyenVong() {
 											<th width={10}>STT</th>
 											<th width={100}>Mã số sinh viên</th>
 											<th width={150}>Tên sinh viên</th>
+											<th width={100}>Mã lớp</th>
 											<th width={150}>Mã số môn học đã đăng ký</th>
 											<th width={150}>Tên môn học đã đăng ký</th>
 											<th width={100}>Học phí</th>
@@ -144,6 +139,7 @@ function DanhSachSVDKNguyenVong() {
 																	{item.mssv}
 																</td>
 																<td>{item.Sinhvien.tensv}</td>
+																<td>{item.Sinhvien.mslop}</td>
 																<td className='italic'>
 																	{item.msmh}
 																</td>
@@ -166,6 +162,7 @@ function DanhSachSVDKNguyenVong() {
 																<td width={10}>{index + 1}</td>
 																<td>{item.mssv}</td>
 																<td>{item.Sinhvien.tensv}</td>
+																<td>{item.Sinhvien.mslop}</td>
 																<td>{item.msmh}</td>
 																<td>{item.monhocDK.tenmh}</td>
 																<td>{item.hocphi}</td>
@@ -182,7 +179,7 @@ function DanhSachSVDKNguyenVong() {
 			{showModel && (
 				<ModelLophoc
 					setShowModel={setShowModel}
-					danhsach={danhsachs.filter((i) => i.msmh === msmh)}
+					danhsachnv={danhsachs.filter((i) => i.msmh === msmh)}
 				/>
 			)}
 			{/* {show && <ModalDetailDKMH setShow={setShow} mssv={mssv} sumHocPhi={sumHocPhi} />} */}

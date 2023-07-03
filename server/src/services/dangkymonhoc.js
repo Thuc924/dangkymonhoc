@@ -3,20 +3,52 @@ import { v4 } from "uuid"
 import jwt from "jsonwebtoken"
 require("dotenv").config()
 
-export const addMonhocInDSDKMH = ({ msmh, mssv, hocphi }) =>
+export const addMonhocInDSDKMH = ({
+	msmh,
+	tenmh,
+	mslophoc,
+	siso,
+	phanTramQT,
+	phanTramGK,
+	thu,
+	tietbd,
+	sotiet,
+	phong,
+	tengiangvien,
+	ngaybd,
+	ngaykt,
+	mssv,
+	hocphi,
+}) =>
 	new Promise(async (resolve, reject) => {
 		try {
 			const response = await db.PhieuDKMH.create({
 				id: v4(),
 				msmh,
+				tenmh,
+				mslophoc,
+				siso,
+				phanTramQT,
+				phanTramGK,
+				thu,
+				tietbd,
+				sotiet,
+				phong,
+				tengiangvien,
+				ngaybd,
+				ngaykt,
 				mssv,
 				hocphi,
 			})
 			const token =
 				response &&
-				jwt.sign({ msmh: response.msmh }, process.env.SECRET_KEY, {
-					expiresIn: "2d",
-				})
+				jwt.sign(
+					{ msmh: response.msmh, mslophoc: response.mslophoc },
+					process.env.SECRET_KEY,
+					{
+						expiresIn: "2d",
+					}
+				)
 			resolve({
 				err: token ? 0 : 2,
 				msg: token ? "ADD is successfully !" : "MSMH is exist!",
@@ -84,17 +116,23 @@ export const getAllSV = ({ mssv }) =>
 			reject(error)
 		}
 	})
-export const DeleteMonhocInDSDKMH = (msmh) =>
+export const DeleteMonhocInDSDKMH = ({ msmh }) =>
 	new Promise(async (resolve, reject) => {
 		try {
 			const mh = await db.PhieuDKMH.findOne({
 				where: { msmh },
 			})
 			if (mh) {
-				await mh.destroy()
+				const rp = await mh.destroy()
+				const token =
+					rp &&
+					jwt.sign({ msmh: mh.msmh }, process.env.SECRET_KEY, {
+						expiresIn: "2d",
+					})
 				resolve({
 					err: 0,
 					msg: "Delete success...!",
+					token: token || null,
 				})
 			} else {
 				resolve({

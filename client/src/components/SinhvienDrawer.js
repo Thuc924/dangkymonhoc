@@ -1,3 +1,7 @@
+import { linkRoute } from "../ultils/Common/constant"
+import "../assets/css/main.css"
+import * as actions from "../store/actions"
+
 import {
 	faCartShopping,
 	faGear,
@@ -7,10 +11,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useDispatch } from "react-redux"
 import { NavLink } from "react-router-dom"
-import { logoutSinhvien } from "../store/actions"
-import { linkRoute } from "../ultils/Common/constant"
-
-import "../assets/css/main.css"
 
 function SinhvienDrawer({
 	danhsachsvdk,
@@ -37,45 +37,31 @@ function SinhvienDrawer({
 			/>
 			<div className='info-sinhvien text-[12px] z-10'>
 				<ul>
-					<li className='hover:font-bold cursor-pointer my-2'>
+					<li className='draw-sv-item hover:underline cursor-pointer my-2 text-[#355170]'>
 						<NavLink
 							style={({ isActive, isPending }) => {
 								return {
 									fontWeight: isActive ? "bold" : "",
-									color: isPending ? "red" : "black",
+									color: isActive ? "#2d8ece" : "",
 								}
 							}}
-							className='text-[12px]'
+							className='text-[12px] text-[#355170] hover:text-[#2d8ece]'
 							to={linkRoute.THONGTIN_SV}
 						>
 							<FontAwesomeIcon className='px-2' icon={faUser} />
 							{labelThongtintaikhoan || labelInfoAccount}
 						</NavLink>
 					</li>
-					<li className='hover:font-bold cursor-pointer my-2'>
+
+					<li className='draw-sv-item cursor-pointer my-2 text-[#355170] hover:underline'>
 						<NavLink
 							style={({ isActive, isPending }) => {
 								return {
 									fontWeight: isActive ? "bold" : "",
-									color: isPending ? "red" : "black",
+									color: isActive ? "#2d8ece" : "",
 								}
 							}}
-							className='text-[12px]'
-							to={linkRoute.CAPNHAT_SV}
-						>
-							<FontAwesomeIcon className='px-2' icon={faGear} />
-							{labelCapnhattaikhoan || labelUpdateAccount}
-						</NavLink>
-					</li>
-					<li className='hover:font-bold cursor-pointer my-2'>
-						<NavLink
-							style={({ isActive, isPending }) => {
-								return {
-									fontWeight: isActive ? "bold" : "",
-									color: isPending ? "red" : "black",
-								}
-							}}
-							className='text-[12px]'
+							className='text-[12px] text-[#355170] hover:text-[#2d8ece]'
 							to={linkRoute.CARTSAVED_SV}
 						>
 							<FontAwesomeIcon className='px-2' icon={faCartShopping} />
@@ -83,10 +69,10 @@ function SinhvienDrawer({
 							<span className='number'>{danhsachsvdk?.length}</span>
 						</NavLink>
 					</li>
-					<li className='hover:font-bold cursor-pointer my-2'>
+					<li className='cursor-pointer my-2 text-[#355170]'>
 						<button
-							onClick={() => dispatch(logoutSinhvien())}
-							className='m-0'
+							onClick={() => dispatch(actions.logoutSinhvien())}
+							className='m-0 hover:underline hover:text-[#2d8ece]'
 						>
 							<FontAwesomeIcon
 								className='px-2'

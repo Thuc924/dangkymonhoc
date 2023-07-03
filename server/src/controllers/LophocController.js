@@ -1,14 +1,14 @@
 import * as lophocService from "../services/lophoc"
 
 export const createLop = async (req, res) => {
-	const { mslophoc, tenlophoc, mssv } = req.body
+	const { mslophoc, tenlophoc, mssv, ngaybd, ngaykt } = req.body
 	try {
-		if (!mslophoc || !tenlophoc || !mssv) {
-			return res.status(400).json({
-				err: 1,
-				msg: "Missing input...!",
-			})
-		}
+		// if (!mslophoc || !tenlophoc || !mssv || !ngaybd || ngaykt) {
+		// 	return res.status(400).json({
+		// 		err: 1,
+		// 		msg: "Missing input...!",
+		// 	})
+		// }
 		const response = await lophocService.createLophoc(req.body)
 		return res.status(200).json(response)
 	} catch (error) {

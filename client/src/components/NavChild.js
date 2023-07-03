@@ -7,7 +7,7 @@ function NavChild({ label, to }) {
 		<nav className='nav-bar'>
 			<NavLink
 				to={to}
-				className='mr-4 text-[10px] text-[#355170] hover:text-[#993333] hover:underline'
+				className='mr-4 text-[10px] text-[#355170] hover:text-[#2d8ece] hover:underline'
 			>
 				{label}
 			</NavLink>

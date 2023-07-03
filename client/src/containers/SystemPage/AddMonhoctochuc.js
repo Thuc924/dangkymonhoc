@@ -1,4 +1,3 @@
-import { addMonhoctochuc } from "../../store/actions/monhoctochuc"
 import { compareValues } from "../../ultils/func"
 import { linkRoute } from "../../ultils/Common/constant"
 import * as actions from "../../store/actions"
@@ -7,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
+import { ModelAddMHTC } from "../../components"
+import Sinhvien from "./Sinhvien"
 
 function AddMonhoctochuc() {
 	const dispatch = useDispatch()
@@ -17,47 +18,41 @@ function AddMonhoctochuc() {
 
 	const { khoas } = useSelector((state) => state.khoa)
 
-	const { monhoctochucs } = useSelector((state) => state.monhoctochuc)
-
 	const { isLoggedInAdmin } = useSelector((state) => state.auth)
-
+	const { giangviens } = useSelector((state) => state.giangvien)
+	const { lops } = useSelector((state) => state.lop)
 	const [mhtc, setMHTC] = useState([])
 	const [hocky, setHocky] = useState({ mshocky: "" })
 	const [mhByHK, setMHByHK] = useState([])
 	const [khoa, setKhoa] = useState({
-		tenkhoa: "",
+		mskhoa: "",
 	})
 	useEffect(() => {
 		!isLoggedInAdmin && navigate(linkRoute.LOGIN_AD)
 		dispatch(actions.getListMonhoc())
 		dispatch(actions.getListHocky())
 		dispatch(actions.getListKhoa())
-		dispatch(actions.getListMonhoctochuc())
+		dispatch(actions.getListGiangvien())
+		dispatch(actions.getListLop())
 	}, [isLoggedInAdmin])
-	const handleCreateMHTC = () => {
-		if (mhtc) {
-			mhtc.map((i) => {
-				dispatch(addMonhoctochuc(i))
-			})
-			toast.success("Thêm thành công...!")
-			navigate("/admin/monhoctochucs")
-		}
-	}
-	const handleAddMHTC = (mh) => {
-		const x = monhoctochucs.find((i) => i.msmh === mh.msmh)
-		if (!x) {
-			mhtc.push({ ...mhtc.msmh, msmh: mh.msmh, mshocky: hocky.mshocky })
-		} else toast.error("Đã có môn học trong danh sách...!")
-	}
+	// const handleCreateMHTC = () => {
+	// 	if (mhtc) {
+	// 		mhtc.map((i) => {
+	// 			dispatch(actions.addMonhoctochuc(i))
+	// 		})
+	// 		toast.success("Thêm thành công...!")
+	// 		navigate("/admin/monhoctochucs")
+	// 	}
+	// }
 
-	const handleChangeHocKy = (e) => {
-		const list = monhocs.filter((i) => i.mshocky == e.target.value)
+	const handleChaneKhoa = (e) => {
+		const list = monhocs.filter(
+			(i) => i.mskhoa === e.target.value && i.mshocky === hocky.mshocky
+		)
 		setMHByHK(list)
-		setHocky({ mshocky: e.target.value })
+		setKhoa({ mskhoa: e.target.value })
 	}
-	const handleChangeKhoa = (e) => {
-		setKhoa({ tenkhoa: e.target.value })
-	}
+	const [showModel, setShowModel] = useState(false)
 	return (
 		<div className='app sidebar-mini rtl'>
 			<main className='app-content'>
@@ -81,7 +76,7 @@ function AddMonhoctochuc() {
 											className='form-control'
 											id='mskhoa'
 											required
-											onChange={(e) => handleChangeKhoa(e)}
+											onChange={(e) => handleChaneKhoa(e)}
 										>
 											<option value={""}>-- Chọn khoa --</option>
 											{khoas &&
@@ -90,7 +85,7 @@ function AddMonhoctochuc() {
 													return (
 														<option
 															key={index}
-															value={item.tenkhoa}
+															value={item.mskhoa}
 														>
 															{item.tenkhoa}
 														</option>
@@ -104,18 +99,6 @@ function AddMonhoctochuc() {
 											disabled
 										>
 											<option value={""}>-- Chọn khoa --</option>
-											{khoas &&
-												khoas.length > 0 &&
-												khoas.map((item, index) => {
-													return (
-														<option
-															key={index}
-															value={item.tenkhoa}
-														>
-															{item.tenkhoa}
-														</option>
-													)
-												})}
 										</select>
 									)}
 								</div>
@@ -124,7 +107,9 @@ function AddMonhoctochuc() {
 										className='form-control'
 										id='mshocky'
 										required
-										onChange={(e) => handleChangeHocKy(e)}
+										onChange={(e) =>
+											setHocky({ mshocky: e.target.value })
+										}
 									>
 										<option value={""}>-- Chọn học kỳ --</option>
 										{hockys &&
@@ -148,9 +133,6 @@ function AddMonhoctochuc() {
 							>
 								<thead>
 									<tr>
-										<th width={10}>
-											<input type='checkbox' id='all' />
-										</th>
 										<th width={100}>Mã số môn học</th>
 										<th width={300}>Tên môn học</th>
 										<th width={100}>Số tín chỉ</th>
@@ -158,6 +140,7 @@ function AddMonhoctochuc() {
 										<th width={100}>Số tiết</th>
 										<th width={200}>Khoa</th>
 										<th width={150}>Học kỳ</th>
+										{khoa.mskhoa && <th width={150}>Action</th>}
 									</tr>
 								</thead>
 								{!khoa.tenkhoa &&
@@ -170,25 +153,6 @@ function AddMonhoctochuc() {
 											return (
 												<tbody key={mh.id}>
 													<tr>
-														<td width={10}>
-															{hocky.mshocky !== "" ? (
-																<input
-																	type='checkbox'
-																	name='check1'
-																	defaultValue={1}
-																	onClick={() =>
-																		handleAddMHTC(mh)
-																	}
-																/>
-															) : (
-																<input
-																	type='checkbox'
-																	name='check1'
-																	defaultValue={1}
-																	disabled
-																/>
-															)}
-														</td>
 														<td>{mh.msmh}</td>
 														<td>{mh.tenmh}</td>
 														<td>{mh.sotinchi}</td>
@@ -200,25 +164,40 @@ function AddMonhoctochuc() {
 												</tbody>
 											)
 										})}
-								{mhByHK.length > 0 && khoa.tenkhoa
-									? mhByHK
-											.filter(
-												(i) => i.khoaMH?.tenkhoa === khoa.tenkhoa
+								{mhByHK.length > 0
+									? mhByHK.map((mh) => {
+											return (
+												<tbody key={mh.id}>
+													<tr>
+														<td>{mh.msmh}</td>
+														<td>{mh.tenmh}</td>
+														<td>{mh.sotinchi}</td>
+														<td>{mh.mota}</td>
+														<td>{mh.sotiet}</td>
+														<td>{mh.khoaMH?.tenkhoa}</td>
+														<td>{mh.mshocky}</td>
+														<td>
+															<button
+																onClick={() => {
+																	setMHTC(mh)
+																	setShowModel(true)
+																}}
+																className='mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer'
+															>
+																Add
+															</button>
+														</td>
+													</tr>
+												</tbody>
 											)
+									  })
+									: hocky.mshocky &&
+									  monhocs
+											.filter((i) => i.mshocky === hocky.mshocky)
 											.map((mh) => {
 												return (
 													<tbody key={mh.id}>
 														<tr>
-															<td width={10}>
-																<input
-																	type='checkbox'
-																	name='check1'
-																	defaultValue={1}
-																	onClick={() =>
-																		handleAddMHTC(mh)
-																	}
-																/>
-															</td>
 															<td>{mh.msmh}</td>
 															<td>{mh.tenmh}</td>
 															<td>{mh.sotinchi}</td>
@@ -229,43 +208,18 @@ function AddMonhoctochuc() {
 														</tr>
 													</tbody>
 												)
-											})
-									: mhByHK.map((mh) => {
-											return (
-												<tbody key={mh.id}>
-													<tr>
-														<td width={10}>
-															<input
-																type='checkbox'
-																name='check1'
-																defaultValue={1}
-																onClick={() =>
-																	handleAddMHTC(mh)
-																}
-															/>
-														</td>
-														<td>{mh.msmh}</td>
-														<td>{mh.tenmh}</td>
-														<td>{mh.sotinchi}</td>
-														<td>{mh.mota}</td>
-														<td>{mh.sotiet}</td>
-														<td>{mh.khoaMH?.tenkhoa}</td>
-														<td>{mh.mshocky}</td>
-													</tr>
-												</tbody>
-											)
-									  })}
+											})}
 							</table>
-							<button
+							{/* <button
 								className='btn btn-save'
 								type='button'
 								onClick={handleCreateMHTC}
 							>
 								Lưu lại
 							</button>
-							<button className='btn btn-cancel'>Hủy bỏ</button>
+							<button className='btn btn-cancel'>Hủy bỏ</button> */}
 							<Link
-								className='btn btn-dangerous'
+								className='text-[16px] border-[1px] border-solid p-2 rounded-sm border-black'
 								to={linkRoute.MHTC_ADMIN}
 							>
 								Thoát
@@ -274,6 +228,16 @@ function AddMonhoctochuc() {
 					</div>
 				</div>
 			</main>
+			{showModel && (
+				<ModelAddMHTC
+					mslop={lops}
+					mshocky={hocky.mshocky}
+					setShowModel={setShowModel}
+					monhoc={mhtc}
+					giangviens={giangviens}
+					khoa={khoa.mskhoa}
+				/>
+			)}
 		</div>
 	)
 }

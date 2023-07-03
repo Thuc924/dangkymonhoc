@@ -1,39 +1,27 @@
 import { Footer, Header, Nav } from "../PublicPage"
-import Tippy from "@tippyjs/react"
 import "tippy.js/dist/tippy.css"
-import { createContext, useState } from "react"
-
-export const languageContext = createContext()
+import "../../assets/css/main.css"
 
 function DefaultLayout({ children }) {
-	const [language, setLanguage] = useState("VI")
 	return (
-		<languageContext.Provider value={language}>
-			<div className='m-auto m-0 w-[1050px] bg-white'>
-				<ul className='flex p-2 bg-[#2D8ECE] text-white m-0'>
-					<li
-						className='p-1 cursor-pointer hover:text-[#993333] hover:underline'
-						onClick={() => setLanguage("VI")}
-					>
-						<Tippy content='VI'>
-							<img src={require("../../assets/images/VI.gif")} />
-						</Tippy>
-					</li>
-					<li
-						className='p-1 cursor-pointer hover:text-[#993333] hover:underline'
-						onClick={() => setLanguage("EN")}
-					>
-						<Tippy content='EN'>
-							<img src={require("../../assets/images/US.gif")} />
-						</Tippy>
-					</li>
-				</ul>
-				<Header />
-				<Nav />
-				<article>{children}</article>
-				<Footer />
+		<div className='m-auto m-0 bg-white h-full'>
+			<div className='w-full h-full cover relative bottom-0 top-[106px] right-0 left-0 bg-transparent bg-repeat'>
+				<img
+					className='w-full h-full bg-repeat'
+					src={require("../../assets/images/dai-hoc-cong-nghe-sai-gon-1.webp")}
+				/>
 			</div>
-		</languageContext.Provider>
+			<div className='min-h-[1000px] absolute z-20 top-0 right-0 left-0 bottom-0'>
+				<Header />
+				<div className='w-[1200px] m-auto'>
+					<Nav />
+					<article className='bg-[#dddd] w-[100%] min-h-[742px] '>
+						{children}
+					</article>
+					<Footer />
+				</div>
+			</div>
+		</div>
 	)
 }
 export default DefaultLayout

@@ -46,13 +46,6 @@ export const getLimitSinhvien = (offset) =>
 			const response = await db.Sinhvien.findAndCountAll({
 				raw: true,
 				nest: true,
-				include: [
-					{
-						model: db.Lophoc,
-						as: "lop",
-						attributes: ["tenlop"],
-					},
-				],
 				offset: offset * +process.env.LIMIT || 0,
 				limit: +process.env.LIMIT,
 			})
@@ -91,7 +84,7 @@ export const createSinhvien = ({
 					mslop,
 					tensv,
 					email,
-					matkhau: hashPassword(matkhau),
+					matkhau,
 					diachi,
 					sodienthoai,
 					ngaysinh,
@@ -140,7 +133,7 @@ export const SinhvienUpdate = ({
 						mssv: mssv ? mssv : sv.mssv,
 						tensv: tensv ? tensv : sv.tensv,
 						email: email ? email : sv.email,
-						matkhau: matkhau ? hashPassword(matkhau) : sv.matkhau,
+						matkhau: matkhau ? matkhau : sv.matkhau,
 						diachi: diachi ? diachi : sv.diachi,
 						sodienthoai: sodienthoai ? sodienthoai : sv.sodienthoai,
 						ngaysinh: ngaysinh ? ngaysinh : sv.ngaysinh,
@@ -215,7 +208,7 @@ export const SinhvienEditPass = ({ newPass, mssv }) =>
 				const ss = await db.Sinhvien.update(
 					{
 						...response,
-						matkhau: newPass ? hashPassword(newPass) : response.matkhau,
+						matkhau: newPass ? newPass : response.matkhau,
 					},
 					{ where: { mssv } }
 				)

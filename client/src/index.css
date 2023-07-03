@@ -7,8 +7,21 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+body,
+html {
+	font-size: 62.5%;
+	font-family: "Comforter", cursive;
+	font-family: "PT Serif", serif;
+	font-family: "Raleway", sans-serif;
+}
 :root {
-	--backround-color: #000;
+	--background-color: linear-gradient(
+		to bottom,
+		#00eaff,
+		#4d3589,
+		#badaff,
+		#0025ce
+	);
 	--text-color: #fff;
 }
 p {

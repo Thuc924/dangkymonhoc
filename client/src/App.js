@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css"
 
 function App() {
 	return (
-		<div className='p-0 m-0 h-full bg-black'>
+		<div className='p-0 m-0 h-full bg-gradient-to-r from-sky-500 to-indigo-500'>
 			<Routes>
 				{pathRoutes.map((route, index) => {
 					const Page = route.component

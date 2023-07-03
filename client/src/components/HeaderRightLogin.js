@@ -14,7 +14,7 @@ function HeaderRightLogin({ list, currentSinhvien, labelChaoban, labelHello }) {
 						className='cursor-pointer px-[4px] hover:opacity-80'
 						icon={faCartShopping}
 					></FontAwesomeIcon>
-					<span className='number-info'>{list}</span>
+					<span className='number-info'>{list.length}</span>
 					<CartInfo list={list} />
 				</Link>
 			</div>

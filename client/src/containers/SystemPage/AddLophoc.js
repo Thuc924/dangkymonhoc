@@ -12,7 +12,6 @@ function AddLophoc() {
 	const navigate = useNavigate()
 	const [lop, setLop] = useState({
 		mslop: "",
-		tenlop: "",
 		mskhoa: "",
 	})
 	const { khoas } = useSelector((state) => state.khoa)
@@ -72,15 +71,6 @@ function AddLophoc() {
 										labelInput={"Mã lớp"}
 										name={"mslop"}
 										value={lop.mslop}
-										setValue={setLop}
-									/>
-									<InputForm
-										setInvalidField={setInvalidField}
-										invalidFields={invalidField}
-										type='text'
-										labelInput={"Tên lớp"}
-										name={"tenlop"}
-										value={lop.tenlop}
 										setValue={setLop}
 									/>
 									<div className='form-group col-md-3'>

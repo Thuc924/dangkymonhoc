@@ -4,16 +4,7 @@ export const create = async (req, res) => {
 	const { msmh, tenmh, sotinchi, mskhoa, mota, mshocky, songhanh, sotiet } =
 		req.body
 	try {
-		if (
-			!msmh ||
-			!tenmh ||
-			!sotinchi ||
-			!mskhoa ||
-			!mshocky ||
-			!mota ||
-			!songhanh ||
-			!sotiet
-		) {
+		if (!msmh || !tenmh || !mshocky || !mota || !songhanh || !sotiet) {
 			return res.status(400).json({
 				err: 1,
 				msg: "Missing input...!",

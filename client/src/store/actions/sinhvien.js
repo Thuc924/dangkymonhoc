@@ -85,7 +85,7 @@ export const getSinhvienByMSSV = () => async (dispatch) => {
 			})
 		} else {
 			dispatch({
-				type: actionType.GET_ONE_SINHVIEN,
+				type: actionType.GET_ONE_SINHVIEN_FAIL,
 				msg: response.data.msg,
 				currentData: null,
 			})
@@ -95,9 +95,9 @@ export const getSinhvienByMSSV = () => async (dispatch) => {
 			type: actionType.LOGOUT_SINHVIEN,
 		})
 		dispatch({
-			type: actionType.GET_ONE_SINHVIEN,
+			type: actionType.GET_ONE_SINHVIEN_FAIL,
 			currentData: null,
-			msg: error,
+			msg: "Hết hạn đăng nhập...!",
 		})
 	}
 }

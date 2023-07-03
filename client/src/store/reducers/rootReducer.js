@@ -10,10 +10,13 @@ import { persistReducer } from "redux-persist"
 import lopReducer from "./lopReducer"
 import hockyReducer from "./hockyReducer"
 import monhoctochucReducer from "./monhoctochucReducer"
-import dangKyMonhoc from "./dangkymonhocReducer"
 import adminReducer from "./adminReducer"
 import monhocnguyenvongReducer from "./monhocnguyenvongReducer"
 import lophocReducer from "./lophocReducer"
+import giangvienReducer from "./giangvienReducer"
+import dangKyMonhocReducer from "./dangkymonhocReducer"
+import hocphiReducer from "./hocphiReducer"
+import diemReducer from "./diemReducer"
 
 const commonConfig = {
 	storage,
@@ -41,9 +44,12 @@ const rootReducer = combineReducers({
 	monhoc: monhocReducer,
 	hocky: hockyReducer,
 	monhoctochuc: monhoctochucReducer,
-	dangkymonhoc: dangKyMonhoc,
+	dangkymonhoc: dangKyMonhocReducer,
 	monhocnguyenvong: monhocnguyenvongReducer,
 	lophoc: lophocReducer,
+	giangvien: giangvienReducer,
+	hocphi: hocphiReducer,
+	diem: diemReducer,
 })
 
 export default rootReducer

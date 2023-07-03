@@ -48,7 +48,7 @@ export const getListMonhocByMSSV = (mssv) => async (dispatch) => {
 		})
 	}
 }
-export const getAllDSMH = () => async (dispatch) => {
+export const getAllDSMHDK = () => async (dispatch) => {
 	try {
 		const response = await apiGetAll()
 		if (response?.data.err === 0) {
@@ -76,18 +76,21 @@ export const deleteMonHocInDSDKMH = (msmh) => async (dispatch) => {
 			dispatch({
 				type: actionType.DELETE_SUCCESS,
 				msg: response.data.msg,
+				token: response.data.token,
 			})
 		} else {
 			dispatch({
 				type: actionType.DELETE_FAIL,
 				msg: response.data.msg,
+				token: null,
 			})
 		}
 		// return respone.data
 	} catch (error) {
 		dispatch({
 			type: actionType.DELETE_FAIL,
-			hockys: null,
+			token: null,
+			msg: "",
 		})
 	}
 }

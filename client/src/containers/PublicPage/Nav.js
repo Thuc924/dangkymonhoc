@@ -1,51 +1,69 @@
-import { useContext } from "react"
+import {
+	faBook,
+	faCoins,
+	faFeather,
+	faHome,
+} from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useSelector } from "react-redux"
-import { NavChild } from "../../components"
-import { languageContext } from "../layouts/DefaultLayout"
+import { NavLink } from "react-router-dom"
+import { linkRoute } from "../../ultils/Common/constant"
 
 function Nav() {
-	const language = useContext(languageContext)
-
-	const { isLoggedInSinhvien } = useSelector((state) => state.auth)
 	return (
-		<nav>
-			{language === "VI" ? (
-				<div className='h-full p-2 bg-[#dbdbdb] border-t-8 border-[#fe8606] rounded-t font-bold h-[42px] flex items-center uppercase'>
-					<NavChild label={"TRANG CHỦ"} to='/' />
-					{!isLoggedInSinhvien ? (
-						<>
-							<NavChild label={"GÓP Ý KIẾN"} to='/gopykien' />
-							<NavChild label={"LIÊN HỆ"} to='/contact' />
-						</>
-					) : (
-						<>
-							<NavChild label={"ĐĂNG KÝ MÔN HỌC"} to='/dangkymonhoc' />
-							<NavChild label={"XEM HỌC PHÍ"} to='/hocphi' />
-							<NavChild label={"XEM ĐIỂM"} to='/diem' />
-						</>
-					)}
-				</div>
-			) : (
-				<div className='h-full p-2 bg-[#dbdbdb] border-t-8 border-[#fe8606] rounded-t font-bold h-[42px] flex items-center uppercase'>
-					<NavChild label={"HOME"} to='/' />
-					{!isLoggedInSinhvien ? (
-						<>
-							<NavChild label={"STUDENT COMMENTS"} to='/' />
-							<NavChild label={"ABOUT OUR UNIVERSITY"} to='/gioithieu' />
-						</>
-					) : (
-						<>
-							<NavChild
-								label={"COURSE REGISTRATION"}
-								to='/dangkymonhoc'
-							/>
-							<NavChild label={"SEE LEARNING FEES"} to='/diem' />
-
-							<NavChild label={"TEST SCORE"} to='/hocphi' />
-						</>
-					)}
-				</div>
-			)}
+		<nav className='bg-white sticky top-0 w-full px-[8px] flex justify-between'>
+			<NavLink
+				to={linkRoute.HOME_SV}
+				className='mx-4 text-[Navy] w-[200px] p-[8px] text-center hover:bg-[#e8ebed] rounded-xl flex flex-col my-2 items-center justify-center text-[#404040]'
+				style={({ isActive, isPending }) => {
+					return {
+						backgroundColor: isActive ? "#e8ebed" : "",
+						// color: isActive ? "#1a1a1a" : "",
+					}
+				}}
+			>
+				<FontAwesomeIcon icon={faHome} />
+				<span>Home</span>
+			</NavLink>
+			<NavLink
+				to={linkRoute.DKMH_SV}
+				className='mx-4 text-[Navy] w-[200px] p-[8px] text-center hover:bg-[#e8ebed] rounded-xl flex flex-col my-2 items-center justify-center text-[#404040]'
+				style={({ isActive, isPending }) => {
+					return {
+						backgroundColor: isActive ? "#e8ebed" : "",
+						// color: isActive ? "#1a1a1a" : "",
+					}
+				}}
+			>
+				<FontAwesomeIcon icon={faBook} />
+				<span>Đăng ký môn học</span>
+			</NavLink>
+			<NavLink
+				to={linkRoute.DIEM_SV}
+				className='mx-4 text-[Navy] w-[200px] p-[8px] text-center hover:bg-[#e8ebed] rounded-xl flex flex-col my-2 items-center justify-center text-[#404040]'
+				style={({ isActive, isPending }) => {
+					return {
+						backgroundColor: isActive ? "#e8ebed" : "",
+						// color: isActive ? "#1a1a1a" : "",
+					}
+				}}
+			>
+				<FontAwesomeIcon icon={faFeather} />
+				<span>Điểm</span>
+			</NavLink>
+			<NavLink
+				to={linkRoute.HOCPHI_SV}
+				className='mx-4 text-[Navy] w-[200px] p-[8px] text-center hover:bg-[#e8ebed] rounded-xl flex flex-col my-2 items-center justify-center text-[#404040]'
+				style={({ isActive, isPending }) => {
+					return {
+						backgroundColor: isActive ? "#e8ebed" : "",
+						// color: isActive ? "#1a1a1a" : "",
+					}
+				}}
+			>
+				<FontAwesomeIcon icon={faCoins} />
+				<span>Học phí</span>
+			</NavLink>
 		</nav>
 	)
 }

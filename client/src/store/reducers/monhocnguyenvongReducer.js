@@ -37,6 +37,7 @@ const monhocnguyenvongReducer = (state = initState, action) => {
 			return {
 				...state,
 				msg: action.msg || "",
+				token: action.token || null,
 			}
 		}
 		default:

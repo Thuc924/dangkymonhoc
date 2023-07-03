@@ -67,6 +67,12 @@ const sinhvienReducer = (state = initState, action) => {
 				currentSinhvien: action.currentData || {},
 			}
 		}
+		case actionType.GET_ONE_SINHVIEN_FAIL: {
+			return {
+				...state,
+				msg: action.msg || "",
+			}
+		}
 		case actionType.LOGOUT_SINHVIEN: {
 			return {
 				...state,

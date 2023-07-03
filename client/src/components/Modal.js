@@ -9,8 +9,6 @@ import brcrypt from "bcryptjs"
 
 function Modal({ setShow, sinhvien, monhoc, title }) {
 	const dispatch = useDispatch()
-	console.log(sinhvien.matkhau)
-	console.log(brcrypt.decodeBase64(sinhvien.matkhau, "base64"))
 	const [editSV, setEditSV] = useState({
 		mssv: sinhvien ? sinhvien.mssv : "",
 		tensv: sinhvien ? sinhvien.tensv : "",
@@ -221,7 +219,7 @@ function Modal({ setShow, sinhvien, monhoc, title }) {
 							</select>
 						</div>
 						<div className='form-group col-md-3'>
-							<label className='control-label'>Lớp</label>
+							<label className='control-label'>Khoa</label>
 							<select
 								className='form-control'
 								id='mslop'

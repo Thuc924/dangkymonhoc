@@ -130,12 +130,7 @@ function Sinhvien() {
 														<td>{item.gioitinh}</td>
 														<td>{item.sodienthoai}</td>
 														<td>{item.noisinh}</td>
-														<td>{`${item.mssv.slice(
-															0,
-															1
-														)}${item.mssv.slice(3, 5)}_${
-															item.mslop
-														}`}</td>
+														<td>{item.mslop}</td>
 														<td className='table-td-center'>
 															<button
 																className='btn btn-primary btn-sm trash'

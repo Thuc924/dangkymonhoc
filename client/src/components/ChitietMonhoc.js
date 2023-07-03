@@ -16,9 +16,9 @@ function ChitietMonhoc({ setShowDetail, monhoc, monhocs }) {
 
 	return (
 		<div className='fixed z-[1] pt-[100px] left-0 top-0 w-[100%] h-[100%] bg-[#0006]'>
-			<div className='absolute w-[800px] h-[300px] bg-white left-[50%] right-[50%] translate-x-[-50%] p-[10px] rounded-md'>
+			<div className='absolute w-[800px] h-[300px] bg-gradient-to-r from-sky-500 to-indigo-500 text-white left-[50%] right-[50%] translate-x-[-50%] p-[10px] rounded-md'>
 				<p
-					className='text-right p-2 hover:opacity-80 m-0'
+					className='text-right p-2 hover:opacity-80 m-0 text-white'
 					onClick={() => setShowDetail(false)}
 				>
 					<FontAwesomeIcon className='cursor-pointer p-2' icon={faXmark} />

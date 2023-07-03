@@ -42,7 +42,7 @@ export const getAllDS = () =>
 					{
 						model: db.Sinhvien,
 						as: "Sinhvien",
-						attributes: ["tensv"],
+						attributes: ["tensv", "mslop"],
 					},
 				],
 			})
@@ -57,51 +57,30 @@ export const getAllDS = () =>
 			reject(error)
 		}
 	})
-export const getAllSV = ({ mssv }) =>
+export const DeleteMonhocInDSDKMH = (mssv) =>
 	new Promise(async (resolve, reject) => {
 		try {
-			const response = await db.PhieuDKMH.findAll({
+			const mh = await db.MonHocNguyenVong.findOne({
 				where: { mssv },
-				raw: true,
-				nest: true,
-				include: [
-					{
-						model: db.Monhoc,
-						as: "monhocDK",
-						attributes: ["tenmh", "sotinchi"],
-					},
-					{
-						model: db.Sinhvien,
-						as: "Sinhvien",
-						attributes: ["tensv"],
-					},
-				],
-			})
-			resolve({
-				err: response ? 0 : 1,
-				msg: response ? "Get DSDKMH ok...!" : "Get DSDKMH fail...!",
-				response,
-			})
-		} catch (error) {
-			reject(error)
-		}
-	})
-export const DeleteMonhocInDSDKMH = (msmh) =>
-	new Promise(async (resolve, reject) => {
-		try {
-			const mh = await db.PhieuDKMH.findOne({
-				where: { msmh },
 			})
 			if (mh) {
-				await mh.destroy()
+				const rp = await mh.destroy()
+				const token =
+					rp &&
+					jwt.sign(
+						{ mssv: mh.mssv, msmh: mh.msmh },
+						process.env.SECRET_KEY,
+						{ expiresIn: "2d" }
+					)
 				resolve({
 					err: 0,
 					msg: "Delete success...!",
+					token: token || null,
 				})
 			} else {
 				resolve({
 					err: 2,
-					msg: "MSMH not found...!",
+					msg: "MSSV not found...!",
 				})
 			}
 		} catch (error) {

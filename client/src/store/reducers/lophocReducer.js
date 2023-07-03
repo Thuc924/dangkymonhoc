@@ -17,12 +17,14 @@ const lophocReducer = (state = initState, action) => {
 			return {
 				...state,
 				token: action.data,
+				msg: "",
 			}
 		}
 		case actionType.ADD_FAIL: {
 			return {
 				...state,
 				msg: action.data,
+				token: null,
 			}
 		}
 		// case actionType.DELETE_SUCCESS: {
