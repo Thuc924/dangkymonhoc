@@ -7,7 +7,6 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import { ModelAddMHTC } from "../../components"
-import Sinhvien from "./Sinhvien"
 
 function AddMonhoctochuc() {
 	const dispatch = useDispatch()
@@ -182,9 +181,9 @@ function AddMonhoctochuc() {
 																	setMHTC(mh)
 																	setShowModel(true)
 																}}
-																className='mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer'
+																className='mx-1 text-center border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer'
 															>
-																Add
+																Thêm môn học tổ chức
 															</button>
 														</td>
 													</tr>

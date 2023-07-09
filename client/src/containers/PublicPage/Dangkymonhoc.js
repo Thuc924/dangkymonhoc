@@ -109,7 +109,6 @@ function Dangkymonhoc() {
 		}
 	}
 	const handleAddMHDK = (mh) => {
-		console.log(mh)
 		const exist = dsMHDK.filter((x) => {
 			if (x.mssv === sinhvien?.mssv) {
 				if (mh.thu.split(", ").length > x.thu.split(", ").length) {
@@ -166,6 +165,36 @@ function Dangkymonhoc() {
 			danhsachsvdk?.find((i) => i.msmh === mh?.msmh) ||
 			dsMHDK?.find((i) => i.msmh === mh?.msmh && i.mssv === sinhvien?.mssv)
 		let stc = sumSTC(dsMHDK) + +mh.monhocTC?.sotinchi
+
+		if (monhocSearch) {
+			if (month >= 6 && month <= 8) {
+				if (
+					!!monhocSearch?.find(
+						(i) =>
+							i.mshocky === "HK2" ||
+							i.mshocky === "HK4" ||
+							i.mshocky === "HK6" ||
+							i.mshocky === "HK8"
+					)
+				) {
+					toast.error("Môn học không được tổ chức trong học kỳ này...!")
+					return
+				}
+			} else if (month >= 1 && month <= 3) {
+				if (
+					!!monhocSearch?.find(
+						(i) =>
+							i.mshocky === "HK1" ||
+							i.mshocky === "HK3" ||
+							i.mshocky === "HK5" ||
+							i.mshocky === "HK7"
+					)
+				) {
+					toast.error("Môn học không được tổ chức trong học kỳ này...!")
+					return
+				}
+			}
+		}
 		if (stc > 14) {
 			toast.error("Đã quá số tín chỉ được đăng ký...!")
 		} else if (!!search) {

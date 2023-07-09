@@ -187,6 +187,30 @@ function PhieuDKMH() {
 								</tr>
 							)
 						})}
+					{!danhsachsvdk &&
+						dsMHDK.map((item, index) => {
+							return (
+								<tr key={index} className='hover:bg-[#00000013]'>
+									<td>{index + 1}</td>
+									<td>{item.msmh}</td>
+									<td>{item.tenmh}</td>
+									<td>{item.monhocTC?.sotinchi}</td>
+									<td>{item.monhocTC?.sotinchi * 616000}</td>
+									<td>
+										{danhsachsvdk.find((i) => i.msmh === item.msmh)
+											? "Đã lưu"
+											: "Chưa lưu"}
+									</td>
+									<td>
+										<FontAwesomeIcon
+											className='text-[20px] p-2 cursor-pointer'
+											icon={faTrashCan}
+											onClick={() => handleRemoveDSDKMH(item)}
+										/>
+									</td>
+								</tr>
+							)
+						})}
 					{dsMHDK &&
 						danhsachsvdk &&
 						danhsachsvdk.map((item, index) => {
@@ -208,11 +232,11 @@ function PhieuDKMH() {
 								</tr>
 							)
 						})}
-					{!!dshocphi.find((i) => i.mssv !== sinhvien?.mssv) && (
+					{/* {!!dshocphi.find((i) => i.mssv !== sinhvien?.mssv) && (
 						<tr>
 							<td>Đã đóng học phí</td>
 						</tr>
-					)}
+					)} */}
 					{/* {!!dshocphi.find((i) => i.mssv !== sinhvien?.mssv) &&
 						!danhsachsvdk &&
 						dsMHDK.map((item, index) => {

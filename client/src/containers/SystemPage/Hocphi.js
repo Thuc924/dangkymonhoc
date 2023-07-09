@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { createHocphi, getListHocPhi } from "../../store/actions/hocphi"
+import moment from "moment"
 
 function Hocphi() {
 	const navigate = useNavigate()
@@ -70,8 +71,10 @@ function Hocphi() {
 									<thead>
 										<tr>
 											<th>Mã số sinh viên</th>
+											<th>Tên sinh viên</th>
 											<th>Học phí</th>
 											<th>Action</th>
+											<th>Thời gian</th>
 										</tr>
 									</thead>
 									{list &&
@@ -81,18 +84,26 @@ function Hocphi() {
 												<tbody key={item.id}>
 													<tr>
 														<td>{item.mssv}</td>
+														<td>{item.Sinhvien?.tensv}</td>
 														<td>{item.hocphi} đ</td>
 														{dshocphi.find(
 															(i) => i.mssv === item.mssv
 														) ? (
-															<td>
-																<button
-																	disabled
-																	className='text-center w-[130px] border-[1px] border-solid border-[#000000d] text-[#0000008a] bg-white rounded-3xl p-2 cursor-pointer hover:border-[#0000008a] hover:text-[#000000ad]'
-																>
-																	Đã đóng
-																</button>
-															</td>
+															<>
+																<td>
+																	<button
+																		disabled
+																		className='text-center w-[130px] border-[1px] border-solid border-[#000000d] text-[#0000008a] bg-white rounded-3xl p-2'
+																	>
+																		Đã đóng
+																	</button>
+																</td>
+																<td>
+																	{moment(
+																		item.createdAt
+																	).format("DD/MM/YYYY")}
+																</td>
+															</>
 														) : (
 															<td>
 																<button
