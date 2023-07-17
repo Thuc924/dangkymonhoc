@@ -50,25 +50,17 @@ export const KhoaDelete = (mskhoa) =>
             where: { mskhoa },
          })
          if (khoa) {
-            const mh = await db.Monhoc.findOne({ where: { mskhoa } })
-            if (!mh) {
-               await khoa.destroy()
-               const token =
-                  khoa.destroy() &&
-                  jwt.sign({ mskhoa: khoa.destroy().mskhoa, tenkhoa: khoa.destroy().tenkhoa }, process.env.SECRET_KEY, {
-                     expiresIn: '2d',
-                  })
-               resolve({
-                  err: 0,
-                  msg: 'Delete success...!',
-                  token: token || null,
+            await khoa.destroy()
+            const token =
+               khoa.destroy() &&
+               jwt.sign({ mskhoa: khoa.destroy().mskhoa, tenkhoa: khoa.destroy().tenkhoa }, process.env.SECRET_KEY, {
+                  expiresIn: '2d',
                })
-            } else {
-               resolve({
-                  err: 2,
-                  msg: 'KHOA already in model MONHOC...!',
-               })
-            }
+            resolve({
+               err: 0,
+               msg: 'Delete success...!',
+               token: token || null,
+            })
          } else {
             resolve({
                err: 2,

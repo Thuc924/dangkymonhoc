@@ -1,34 +1,27 @@
-"use strict"
-const { Model } = require("sequelize")
+'use strict'
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
-	class Khoa extends Model {
-		/**
-		 * Helper method for defining associations.
-		 * This method is not a part of Sequelize lifecycle.
-		 * The `models/index` file will call this method automatically.
-		 */
-		static associate(models) {
-			// define association here
-			Khoa.hasMany(models.Lophoc, { foreignKey: "mskhoa", as: "khoa" })
-			Khoa.hasMany(models.Monhoc, {
-				foreignKey: { name: "mskhoa", unique: false },
-				as: "khoaMH",
-			})
-			Khoa.hasMany(models.Monhoctochuc, {
-				foreignKey: { name: "mskhoa" },
-				as: "Khoa",
-			})
-		}
-	}
-	Khoa.init(
-		{
-			mskhoa: DataTypes.STRING,
-			tenkhoa: DataTypes.STRING,
-		},
-		{
-			sequelize,
-			modelName: "Khoa",
-		}
-	)
-	return Khoa
+   class Khoa extends Model {
+      /**
+       * Helper method for defining associations.
+       * This method is not a part of Sequelize lifecycle.
+       * The `models/index` file will call this method automatically.
+       */
+      static associate(models) {
+         // define association here
+         Khoa.hasMany(models.Lophoc, { foreignKey: 'mskhoa', as: 'khoa' })
+         Khoa.hasMany(models.Giangvien, { foreignKey: 'mskhoa', as: 'Khoa' })
+      }
+   }
+   Khoa.init(
+      {
+         mskhoa: DataTypes.STRING,
+         tenkhoa: DataTypes.STRING,
+      },
+      {
+         sequelize,
+         modelName: 'Khoa',
+      }
+   )
+   return Khoa
 }
