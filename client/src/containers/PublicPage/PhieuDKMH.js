@@ -21,13 +21,13 @@ function PhieuDKMH() {
    const { monhocs } = useSelector((state) => state.monhoc)
 
    const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
-   const { danhsachsvdk } = useSelector((state) => state.dangkymonhoc)
+   const { danhsachsvdk, token } = useSelector((state) => state.dangkymonhoc)
    const { monhoctochucs } = useSelector((state) => state.monhoctochuc)
    const { dshocphi } = useSelector((state) => state.hocphi)
    const [showDetail, setShowDetail] = useState(false)
 
    const [detailMH, setDetailMH] = useState()
-
+   const [hocky, setHocky] = useState('')
    // const listMHDK = JSON.parse(localStorage.getItem("mhdk"))
    const [listMH, setListMH] = useState()
 
@@ -43,41 +43,82 @@ function PhieuDKMH() {
       const data = ds?.filter((i) => i.mssv === sinhvien.mssv)
       setDSMHDK(data)
       getMHTCC()
-
       isLoggedInSinhvien && localStorage.setItem('mhdk', JSON.stringify(ds) || [])
-   }, [isLoggedInSinhvien, dsMHDK?.length, ds?.length])
+   }, [isLoggedInSinhvien, dsMHDK?.length, ds?.length, token])
    const getMHTCC = () => {
       const nienKhoa = sinhvien?.mssv?.slice(3, 5)
       if (+nienKhoa === +year) {
-         let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK1' && i.mslophoc === sinhvien?.mslop)
-         setTimeout(() => {
+         if (month >= 6 && month <= 8) {
+            let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK1' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-         }, 1000)
+            setHocky('HK1')
+         } else if (month >= 1 && month <= 3) {
+            let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK2' && i.mslophoc === sinhvien?.mslop)
+            setListMH(kq)
+            setHocky('HK2')
+         }
       } else if (+nienKhoa + 1 === +year) {
-         let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK3' && i.mslophoc === sinhvien?.mslop)
-         setListMH(kq)
+         if (month >= 6 && month <= 8) {
+            let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK3' && i.mslophoc === sinhvien?.mslop)
+            setListMH(kq)
+            setHocky('HK3')
+         } else if (month >= 1 && month <= 3) {
+            let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK4' && i.mslophoc === sinhvien?.mslop)
+            setListMH(kq)
+            setHocky('HK4')
+         }
       } else if (+nienKhoa + 2 === +year) {
-         let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK5' && i.mslophoc === sinhvien?.mslop)
-         setListMH(kq)
+         if (month >= 6 && month <= 8) {
+            let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK5' && i.mslophoc === sinhvien?.mslop)
+            setListMH(kq)
+            setHocky('HK5')
+         } else if (month >= 1 && month <= 3) {
+            let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK6' && i.mslophoc === sinhvien?.mslop)
+            setListMH(kq)
+            setHocky('HK6')
+         }
       } else if (+nienKhoa + 3 === +year) {
-         let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK7' && i.mslophoc === sinhvien?.mslop)
-         setListMH(kq)
+         if (month >= 6 && month <= 8) {
+            let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK7' && i.mslophoc === sinhvien?.mslop)
+            setListMH(kq)
+            setHocky('HK7')
+         } else if (month >= 1 && month <= 3) {
+            let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK8' && i.mslophoc === sinhvien?.mslop)
+            setListMH(kq)
+            setHocky('HK8')
+         }
       }
    }
+   console.log(hocky)
    const handleAddMHVaoDSDKMH = () => {
       let stc = sumSTC(dsMHDK) + sumSTC(danhsachsvdk)
       if (!listMH) {
          return
       } else {
-         if (stc < 14) toast.error('Không đủ 12 tín chỉ, vui lòng thêm môn học')
+         if (stc < 12) toast.error('Không đủ 12 tín chỉ, vui lòng thêm môn học')
          else if (stc > 24) toast.error(' Vượt quá 16 tín chỉ, vui lòng xoá môn học')
          else {
             dsMHDK.map((i) =>
                dispatch(
                   actions.addMonhoc({
                      ...i,
+                     mshocky: hocky,
                      tengiangvien: i.GV?.tengiangvien,
                      tenmh: i.monhocTC?.tenmh,
+                  })
+               )
+            )
+            dsMHDK.map((i) =>
+               dispatch(
+                  actions.createDiem({
+                     mssv: sinhvien?.mssv,
+                     msmh: i.msmh,
+                     mshocky: hocky,
+                     phanTramQT: i.phanTramQT,
+                     phanTramGK: i.phanTramGK,
+                     quatrinh: '',
+                     giuaky: '',
+                     diemthi: '',
                   })
                )
             )
@@ -89,6 +130,7 @@ function PhieuDKMH() {
          }
       }
    }
+   console.log(dsMHDK)
    const handleRemoveDSDKMH = (mh) => {
       let newDs = dsMHDK?.filter((i) => i.msmh !== mh.msmh)
       let data = []
@@ -117,14 +159,11 @@ function PhieuDKMH() {
                <tr>
                   <th>Mã môn học</th>
                   <th>Tên môn học</th>
+                  <th>Lớp học</th>
                   <th>Số tín chỉ</th>
                   <th>Học phí</th>
                   <th>Trạng thái môn học</th>
-                  {dshocphi.find((i) => (+i.hocphi === sumHocPhi(danhsachsvdk)) & (i.mssv === sinhvien?.mssv)) ? (
-                     ''
-                  ) : (
-                     <th>Chức năng</th>
-                  )}
+                  {dshocphi.find((i) => i.mssv === sinhvien?.mssv) ? '' : <th>Chức năng</th>}
                </tr>
             </thead>
             <tbody className="text-[#000080]">
@@ -134,6 +173,7 @@ function PhieuDKMH() {
                         <tr key={index} className="hover:bg-[#00000013]">
                            <td>{item.msmh}</td>
                            <td>{item.monhocTC?.tenmh}</td>
+                           <td>{item.mslophoc}</td>
                            <td>{item.monhocTC?.sotinchi}</td>
                            <td>
                               {Intl.NumberFormat('VI', {
@@ -158,6 +198,7 @@ function PhieuDKMH() {
                         <tr key={index} className="hover:bg-[#00000013]">
                            <td>{item.msmh}</td>
                            <td>{item.monhocDK?.tenmh}</td>
+                           <td>{item.mslophoc}</td>
                            <td>{item.monhocDK?.sotinchi}</td>
                            <td>
                               {Intl.NumberFormat('VI', {
@@ -167,9 +208,7 @@ function PhieuDKMH() {
                            </td>
                            <td>{danhsachsvdk.find((i) => i.msmh === item.msmh) ? 'Đã lưu' : 'Chưa lưu'}</td>
                            <td>
-                              {dshocphi.find(
-                                 (i) => (+i.hocphi === sumHocPhi(danhsachsvdk)) & (i.mssv === sinhvien?.mssv)
-                              ) ? (
+                              {dshocphi.find((i) => i.mssv === sinhvien?.mssv) ? (
                                  ''
                               ) : (
                                  <FontAwesomeIcon

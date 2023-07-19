@@ -19,6 +19,11 @@ module.exports = (sequelize, DataTypes) => {
             targetKey: 'msgiangvien',
             as: 'GV',
          })
+         Monhoctochuc.hasMany(models.Diem, {
+            foreignKey: 'msmh',
+            as: 'Diem_MH',
+            // targetKey: 'msmh',
+         })
       }
    }
    Monhoctochuc.init(

@@ -21,7 +21,7 @@ function Dangkymonhoc() {
    const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
 
    const { monhoctochucs } = useSelector((state) => state.monhoctochuc)
-   const { danhsachsvdk, danhsachs } = useSelector((state) => state.dangkymonhoc)
+   const { danhsachsvdk, danhsachs, token } = useSelector((state) => state.dangkymonhoc)
 
    const [msmh, setMSMH] = useState('')
 
@@ -47,35 +47,35 @@ function Dangkymonhoc() {
       !msmh && setMonhocSearch()
       isLoggedInSinhvien && localStorage.setItem('mhdk', JSON.stringify(dsMHDK) || [])
       !isLoggedInSinhvien && navigate(linkRoute.HOME_SV)
-   }, [isLoggedInSinhvien, dsMHDK?.length, msmh])
+   }, [isLoggedInSinhvien, dsMHDK?.length, msmh, token])
    const getMHTCC = () => {
       const nienKhoa = sinhvien?.mssv?.slice(3, 5)
       if (month >= 6 && month <= 8) {
          if (+nienKhoa === +year) {
             let kq = monhoctochucs?.filter((i) => i.monhocTC?.mshocky === 'HK1' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            kq.map((i) =>
-               dispatch(
-                  actions.addMonhoc({
-                     msmh: i.msmh,
-                     tenmh: i.monhocTC?.tenmh,
-                     mslophoc: i.mslophoc,
-                     siso: i.siso,
-                     phanTramQT: i.phanTramQT,
-                     phanTramGK: i.phanTramGK,
-                     thu: i.thu,
-                     tietbd: i.tietbd,
-                     sotiet: i.sotiet,
-                     phong: i.phong,
-                     mssv: sinhvien?.mssv,
-                     ngaybd: i.ngaybd,
-                     ngaykt: i.ngaykt,
-                     tengiangvien: i.GV?.tengiangvien,
-                     tenmh: i.monhocTC?.tenmh,
-                     hocphi: i.monhocTC?.sotinchi * 616000,
-                  })
-               )
-            )
+            // kq.map((i) =>
+            //    dispatch(
+            //       actions.addMonhoc({
+            //          msmh: i.msmh,
+            //          tenmh: i.monhocTC?.tenmh,
+            //          mslophoc: i.mslophoc,
+            //          siso: i.siso,
+            //          phanTramQT: i.phanTramQT,
+            //          phanTramGK: i.phanTramGK,
+            //          thu: i.thu,
+            //          tietbd: i.tietbd,
+            //          sotiet: i.sotiet,
+            //          phong: i.phong,
+            //          mssv: sinhvien?.mssv,
+            //          ngaybd: i.ngaybd,
+            //          ngaykt: i.ngaykt,
+            //          tengiangvien: i.GV?.tengiangvien,
+            //          tenmh: i.monhocTC?.tenmh,
+            //          hocphi: i.monhocTC?.sotinchi * 616000,
+            //       })
+            //    )
+            // )
          } else if (+nienKhoa + 1 === +year) {
             let kq = monhoctochucs?.filter((i) => i.monhocTC?.mshocky === 'HK3' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
@@ -101,7 +101,8 @@ function Dangkymonhoc() {
             setListMH(kq)
          }
       } else {
-         alert('Không trong thời gian đăng ký môn học...!')
+         toast.error('Không trong thời gian đăng ký môn học...!')
+         return
       }
    }
    const handleAddMHDK = (mh) => {
@@ -160,10 +161,6 @@ function Dangkymonhoc() {
       const search =
          danhsachsvdk?.find((i) => i.msmh === mh?.msmh) ||
          dsMHDK?.find((i) => i.msmh === mh?.msmh && i.mssv === sinhvien?.mssv)
-      let stc = sumSTC(dsMHDK) + +mh.monhocTC?.sotinchi
-      let mht = monhoctochucs.find((i) => i.monhoctruoc === mh.monhoctruoc)
-      let findMHTInDS = dsMHDK.find((i) => i.monhocTC?.tenmh === mh.monhoctruoc)
-      let findMHTInCSDL = danhsachsvdk.find((i) => i.tenmh === mh.monhoctruoc && i.mssv === sinhvien?.mssv)
       if (monhocSearch) {
          if (month >= 6 && month <= 8) {
             if (
@@ -268,148 +265,153 @@ function Dangkymonhoc() {
                </li>
             </ul>
          </div>
-
-         <div className="w-full p-4">
-            <h2 className="uppercase py-2">Danh sách các môn học được tổ chức</h2>
-            <div>
-               <table>
-                  <thead className="border-hidden text-[14px]">
-                     <tr>
-                        <th>Mã môn học</th>
-                        <th>Tên môn học</th>
-                        <th>Mã lớp</th>
-                        <th>Sĩ số</th>
-                        <th>Còn lại</th>
-                        <th>Thứ</th>
-                        <th>Tiết BD</th>
-                        <th>Số tiết</th>
-                        <th>Phòng</th>
-                        <th>Giảng viên</th>
-                        <th>Thời gian</th>
-                        <th>Chức năng</th>
-                     </tr>
-                  </thead>
-                  <tbody className="border-t-hidden border-l-hidden border-r-hidden">
-                     {monhocSearch &&
-                        monhocSearch.length > 0 &&
-                        monhocSearch.map((item, index) => {
-                           return (
-                              <tr key={index} className="py-4 hover:bg-[#c7ceda80]">
-                                 <td>{item.msmh}</td>
-                                 <td>{item.monhocTC?.tenmh}</td>
-                                 <td>{item.mslophoc}</td>
-                                 <td>{item.siso}</td>
-                                 <td>
-                                    {+item.siso -
-                                       +danhsachs.filter((i) => i.msmh === item.msmh && i.mslophoc === item.mslophoc)
-                                          .length}
-                                 </td>
-                                 <td className="font-bold">{item.thu}</td>
-                                 <td>{item.tietbd}</td>
-                                 <td>{item.sotiet}</td>
-                                 <td>{item.phong}</td>
-                                 <td>{item.GV?.tengiangvien}</td>
-                                 <td width={100}>
-                                    {moment(item.ngaybd).format('DD/MM/YYYY')} -{' '}
-                                    {moment(item.ngaykt).format('DD/MM/YYYY')}
-                                 </td>
-                                 <td className="py-8" width={100}>
-                                    {dsMHDK.find(
-                                       (i) =>
-                                          i.msmh === item.msmh &&
-                                          i.mssv === sinhvien?.mssv &&
-                                          i.thu === item.thu &&
-                                          i.mslophoc === item?.mslophoc
-                                    ) ? (
-                                       <button
-                                          disabled
-                                          className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
-                                       >
-                                          Đã thêm vào phiếu đăng ký
-                                       </button>
-                                    ) : danhsachsvdk?.find(
-                                         (i) =>
-                                            i.msmh === item?.msmh &&
-                                            i.thu === item?.thu &&
-                                            i.mslophoc === item?.mslophoc
-                                      ) ? (
-                                       <button
-                                          disabled
-                                          className="mx-1 text-center w-[90px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
-                                       >
-                                          Đã lưu đăng ký
-                                       </button>
-                                    ) : (
-                                       <button
-                                          onClick={() => handleAddMHDK(item)}
-                                          className="mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]"
-                                       >
-                                          Thêm
-                                       </button>
-                                    )}
-                                 </td>
-                              </tr>
-                           )
-                        })}
-                  </tbody>
-                  <tbody className="border-t-hidden border-l-hidden border-r-hidden">
-                     {!monhocSearch &&
-                        listMH &&
-                        listMH.length > 0 &&
-                        listMH.sort(compareValues('msmh', 'asc')).map((item, index) => {
-                           return (
-                              <tr key={index} className="py-4 hover:bg-[#c7ceda80] h-[100px]">
-                                 <td>{item.msmh}</td>
-                                 <td>{item.monhocTC?.tenmh}</td>
-                                 <td>{item.mslophoc}</td>
-                                 <td>{item.siso}</td>
-                                 <td>
-                                    {+item.siso -
-                                       +danhsachs.filter((i) => i.msmh === item.msmh && i.mslophoc === sinhvien?.mslop)
-                                          .length}
-                                 </td>
-                                 <td className="font-bold">{item.thu}</td>
-                                 <td>{item.tietbd}</td>
-                                 <td>{item.sotiet}</td>
-                                 <td>{item.phong}</td>
-                                 <td>{item.GV?.tengiangvien}</td>
-                                 <td width={100}>
-                                    {moment(item.ngaybd).format('DD/MM/YYYY')} -{' '}
-                                    {moment(item.ngaykt).format('DD/MM/YYYY')}
-                                 </td>
-                                 <td className="py-8" width={125}>
-                                    {dsMHDK.find(
-                                       (i) => i.msmh === item?.msmh && i.mssv === sinhvien?.mssv && i.thu === item.thu
-                                    ) ? (
-                                       <button
-                                          disabled
-                                          className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
-                                       >
-                                          Đã thêm vào phiếu đăng ký
-                                       </button>
-                                    ) : danhsachsvdk?.find((i) => i.msmh === item?.msmh && i.thu === item?.thu) ? (
-                                       <button
-                                          disabled
-                                          className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
-                                       >
-                                          Đã lưu đăng ký
-                                       </button>
-                                    ) : (
-                                       <button
-                                          onClick={() => handleAddMHDK(item)}
-                                          className="mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]"
-                                       >
-                                          Thêm
-                                       </button>
-                                    )}
-                                 </td>
-                              </tr>
-                           )
-                        })}{' '}
-                  </tbody>
-               </table>
+         {month === 9 || month === 10 || month === 11 || month === 12 || month === 4 || month === 5 ? (
+            ''
+         ) : (
+            <div className="w-full p-4">
+               <h2 className="uppercase py-2">Danh sách các môn học được tổ chức</h2>
+               <div>
+                  <table>
+                     <thead className="border-hidden text-[14px]">
+                        <tr>
+                           <th>Mã môn học</th>
+                           <th>Tên môn học</th>
+                           <th>Mã lớp</th>
+                           <th>Sĩ số</th>
+                           <th>Còn lại</th>
+                           <th>Thứ</th>
+                           <th>Tiết BD</th>
+                           <th>Số tiết</th>
+                           <th>Phòng</th>
+                           <th>Giảng viên</th>
+                           <th>Thời gian</th>
+                           <th>Chức năng</th>
+                        </tr>
+                     </thead>
+                     <tbody className="border-t-hidden border-l-hidden border-r-hidden">
+                        {monhocSearch &&
+                           monhocSearch.length > 0 &&
+                           monhocSearch.map((item, index) => {
+                              return (
+                                 <tr key={index} className="py-4 hover:bg-[#c7ceda80]">
+                                    <td>{item.msmh}</td>
+                                    <td>{item.monhocTC?.tenmh}</td>
+                                    <td>{item.mslophoc}</td>
+                                    <td>{item.siso}</td>
+                                    <td>
+                                       {+item.siso -
+                                          +danhsachs.filter((i) => i.msmh === item.msmh && i.mslophoc === item.mslophoc)
+                                             .length}
+                                    </td>
+                                    <td className="font-bold">{item.thu}</td>
+                                    <td>{item.tietbd}</td>
+                                    <td>{item.sotiet}</td>
+                                    <td>{item.phong}</td>
+                                    <td>{item.GV?.tengiangvien}</td>
+                                    <td width={100}>
+                                       {moment(item.ngaybd).format('DD/MM/YYYY')} -{' '}
+                                       {moment(item.ngaykt).format('DD/MM/YYYY')}
+                                    </td>
+                                    <td className="py-8" width={100}>
+                                       {dsMHDK.find(
+                                          (i) =>
+                                             i.msmh === item.msmh &&
+                                             i.mssv === sinhvien?.mssv &&
+                                             i.thu === item.thu &&
+                                             i.mslophoc === item?.mslophoc
+                                       ) ? (
+                                          <button
+                                             disabled
+                                             className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
+                                          >
+                                             Đã thêm vào phiếu đăng ký
+                                          </button>
+                                       ) : danhsachsvdk?.find(
+                                            (i) =>
+                                               i.msmh === item?.msmh &&
+                                               i.thu === item?.thu &&
+                                               i.mslophoc === item?.mslophoc
+                                         ) ? (
+                                          <button
+                                             disabled
+                                             className="mx-1 text-center w-[90px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
+                                          >
+                                             Đã lưu đăng ký
+                                          </button>
+                                       ) : (
+                                          <button
+                                             onClick={() => handleAddMHDK(item)}
+                                             className="mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]"
+                                          >
+                                             Thêm
+                                          </button>
+                                       )}
+                                    </td>
+                                 </tr>
+                              )
+                           })}
+                     </tbody>
+                     <tbody className="border-t-hidden border-l-hidden border-r-hidden">
+                        {!monhocSearch &&
+                           listMH &&
+                           listMH.length > 0 &&
+                           listMH.sort(compareValues('msmh', 'asc')).map((item, index) => {
+                              return (
+                                 <tr key={index} className="py-4 hover:bg-[#c7ceda80] h-[100px]">
+                                    <td>{item.msmh}</td>
+                                    <td>{item.monhocTC?.tenmh}</td>
+                                    <td>{item.mslophoc}</td>
+                                    <td>{item.siso}</td>
+                                    <td>
+                                       {+item.siso -
+                                          +danhsachs.filter(
+                                             (i) => i.msmh === item.msmh && i.mslophoc === sinhvien?.mslop
+                                          ).length}
+                                    </td>
+                                    <td className="font-bold">{item.thu}</td>
+                                    <td>{item.tietbd}</td>
+                                    <td>{item.sotiet}</td>
+                                    <td>{item.phong}</td>
+                                    <td>{item.GV?.tengiangvien}</td>
+                                    <td width={100}>
+                                       {moment(item.ngaybd).format('DD/MM/YYYY')} -{' '}
+                                       {moment(item.ngaykt).format('DD/MM/YYYY')}
+                                    </td>
+                                    <td className="py-8" width={125}>
+                                       {dsMHDK.find(
+                                          (i) =>
+                                             i.msmh === item?.msmh && i.mssv === sinhvien?.mssv && i.thu === item.thu
+                                       ) ? (
+                                          <button
+                                             disabled
+                                             className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
+                                          >
+                                             Đã thêm vào phiếu đăng ký
+                                          </button>
+                                       ) : danhsachsvdk?.find((i) => i.msmh === item?.msmh && i.thu === item?.thu) ? (
+                                          <button
+                                             disabled
+                                             className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
+                                          >
+                                             Đã lưu đăng ký
+                                          </button>
+                                       ) : (
+                                          <button
+                                             onClick={() => handleAddMHDK(item)}
+                                             className="mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]"
+                                          >
+                                             Thêm
+                                          </button>
+                                       )}
+                                    </td>
+                                 </tr>
+                              )
+                           })}{' '}
+                     </tbody>
+                  </table>
+               </div>
             </div>
-         </div>
+         )}
       </main>
    )
 }

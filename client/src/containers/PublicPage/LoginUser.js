@@ -36,7 +36,7 @@ function LoginUser() {
          if (!loginSV.mssv || !loginSV.matkhau) {
             toast.error('Vui lòng nhập đầy đủ tài khoản và mật khẩu...!')
          } else {
-            const findSV = sinhviens?.find((i) => i.mssv === loginSV.mssv)
+            const findSV = sinhviens.find((i) => i.mssv === loginSV.mssv)
             if (!findSV) {
                toast.error('Không tìm thấy sinh viên...!')
             } else if (loginSV.matkhau === findSV.matkhau) {

@@ -5,11 +5,13 @@ import { toast } from 'react-toastify'
 
 import * as actions from '../../store/actions'
 import { linkRoute } from '../../ultils/Common/constant'
+import { compareValues, sumHocPhi } from '../../ultils/func'
 function XemDiem() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
    const { danhsachsvdk } = useSelector((state) => state.dangkymonhoc)
+   const { dshocphi } = useSelector((state) => state.hocphi)
    const { listDiemMh } = useSelector((state) => state.diem)
    const { token, msg } = useSelector((state) => state.sinhvien)
 
@@ -19,7 +21,8 @@ function XemDiem() {
          toast.error(msg)
          dispatch(actions.getSinhvienByMSSV())
       }
-      !isLoggedInSinhvien && navigate(linkRoute.HOME_SV)
+
+      !isLoggedInSinhvien && navigate(linkRoute.LOGIN_SV)
       dispatch(actions.getListHocPhi())
       dispatch(actions.getListDiem(sinhvien?.mssv))
       dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
@@ -45,51 +48,377 @@ function XemDiem() {
                   </tr>
                </thead>
                <tbody className="text-[Navy]">
-                  {danhsachsvdk &&
-                     danhsachsvdk.length > 0 &&
-                     danhsachsvdk.map((item, index) => {
+                  {listDiemMh.filter((i) => i.mshocky === 'HK1').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK1</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.mshocky === 'HK1')
+                     .map((item, index) => {
                         return (
                            <tr key={index}>
                               <td>{index + 1}</td>
                               <td className="font-bold">{item.msmh}</td>
-                              <td>{item.tenmh}</td>
-                              <td className="text-center">{item.monhocDK?.sotinchi}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
                               <td className="text-center">{item.phanTramQT}</td>
                               <td className="text-center">{item.phanTramGK}</td>
-                              {listDiemMh?.map((i, index) => {
-                                 return (
-                                    i.msmh === item.msmh && (
-                                       <>
-                                          <td className="text-center">{i.quatrinh}</td>
-                                          <td className="text-center">{i.giuaky}</td>
-                                          <td className="text-center">{i.diemthi}</td>
-                                          <td className="text-center">
-                                             {(item.phanTramQT * i.quatrinh +
-                                                item.phanTramGK * i.giuaky +
-                                                (100 - (+item.phanTramGK + +item.phanTramQT)) * i.diemthi) /
-                                                100}
-                                          </td>
-                                          <td className="text-center">
-                                             {Math.round(
-                                                (item.phanTramQT * i.quatrinh +
-                                                   item.phanTramGK * i.giuaky +
-                                                   (100 - (+item.phanTramGK + +item.phanTramQT)) * i.diemthi) /
-                                                   100
-                                             )}
-                                          </td>
-                                          <td className="text-center font-bold">
-                                             {(item.phanTramQT * i.quatrinh +
-                                                item.phanTramGK * i.giuaky +
-                                                (100 - (+item.phanTramGK + +item.phanTramQT)) * i.diemthi) /
-                                                100 >=
-                                             5
-                                                ? 'Đạt'
-                                                : 'X'}
-                                          </td>
-                                       </>
-                                    )
-                                 )
-                              })}
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
+                           </tr>
+                        )
+                     })}
+
+                  {listDiemMh.filter((i) => i.mshocky === 'HK2').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK2</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.mshocky === 'HK2')
+                     .map((item, index) => {
+                        return (
+                           <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td className="font-bold">{item.msmh}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
+                              <td className="text-center">{item.phanTramQT}</td>
+                              <td className="text-center">{item.phanTramGK}</td>
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
+                           </tr>
+                        )
+                     })}
+
+                  {listDiemMh.filter((i) => i.mshocky === 'HK3').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK3</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.mshocky === 'HK3')
+                     .map((item, index) => {
+                        return (
+                           <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td className="font-bold">{item.msmh}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
+                              <td className="text-center">{item.phanTramQT}</td>
+                              <td className="text-center">{item.phanTramGK}</td>
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
+                           </tr>
+                        )
+                     })}
+                  {listDiemMh.filter((i) => i.mshocky === 'HK4').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK4</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.mshocky === 'HK4')
+                     .map((item, index) => {
+                        return (
+                           <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td className="font-bold">{item.msmh}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
+                              <td className="text-center">{item.phanTramQT}</td>
+                              <td className="text-center">{item.phanTramGK}</td>
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
+                           </tr>
+                        )
+                     })}
+
+                  {listDiemMh.filter((i) => i.mshocky === 'HK5').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK5</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.Diem_MH.mshocky === 'HK5')
+                     .map((item, index) => {
+                        return (
+                           <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td className="font-bold">{item.msmh}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
+                              <td className="text-center">{item.phanTramQT}</td>
+                              <td className="text-center">{item.phanTramGK}</td>
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
+                           </tr>
+                        )
+                     })}
+
+                  {listDiemMh.filter((i) => i.mshocky === 'HK6').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK6</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.Diem_MH.mshocky === 'HK6')
+                     .map((item, index) => {
+                        return (
+                           <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td className="font-bold">{item.msmh}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
+                              <td className="text-center">{item.phanTramQT}</td>
+                              <td className="text-center">{item.phanTramGK}</td>
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
+                           </tr>
+                        )
+                     })}
+
+                  {listDiemMh.filter((i) => i.mshocky === 'HK7').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK7</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.Diem_MH.mshocky === 'HK7')
+                     .map((item, index) => {
+                        return (
+                           <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td className="font-bold">{item.msmh}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
+                              <td className="text-center">{item.phanTramQT}</td>
+                              <td className="text-center">{item.phanTramGK}</td>
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
+                           </tr>
+                        )
+                     })}
+
+                  {listDiemMh.filter((i) => i.mshocky === 'HK8').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK8</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.Diem_MH.mshocky === 'HK8')
+                     .map((item, index) => {
+                        return (
+                           <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td className="font-bold">{item.msmh}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
+                              <td className="text-center">{item.phanTramQT}</td>
+                              <td className="text-center">{item.phanTramGK}</td>
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
                            </tr>
                         )
                      })}

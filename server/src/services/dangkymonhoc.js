@@ -7,6 +7,7 @@ export const addMonhocInDSDKMH = ({
    msmh,
    tenmh,
    mslophoc,
+   mshocky,
    siso,
    phanTramQT,
    phanTramGK,
@@ -27,6 +28,7 @@ export const addMonhocInDSDKMH = ({
             msmh,
             tenmh,
             mslophoc,
+            mshocky,
             siso,
             phanTramQT,
             phanTramGK,
@@ -65,7 +67,7 @@ export const getAllDS = () =>
                {
                   model: db.Monhoc,
                   as: 'monhocDK',
-                  attributes: ['tenmh', 'sotinchi'],
+                  attributes: ['tenmh', 'sotinchi', 'mshocky'],
                },
                {
                   model: db.Sinhvien,
@@ -94,7 +96,7 @@ export const getAllSV = ({ mssv }) =>
                {
                   model: db.Monhoc,
                   as: 'monhocDK',
-                  attributes: ['tenmh', 'sotinchi'],
+                  attributes: ['tenmh', 'sotinchi', 'mshocky'],
                },
                {
                   model: db.Sinhvien,
@@ -123,6 +125,35 @@ export const DeleteMonhocInDSDKMH = ({ msmh }) =>
             const token =
                rp &&
                jwt.sign({ msmh: mh.msmh }, process.env.SECRET_KEY, {
+                  expiresIn: '2d',
+               })
+            resolve({
+               err: 0,
+               msg: 'Delete success...!',
+               token: token || null,
+            })
+         } else {
+            resolve({
+               err: 2,
+               msg: 'MSMH not found...!',
+            })
+         }
+      } catch (error) {
+         reject(error)
+      }
+   })
+export const DeleteMonhocInDSDKMHByMSSV = ({ mssv, msmh }) =>
+   new Promise(async (resolve, reject) => {
+      try {
+         const listMH = await db.PhieuDKMH.findOne({
+            where: { mssv, msmh },
+         })
+         resolve(listMH)
+         if (listMH) {
+            const rp = await listMH.destroy()
+            const token =
+               rp &&
+               jwt.sign({ mssv: mh.mssv }, process.env.SECRET_KEY, {
                   expiresIn: '2d',
                })
             resolve({

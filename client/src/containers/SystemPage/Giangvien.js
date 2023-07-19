@@ -13,7 +13,6 @@ function Giangvien() {
    const dispatch = useDispatch()
    const { isLoggedInAdmin } = useSelector((state) => state.auth)
    const { giangviens, token, msg } = useSelector((state) => state.giangvien)
-   console.log(giangviens)
    useEffect(() => {
       dispatch(actions.getListGiangvien())
       !isLoggedInAdmin && navigate(linkRoute.LOGIN_AD)

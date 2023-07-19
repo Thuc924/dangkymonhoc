@@ -54,3 +54,15 @@ export const deleteMonhocInDSDKMH = async (req, res) => {
       })
    }
 }
+export const deleteMonhocInDSDKMHByMSSV = async (req, res) => {
+   try {
+      const { mssv, msmh } = req.query
+      const response = await dangkymonhocService.DeleteMonhocInDSDKMHByMSSV(req.query)
+      return res.status(200).json(response)
+   } catch (error) {
+      return res.status(500).json({
+         err: -1,
+         msg: 'Fail of dangkymonhoc controller ' + error,
+      })
+   }
+}

@@ -10,12 +10,14 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
    const [diem, setDiem] = useState({
       mssv: monhoc?.mssv,
       msmh: monhoc?.msmh,
-      tenmh: monhoc.monhocDK?.tenmh,
-      sotinchi: monhoc.monhocDK?.sotinchi,
+      mshocky: monhoc.monhocDK?.mshocky,
+      phanTramQT: monhoc?.phanTramQT,
+      phanTramGK: monhoc?.phanTramGK,
       quatrinh: '',
       giuaky: '',
       diemthi: '',
    })
+   console.log(monhoc)
    const { danhsachs } = useSelector((state) => state.dangkymonhoc)
 
    useEffect(() => {
@@ -26,9 +28,10 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
       if (!diem.diemthi) {
          return
       } else {
-         dispatch(actions.createDiem(diem))
+         dispatch(actions.updateDiem(diem))
          toast.success('Cập nhật điểm thành công...!')
          setShowModel(false)
+         // dispatch(actions.deleteMonHocInDSDKMH(monhoc?.msmh))
       }
    }
    return (
@@ -64,14 +67,14 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
                            disabled
                            className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
                            type={'text'}
-                           value={diem.tenmh}
+                           value={monhoc.tenmh}
                         />
                         <label className="italic">Số tín chỉ</label>
                         <input
                            disabled
                            className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
                            type={'text'}
-                           value={diem.sotinchi}
+                           value={monhoc.monhocDK?.sotinchi}
                         />
                         {danhsachs.find(
                            (i) => i.msmh === monhoc.msmh && i.mssv === monhoc.mssv && i.phanTramQT === '0'

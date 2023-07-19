@@ -1,9 +1,9 @@
 import * as diemService from '../services/diem'
 
 export const create = async (req, res) => {
-   const { mssv, msmh, diemthi } = req.body
+   const { mssv, msmh, mshocky, phanTramQT, phanTramGK } = req.body
    try {
-      if (!mssv || !msmh || !diemthi) {
+      if (!mssv || !msmh || !mshocky || !phanTramQT || !phanTramGK) {
          return res.status(400).json({
             err: 1,
             msg: 'Missing input...!',
@@ -14,7 +14,7 @@ export const create = async (req, res) => {
    } catch (error) {
       return res.status(500).json({
          err: -1,
-         msg: 'Fail at khoa controller ' + error,
+         msg: 'Fail at diem controller ' + error,
       })
    }
 }
@@ -28,7 +28,7 @@ export const getAllDiemByMSSV = async (req, res) => {
    } catch (error) {
       return res.status(500).json({
          err: -1,
-         msg: ' Fail of SV controller' + error,
+         msg: ' Fail of diem controller' + error,
       })
    }
 }
@@ -39,21 +39,18 @@ export const getAllDiem = async (req, res) => {
    } catch (error) {
       return res.status(500).json({
          err: -1,
-         msg: ' Fail of SV controller' + error,
+         msg: ' Fail of diem controller' + error,
       })
    }
 }
-// export const deleteLophoc = async (req, res) => {
-//    try {
-//       const { mslop } = req.query
-//       if (mslop) {
-//          const response = await lopService.LophocDelete(mslop)
-//          return res.status(200).json(response)
-//       }
-//    } catch (error) {
-//       return res.status(500).json({
-//          err: -1,
-//          msg: 'Fail of SV controller ' + error,
-//       })
-//    }
-// }
+export const updateDiemMH = async (req, res) => {
+   try {
+      const response = await diemService.DiemUpdate(req.body)
+      return res.status(200).json(response)
+   } catch (error) {
+      return res.status(500).json({
+         err: -1,
+         msg: 'Fail of diem controller ' + error,
+      })
+   }
+}

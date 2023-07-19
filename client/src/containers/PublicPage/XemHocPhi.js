@@ -44,7 +44,6 @@ function XemHocPhi() {
       }
       return kq
    }
-   console.log(!!dshocphi)
    return (
       <main className="text-[12px]">
          <div className="flex justify-center">
@@ -85,37 +84,23 @@ function XemHocPhi() {
                   </tr>
                </thead>
                <tbody className="text-[Navy]">
-                  {!dshocphi.find((i) => i.mssv === sinhvien?.mssv) ? (
-                     danhsachsvdk.map((mh, index) => {
-                        return (
-                           <tr key={mh.id}>
-                              {dshocphi.find((i) => i.mssv === sinhvien.mssv) ? (
-                                 ''
-                              ) : (
-                                 <>
-                                    <td className="text-center">{index + 1}</td>
-                                    <td className="text-center">{mh.msmh}</td>
-                                    <td>{mh.monhocDK?.tenmh}</td>
-                                    <td className="text-center">{mh.monhocDK?.sotinchi}</td>
-                                    <td className="text-center">
-                                       {Intl.NumberFormat('VI', {
-                                          style: 'currency',
-                                          currency: 'VND',
-                                       }).format(mh.hocphi)}
-                                    </td>
-                                    <td className="text-center" width={450}></td>
-                                 </>
-                              )}
-                           </tr>
-                        )
-                     })
-                  ) : (
-                     <tr>
-                        <td colSpan={6} className="text-center font-bold">
-                           Đã đóng học phí
-                        </td>
-                     </tr>
-                  )}
+                  {danhsachsvdk.map((mh, index) => {
+                     return (
+                        <tr key={mh.id}>
+                           <td className="text-center">{index + 1}</td>
+                           <td className="text-center">{mh.msmh}</td>
+                           <td>{mh.monhocDK?.tenmh}</td>
+                           <td className="text-center">{mh.monhocDK?.sotinchi}</td>
+                           <td className="text-center">
+                              {Intl.NumberFormat('VI', {
+                                 style: 'currency',
+                                 currency: 'VND',
+                              }).format(mh.hocphi)}
+                           </td>
+                           <td className="text-center" width={450}></td>
+                        </tr>
+                     )
+                  })}
                   {danhsachsvdk.length === 0 && (
                      <tr>
                         <td colSpan={6} className="text-center italic text-[16px]">
@@ -127,21 +112,20 @@ function XemHocPhi() {
                         </td>
                      </tr>
                   )}
-                  {!dshocphi.find((i) => i.mssv === sinhvien?.mssv) && danhsachsvdk.length > 0 && (
-                     <tr className="font-bold">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td className="text-center italic">{sumSTC(danhsachsvdk)}</td>
-                        <td className="text-center italic">
-                           {Intl.NumberFormat('VI', {
-                              style: 'currency',
-                              currency: 'VND',
-                           }).format(sumHocPhi(danhsachsvdk))}
-                        </td>
-                        <td className="text-center" width={450}></td>
-                     </tr>
-                  )}
+
+                  <tr className="font-bold">
+                     <td></td>
+                     <td></td>
+                     <td></td>
+                     <td className="text-center italic">{sumSTC(danhsachsvdk)}</td>
+                     <td className="text-center italic">
+                        {Intl.NumberFormat('VI', {
+                           style: 'currency',
+                           currency: 'VND',
+                        }).format(sumHocPhi(danhsachsvdk))}
+                     </td>
+                     <td className="text-center" width={450}></td>
+                  </tr>
                   {dshocphi.find((i) => i.mssv === sinhvien?.mssv) && danhsachsvdk.length === 0 && (
                      <tr>
                         <td colSpan={6} className="text-center italic text-[16px]">
@@ -156,23 +140,44 @@ function XemHocPhi() {
                </tbody>
             </table>
          </div>
-         {!dshocphi.find((i) => i.mssv === sinhvien?.mssv) && (
-            <div className="flex">
-               <ul className="w-[250px]">
-                  <li className="py-[4px]">Tổng số tín chỉ đăng ký:</li>
-                  <li className="py-[4px]">Học phí học kỳ:</li>
-               </ul>
-               <ul className="font-bold">
-                  <li className="py-[4px] italic">{sumSTC(danhsachsvdk)}</li>
-                  <li className="py-[4px] italic">
-                     {Intl.NumberFormat('VI', {
-                        style: 'currency',
-                        currency: 'VND',
-                     }).format(sumHocPhi(danhsachsvdk))}
-                  </li>
-               </ul>
-            </div>
-         )}
+         <div className="flex p-2">
+            <ul className="w-[250px]">
+               <li className="py-[4px]">Tổng số tín chỉ đăng ký:</li>
+               <li className="py-[4px]">Học phí học kỳ:</li>
+               <li className="py-[4px]">Đã đóng:</li>
+               <li className="py-[4px]">Nợ:</li>
+            </ul>
+            <ul className="font-bold">
+               <li className="py-[4px] italic">{sumSTC(danhsachsvdk)}</li>
+               <li className="py-[4px] italic">
+                  {Intl.NumberFormat('VI', {
+                     style: 'currency',
+                     currency: 'VND',
+                  }).format(sumHocPhi(danhsachsvdk))}
+               </li>
+               <li className="py-[4px] italic">
+                  {Intl.NumberFormat('VI', {
+                     style: 'currency',
+                     currency: 'VND',
+                  }).format(dshocphi.find((i) => i.mssv === sinhvien?.mssv)?.hocphi || 0)}
+               </li>{' '}
+               <li className="py-[4px] italic">
+                  {+sumHocPhi(danhsachsvdk) - +dshocphi.find((i) => i.mssv === sinhvien?.mssv)?.hocphi === 0
+                     ? Intl.NumberFormat('VI', {
+                          style: 'currency',
+                          currency: 'VND',
+                       }).format(0)
+                     : Intl.NumberFormat('VI', {
+                          style: 'currency',
+                          currency: 'VND',
+                       }).format(
+                          +sumHocPhi(danhsachsvdk) - +dshocphi.find((i) => i.mssv === sinhvien?.mssv)?.hocphi ||
+                             sumHocPhi(danhsachsvdk)
+                       )}
+               </li>
+            </ul>
+         </div>
+
          <div>
             <img src={imgs.ghichuhocphi} className="w-full p-2" />
          </div>
