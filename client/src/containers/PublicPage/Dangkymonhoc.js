@@ -21,9 +21,12 @@ function Dangkymonhoc() {
    const { isLoggedInSinhvien, sinhvien } = useSelector((state) => state.auth)
 
    const { monhoctochucs } = useSelector((state) => state.monhoctochuc)
+   const { danhsachsnv } = useSelector((state) => state.monhocnguyenvong)
+   const { monhocs } = useSelector((state) => state.monhoc)
    const { danhsachsvdk, danhsachs, token } = useSelector((state) => state.dangkymonhoc)
 
    const [msmh, setMSMH] = useState('')
+   const [msmhnv, setMSMHNV] = useState('')
 
    const [listMH, setListMH] = useState()
 
@@ -32,6 +35,7 @@ function Dangkymonhoc() {
    const [msmhNguyevong, setMSMHNguyenvong] = useState()
 
    const [showInputSearch, setShowInputSearch] = useState(false)
+   const [showInputSearchNV, setShowInputSearchNV] = useState(false)
 
    const [dsMHDK, setDSMHDK] = useState(JSON.parse(localStorage.getItem('mhdk')) || [])
    useEffect(() => {
@@ -39,6 +43,7 @@ function Dangkymonhoc() {
       dispatch(actions.getListMonhoc())
       dispatch(actions.getListMonhoctochuc())
       dispatch(actions.getAllDSMHDK())
+      dispatch(actions.getAllDSNguyenVong())
       isLoggedInSinhvien &&
          setTimeout(() => {
             dispatch(actions.getSinhvienByMSSV())
@@ -236,181 +241,229 @@ function Dangkymonhoc() {
          setMonhocSearch(rp)
       }
    }
+   const handleSearchMonhocNVKeyDown = (e) => {
+      if (e.keyCode === 13) {
+         const rp = monhocs.find((i) => i.msmh === msmhnv)
+         const isExist = danhsachsnv.find((i) => i.msmh === msmhnv && i.mssv === sinhvien.mssv)
+         if (isExist) {
+            toast.error('Bạn đã thêm môn học này...!')
+         } else {
+            dispatch(
+               actions.addMonhocNguyenvong({
+                  msmh: rp.msmh,
+                  mssv: sinhvien?.mssv,
+                  hocphi: +rp.sotinchi * 616000,
+               })
+            )
+            toast.success('Thêm thành công...!')
+         }
+         console.log(danhsachsnv)
+      }
+   }
    return (
       <main className="w-full min-h-[550px] px-2 py-4 flex">
-         <div className="w-[20%] border-r-2 border-solid min-h-[550px] pr-4">
-            <ul>
-               <li className="text-[red] py-2">
-                  (Sinh viên muốn thêm môn học vượt, học lại môn không đạt, cải thiện điểm số môn học, thì có thể tìm
-                  kiếm và đăng ký tại đây)
-                  <FontAwesomeIcon className="hand-down" icon={faHandPointDown} />
-               </li>
-               <li className="hover:underline cursor-pointer" onClick={() => setShowInputSearch(!showInputSearch)}>
-                  Lọc môn học theo mã môn học (Click để hiển thị ô nhập)
-               </li>
-               <li>
-                  {showInputSearch && (
-                     <input
-                        onKeyDown={(e) => handleSearchMonhocKeyDown(e)}
-                        onChange={(e) => setMSMH(e.target.value)}
-                        className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
-                        type={'text'}
-                        placeholder={'Mã môn học'}
-                     />
-                  )}
-               </li>
-               <li className="text-[red] py-2">
-                  Lưu ý: đối với những lớp đã đầy hoặc sinh viên muốn thay đổi lớp học, sinh viên vui lòng đăng ký với
-                  lớp khác (tìm theo mã môn học)
-               </li>
-            </ul>
-         </div>
          {month === 9 || month === 10 || month === 11 || month === 12 || month === 4 || month === 5 ? (
             ''
          ) : (
-            <div className="w-full p-4">
-               <h2 className="uppercase py-2">Danh sách các môn học được tổ chức</h2>
-               <div>
-                  <table>
-                     <thead className="border-hidden text-[14px]">
-                        <tr>
-                           <th>Mã môn học</th>
-                           <th>Tên môn học</th>
-                           <th>Mã lớp</th>
-                           <th>Sĩ số</th>
-                           <th>Còn lại</th>
-                           <th>Thứ</th>
-                           <th>Tiết BD</th>
-                           <th>Số tiết</th>
-                           <th>Phòng</th>
-                           <th>Giảng viên</th>
-                           <th>Thời gian</th>
-                           <th>Chức năng</th>
-                        </tr>
-                     </thead>
-                     <tbody className="border-t-hidden border-l-hidden border-r-hidden">
-                        {monhocSearch &&
-                           monhocSearch.length > 0 &&
-                           monhocSearch.map((item, index) => {
-                              return (
-                                 <tr key={index} className="py-4 hover:bg-[#c7ceda80]">
-                                    <td>{item.msmh}</td>
-                                    <td>{item.monhocTC?.tenmh}</td>
-                                    <td>{item.mslophoc}</td>
-                                    <td>{item.siso}</td>
-                                    <td>
-                                       {+item.siso -
-                                          +danhsachs.filter((i) => i.msmh === item.msmh && i.mslophoc === item.mslophoc)
-                                             .length}
-                                    </td>
-                                    <td className="font-bold">{item.thu}</td>
-                                    <td>{item.tietbd}</td>
-                                    <td>{item.sotiet}</td>
-                                    <td>{item.phong}</td>
-                                    <td>{item.GV?.tengiangvien}</td>
-                                    <td width={100}>
-                                       {moment(item.ngaybd).format('DD/MM/YYYY')} -{' '}
-                                       {moment(item.ngaykt).format('DD/MM/YYYY')}
-                                    </td>
-                                    <td className="py-8" width={100}>
-                                       {dsMHDK.find(
-                                          (i) =>
-                                             i.msmh === item.msmh &&
-                                             i.mssv === sinhvien?.mssv &&
-                                             i.thu === item.thu &&
-                                             i.mslophoc === item?.mslophoc
-                                       ) ? (
-                                          <button
-                                             disabled
-                                             className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
-                                          >
-                                             Đã thêm vào phiếu đăng ký
-                                          </button>
-                                       ) : danhsachsvdk?.find(
-                                            (i) =>
-                                               i.msmh === item?.msmh &&
-                                               i.thu === item?.thu &&
-                                               i.mslophoc === item?.mslophoc
-                                         ) ? (
-                                          <button
-                                             disabled
-                                             className="mx-1 text-center w-[90px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
-                                          >
-                                             Đã lưu đăng ký
-                                          </button>
-                                       ) : (
-                                          <button
-                                             onClick={() => handleAddMHDK(item)}
-                                             className="mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]"
-                                          >
-                                             Thêm
-                                          </button>
-                                       )}
-                                    </td>
-                                 </tr>
-                              )
-                           })}
-                     </tbody>
-                     <tbody className="border-t-hidden border-l-hidden border-r-hidden">
-                        {!monhocSearch &&
-                           listMH &&
-                           listMH.length > 0 &&
-                           listMH.sort(compareValues('msmh', 'asc')).map((item, index) => {
-                              return (
-                                 <tr key={index} className="py-4 hover:bg-[#c7ceda80] h-[100px]">
-                                    <td>{item.msmh}</td>
-                                    <td>{item.monhocTC?.tenmh}</td>
-                                    <td>{item.mslophoc}</td>
-                                    <td>{item.siso}</td>
-                                    <td>
-                                       {+item.siso -
-                                          +danhsachs.filter(
-                                             (i) => i.msmh === item.msmh && i.mslophoc === sinhvien?.mslop
-                                          ).length}
-                                    </td>
-                                    <td className="font-bold">{item.thu}</td>
-                                    <td>{item.tietbd}</td>
-                                    <td>{item.sotiet}</td>
-                                    <td>{item.phong}</td>
-                                    <td>{item.GV?.tengiangvien}</td>
-                                    <td width={100}>
-                                       {moment(item.ngaybd).format('DD/MM/YYYY')} -{' '}
-                                       {moment(item.ngaykt).format('DD/MM/YYYY')}
-                                    </td>
-                                    <td className="py-8" width={125}>
-                                       {dsMHDK.find(
-                                          (i) =>
-                                             i.msmh === item?.msmh && i.mssv === sinhvien?.mssv && i.thu === item.thu
-                                       ) ? (
-                                          <button
-                                             disabled
-                                             className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
-                                          >
-                                             Đã thêm vào phiếu đăng ký
-                                          </button>
-                                       ) : danhsachsvdk?.find((i) => i.msmh === item?.msmh && i.thu === item?.thu) ? (
-                                          <button
-                                             disabled
-                                             className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
-                                          >
-                                             Đã lưu đăng ký
-                                          </button>
-                                       ) : (
-                                          <button
-                                             onClick={() => handleAddMHDK(item)}
-                                             className="mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]"
-                                          >
-                                             Thêm
-                                          </button>
-                                       )}
-                                    </td>
-                                 </tr>
-                              )
-                           })}{' '}
-                     </tbody>
-                  </table>
+            <>
+               <div className="w-[20%] border-r-2 border-solid min-h-[550px] pr-4">
+                  <ul>
+                     <li className="text-[red] py-2">
+                        (Sinh viên muốn thêm môn học vượt, học lại môn không đạt, cải thiện điểm số môn học, thì có thể
+                        tìm kiếm và đăng ký tại đây)
+                        <FontAwesomeIcon className="hand-down" icon={faHandPointDown} />
+                     </li>
+                     <li
+                        className="hover:underline cursor-pointer"
+                        onClick={() => setShowInputSearch(!showInputSearch)}
+                     >
+                        Lọc môn học theo mã môn học (Click để hiển thị ô nhập)
+                     </li>
+                     <li>
+                        {showInputSearch && (
+                           <input
+                              onKeyDown={(e) => handleSearchMonhocKeyDown(e)}
+                              onChange={(e) => setMSMH(e.target.value)}
+                              className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
+                              type={'text'}
+                              placeholder={'Mã môn học'}
+                           />
+                        )}
+                     </li>
+                     <li className="text-[red] py-2">
+                        Lưu ý: đối với những lớp đã đầy hoặc sinh viên muốn thay đổi lớp học, sinh viên vui lòng đăng ký
+                        với lớp khác (tìm theo mã môn học)
+                     </li>
+                     <li className="text-[red] py-2">
+                        Đăng ký môn học nguyện vọng không được tổ chức trong học kỳ hè tại đây (tìm theo mã môn học)
+                        <FontAwesomeIcon className="hand-down" icon={faHandPointDown} />
+                     </li>
+                     <li
+                        className="hover:underline cursor-pointer"
+                        onClick={() => setShowInputSearchNV(!showInputSearchNV)}
+                     >
+                        (Click để hiển thị ô nhập)
+                     </li>
+                     <li>
+                        {showInputSearchNV && (
+                           <input
+                              onKeyDown={(e) => handleSearchMonhocNVKeyDown(e)}
+                              onChange={(e) => setMSMHNV(e.target.value)}
+                              className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
+                              type={'text'}
+                              placeholder={'Mã môn học'}
+                           />
+                        )}
+                     </li>
+                  </ul>
                </div>
-            </div>
+               <div className="w-full p-4">
+                  <h2 className="uppercase py-2">Danh sách các môn học được tổ chức</h2>
+                  <div>
+                     <table>
+                        <thead className="border-hidden text-[14px]">
+                           <tr>
+                              <th>Mã môn học</th>
+                              <th>Tên môn học</th>
+                              <th>Mã lớp</th>
+                              <th>Sĩ số</th>
+                              <th>Còn lại</th>
+                              <th>Thứ</th>
+                              <th>Tiết BD</th>
+                              <th>Số tiết</th>
+                              <th>Phòng</th>
+                              <th>Giảng viên</th>
+                              <th>Thời gian</th>
+                              <th>Chức năng</th>
+                           </tr>
+                        </thead>
+                        <tbody className="border-t-hidden border-l-hidden border-r-hidden">
+                           {monhocSearch &&
+                              monhocSearch.length > 0 &&
+                              monhocSearch.map((item, index) => {
+                                 return (
+                                    <tr key={index} className="py-4 hover:bg-[#c7ceda80]">
+                                       <td>{item.msmh}</td>
+                                       <td>{item.monhocTC?.tenmh}</td>
+                                       <td>{item.mslophoc}</td>
+                                       <td>{item.siso}</td>
+                                       <td>
+                                          {+item.siso -
+                                             +danhsachs.filter(
+                                                (i) => i.msmh === item.msmh && i.mslophoc === item.mslophoc
+                                             ).length}
+                                       </td>
+                                       <td className="font-bold">{item.thu}</td>
+                                       <td>{item.tietbd}</td>
+                                       <td>{item.sotiet}</td>
+                                       <td>{item.phong}</td>
+                                       <td>{item.GV?.tengiangvien}</td>
+                                       <td width={100}>
+                                          {moment(item.ngaybd).format('DD/MM/YYYY')} -{' '}
+                                          {moment(item.ngaykt).format('DD/MM/YYYY')}
+                                       </td>
+                                       <td className="py-8" width={100}>
+                                          {dsMHDK.find(
+                                             (i) =>
+                                                i.msmh === item.msmh &&
+                                                i.mssv === sinhvien?.mssv &&
+                                                i.thu === item.thu &&
+                                                i.mslophoc === item?.mslophoc
+                                          ) ? (
+                                             <button
+                                                disabled
+                                                className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
+                                             >
+                                                Đã thêm vào phiếu đăng ký
+                                             </button>
+                                          ) : danhsachsvdk?.find(
+                                               (i) =>
+                                                  i.msmh === item?.msmh &&
+                                                  i.thu === item?.thu &&
+                                                  i.mslophoc === item?.mslophoc
+                                            ) ? (
+                                             <button
+                                                disabled
+                                                className="mx-1 text-center w-[90px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
+                                             >
+                                                Đã lưu đăng ký
+                                             </button>
+                                          ) : (
+                                             <button
+                                                onClick={() => handleAddMHDK(item)}
+                                                className="mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]"
+                                             >
+                                                Thêm
+                                             </button>
+                                          )}
+                                       </td>
+                                    </tr>
+                                 )
+                              })}
+                        </tbody>
+                        <tbody className="border-t-hidden border-l-hidden border-r-hidden">
+                           {!monhocSearch &&
+                              listMH &&
+                              listMH.length > 0 &&
+                              listMH.sort(compareValues('msmh', 'asc')).map((item, index) => {
+                                 return (
+                                    <tr key={index} className="py-4 hover:bg-[#c7ceda80] h-[100px]">
+                                       <td>{item.msmh}</td>
+                                       <td>{item.monhocTC?.tenmh}</td>
+                                       <td>{item.mslophoc}</td>
+                                       <td>{item.siso}</td>
+                                       <td>
+                                          {+item.siso -
+                                             +danhsachs.filter(
+                                                (i) => i.msmh === item.msmh && i.mslophoc === sinhvien?.mslop
+                                             ).length}
+                                       </td>
+                                       <td className="font-bold">{item.thu}</td>
+                                       <td>{item.tietbd}</td>
+                                       <td>{item.sotiet}</td>
+                                       <td>{item.phong}</td>
+                                       <td>{item.GV?.tengiangvien}</td>
+                                       <td width={100}>
+                                          {moment(item.ngaybd).format('DD/MM/YYYY')} -{' '}
+                                          {moment(item.ngaykt).format('DD/MM/YYYY')}
+                                       </td>
+                                       <td className="py-8" width={125}>
+                                          {dsMHDK.find(
+                                             (i) =>
+                                                i.msmh === item?.msmh && i.mssv === sinhvien?.mssv && i.thu === item.thu
+                                          ) ? (
+                                             <button
+                                                disabled
+                                                className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
+                                             >
+                                                Đã thêm vào phiếu đăng ký
+                                             </button>
+                                          ) : danhsachsvdk?.find(
+                                               (i) => i.msmh === item?.msmh && i.thu === item?.thu
+                                            ) ? (
+                                             <button
+                                                disabled
+                                                className="mx-1 text-center w-[100px] border-[1px] border-solid border-[#0C3689] text-[#0C3689] bg-white rounded-3xl p-2 cursor-pointer"
+                                             >
+                                                Đã lưu đăng ký
+                                             </button>
+                                          ) : (
+                                             <button
+                                                onClick={() => handleAddMHDK(item)}
+                                                className="mx-1 text-center w-[70px] border-[1px] border-solid border-[#0C3689] rounded-3xl p-2 cursor-pointer text-[white] bg-[Navy] hover:bg-white hover:text-[Navy]"
+                                             >
+                                                Thêm
+                                             </button>
+                                          )}
+                                       </td>
+                                    </tr>
+                                 )
+                              })}{' '}
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </>
          )}
       </main>
    )

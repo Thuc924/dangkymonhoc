@@ -2,12 +2,14 @@ import * as actions from '../../store/actions'
 import { imgs } from '../../assets/images'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { linkRoute } from '../../ultils/Common/constant'
 import { getListHocPhi } from '../../store/actions/hocphi'
+import { hocKyContext } from '../layouts/DefaultLayout'
 
 function XemHocPhi() {
+   const hocky = useContext(hocKyContext)
    const dispatch = useDispatch()
    const navigate = useNavigate()
 
@@ -46,6 +48,14 @@ function XemHocPhi() {
    }
    return (
       <main className="text-[12px]">
+         <div className="text-right pt-4">
+            <Link
+               to={linkRoute.HOADON}
+               className="p-2 w-[150px] h-[30px] bg-white border-[1px] border-solid border-black cursor-pointer hover:border-dashed hover:font-bold rounded-xl"
+            >
+               Hóa đơn điện tử
+            </Link>
+         </div>
          <div className="flex justify-center">
             <div className="bg-gradient-to-r from-sky-500 to-indigo-500 text-white w-[400px] h-[180px] border-8 rounded-md border-[#7fc1ed] my-[32px] flex p-2">
                <ul className="w-[150px]">
@@ -101,82 +111,66 @@ function XemHocPhi() {
                         </tr>
                      )
                   })}
-                  {danhsachsvdk.length === 0 && (
-                     <tr>
-                        <td colSpan={6} className="text-center italic text-[16px]">
-                           Chưa đăng ký môn học nhấn{' '}
-                           <Link to={linkRoute.DKMH_SV} className="text-[16px] underline hover:font-bold">
-                              Vào đây
-                           </Link>{' '}
-                           để tới trang đăng ký môn học
+                  {danhsachsvdk.length > 0 && (
+                     <tr className="font-bold">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td className="text-center italic">{sumSTC(danhsachsvdk)}</td>
+                        <td className="text-center italic">
+                           {Intl.NumberFormat('VI', {
+                              style: 'currency',
+                              currency: 'VND',
+                           }).format(sumHocPhi(danhsachsvdk))}
                         </td>
-                     </tr>
-                  )}
-
-                  <tr className="font-bold">
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                     <td className="text-center italic">{sumSTC(danhsachsvdk)}</td>
-                     <td className="text-center italic">
-                        {Intl.NumberFormat('VI', {
-                           style: 'currency',
-                           currency: 'VND',
-                        }).format(sumHocPhi(danhsachsvdk))}
-                     </td>
-                     <td className="text-center" width={450}></td>
-                  </tr>
-                  {dshocphi.find((i) => i.mssv === sinhvien?.mssv) && danhsachsvdk.length === 0 && (
-                     <tr>
-                        <td colSpan={6} className="text-center italic text-[16px]">
-                           Chưa đăng ký môn học nhấn{' '}
-                           <Link to={linkRoute.DKMH_SV} className="text-[16px] underline hover:font-bold">
-                              Vào đây
-                           </Link>{' '}
-                           để tới trang đăng ký môn học
-                        </td>
+                        <td className="text-center" width={450}></td>
                      </tr>
                   )}
                </tbody>
             </table>
          </div>
-         <div className="flex p-2">
-            <ul className="w-[250px]">
-               <li className="py-[4px]">Tổng số tín chỉ đăng ký:</li>
-               <li className="py-[4px]">Học phí học kỳ:</li>
-               <li className="py-[4px]">Đã đóng:</li>
-               <li className="py-[4px]">Nợ:</li>
-            </ul>
-            <ul className="font-bold">
-               <li className="py-[4px] italic">{sumSTC(danhsachsvdk)}</li>
-               <li className="py-[4px] italic">
-                  {Intl.NumberFormat('VI', {
-                     style: 'currency',
-                     currency: 'VND',
-                  }).format(sumHocPhi(danhsachsvdk))}
-               </li>
-               <li className="py-[4px] italic">
-                  {Intl.NumberFormat('VI', {
-                     style: 'currency',
-                     currency: 'VND',
-                  }).format(dshocphi.find((i) => i.mssv === sinhvien?.mssv)?.hocphi || 0)}
-               </li>{' '}
-               <li className="py-[4px] italic">
-                  {+sumHocPhi(danhsachsvdk) - +dshocphi.find((i) => i.mssv === sinhvien?.mssv)?.hocphi === 0
-                     ? Intl.NumberFormat('VI', {
-                          style: 'currency',
-                          currency: 'VND',
-                       }).format(0)
-                     : Intl.NumberFormat('VI', {
-                          style: 'currency',
-                          currency: 'VND',
-                       }).format(
-                          +sumHocPhi(danhsachsvdk) - +dshocphi.find((i) => i.mssv === sinhvien?.mssv)?.hocphi ||
-                             sumHocPhi(danhsachsvdk)
-                       )}
-               </li>
-            </ul>
-         </div>
+         {danhsachsvdk.find((i) => i.mssv === sinhvien?.mssv && i.monhocDK?.mshocky === hocky) && (
+            <div className="flex p-2">
+               <ul className="w-[250px]">
+                  <li className="py-[4px]">Tổng số tín chỉ đăng ký:</li>
+                  <li className="py-[4px]">Học phí học kỳ:</li>
+                  <li className="py-[4px]">Đã đóng:</li>
+                  <li className="py-[4px]">Nợ:</li>
+               </ul>
+               <ul className="font-bold">
+                  <li className="py-[4px] italic">{sumSTC(danhsachsvdk)}</li>
+                  <li className="py-[4px] italic">
+                     {Intl.NumberFormat('VI', {
+                        style: 'currency',
+                        currency: 'VND',
+                     }).format(sumHocPhi(danhsachsvdk))}
+                  </li>
+                  <li className="py-[4px] italic">
+                     {Intl.NumberFormat('VI', {
+                        style: 'currency',
+                        currency: 'VND',
+                     }).format(dshocphi.find((i) => i.mssv === sinhvien?.mssv && i.mshocky === hocky)?.hocphi || 0)}
+                  </li>{' '}
+                  <li className="py-[4px] italic">
+                     {+sumHocPhi(danhsachsvdk) -
+                        +dshocphi.find((i) => i.mssv === sinhvien?.mssv && i.mshocky === hocky)?.hocphi <=
+                     0
+                        ? Intl.NumberFormat('VI', {
+                             style: 'currency',
+                             currency: 'VND',
+                          }).format(0)
+                        : Intl.NumberFormat('VI', {
+                             style: 'currency',
+                             currency: 'VND',
+                          }).format(
+                             +sumHocPhi(danhsachsvdk) -
+                                +dshocphi.find((i) => i.mssv === sinhvien?.mssv && i.mshocky === hocky)?.hocphi ||
+                                sumHocPhi(danhsachsvdk)
+                          )}
+                  </li>
+               </ul>
+            </div>
+         )}
 
          <div>
             <img src={imgs.ghichuhocphi} className="w-full p-2" />

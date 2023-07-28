@@ -1,9 +1,9 @@
 import * as hocphiService from '../services/hocphi'
 
 export const create = async (req, res) => {
-   const { mshp, mssv, mshocky, hocphi } = req.body
+   const { mshp, mssv, mshocky, namhoc, hocphi } = req.body
    try {
-      if (!mshp || !mssv || !mshocky || !hocphi) {
+      if (!mshp || !mssv || !mshocky || !namhoc || !hocphi) {
          return res.status(400).json({
             err: 1,
             msg: 'Missing input...!',

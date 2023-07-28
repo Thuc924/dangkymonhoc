@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import * as actions from '../../store/actions'
 import { linkRoute } from '../../ultils/Common/constant'
 import { compareValues, sumHocPhi } from '../../ultils/func'
+import { hocKyContext } from '../layouts/DefaultLayout'
 function XemDiem() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
@@ -16,17 +17,17 @@ function XemDiem() {
    const { token, msg } = useSelector((state) => state.sinhvien)
 
    useEffect(() => {
+      !isLoggedInSinhvien && navigate(linkRoute.LOGIN_SV)
       dispatch(actions.getSinhvienByMSSV())
       if (msg === 'Hết hạn đăng nhập...!') {
          toast.error(msg)
          dispatch(actions.getSinhvienByMSSV())
       }
-
-      !isLoggedInSinhvien && navigate(linkRoute.LOGIN_SV)
       dispatch(actions.getListHocPhi())
       dispatch(actions.getListDiem(sinhvien?.mssv))
       dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
-   }, [token, msg])
+   }, [isLoggedInSinhvien, token, msg])
+   // console.log(listDiemMh)
    return (
       <main className="p-2">
          <div className="">
@@ -102,6 +103,52 @@ function XemDiem() {
                   )}
                   {listDiemMh
                      .filter((i) => i.mshocky === 'HK2')
+                     .map((item, index) => {
+                        return (
+                           <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td className="font-bold">{item.msmh}</td>
+                              <td>{item.Diem_MH?.tenmh}</td>
+                              <td className="text-center">{item.Diem_MH?.sotinchi}</td>
+                              <td className="text-center">{item.phanTramQT}</td>
+                              <td className="text-center">{item.phanTramGK}</td>
+                              <td className="text-center">{item.quatrinh}</td>
+                              <td className="text-center">{item.giuaky}</td>
+                              <td className="text-center">{item.diemthi}</td>
+                              <td className="text-center">
+                                 {(item.phanTramQT * item.quatrinh +
+                                    item.phanTramGK * item.giuaky +
+                                    (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                    100 || ''}
+                              </td>
+                              <td className="text-center">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) || ''}
+                              </td>
+                              <td className="text-center font-bold">
+                                 {Math.round(
+                                    (item.phanTramQT * item.quatrinh +
+                                       item.phanTramGK * item.giuaky +
+                                       (100 - (+item.phanTramGK + +item.phanTramQT)) * item.diemthi) /
+                                       100
+                                 ) >= 5
+                                    ? 'Đạt'
+                                    : 'X'}
+                              </td>
+                           </tr>
+                        )
+                     })}
+                  {listDiemMh.filter((i) => i.mshocky === 'HK_HE_NAM_1').length > 0 && (
+                     <tr>
+                        <td colSpan={12}>HK_HE_NAM_1</td>
+                     </tr>
+                  )}
+                  {listDiemMh
+                     .filter((i) => i.mshocky === 'HK_HE_NAM_1')
                      .map((item, index) => {
                         return (
                            <tr key={index}>

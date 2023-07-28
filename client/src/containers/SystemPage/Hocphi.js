@@ -7,9 +7,6 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { createHocphi, getListHocPhi } from '../../store/actions/hocphi'
 import moment from 'moment'
-import jsPDF from 'jspdf'
-import 'jspdf/dist/polyfills.es'
-import 'jspdf/dist/jspdf.umd'
 function Hocphi() {
    const navigate = useNavigate()
 
@@ -25,6 +22,7 @@ function Hocphi() {
       price: 0,
       mssv: '',
    })
+   const [namhoc, setNamhoc] = useState()
    useEffect(() => {
       dispatch(actions.getAllDSMHDK())
       dispatch(getListHocPhi())
@@ -50,34 +48,14 @@ function Hocphi() {
             mssv: i.mssv,
             mshocky: i.monhocDK?.mshocky,
             hocphi: Pay.price,
+            namhoc: namhoc,
          })
       )
       toast.success('Thành công...!')
       setShowInput(false)
       setPay({ mssv: '', price: 0 })
    }
-   const createPDF = () => {
-      const doc = new jsPDF('p', 'px', 'a4')
-      doc.setFont('courier', 'italic')
-      list.map((i) => {
-         doc.text(20, 20, `${i.msmh} - ${i.Sinhvien?.tensv} - ${i.hocphi}`)
-      })
-      doc.save('demo.pdf')
-      // doc.addPage()
-      const elementHTML = document.querySelector('#form')
-      // console.log(elementHTML)
-      // doc.html(elementHTML, {
-      //    callback: function (doc) {
-      //       doc.save('demo.pdf')
-      //    },
-      //    margin: [10, 10, 10, 10],
-      //    width: 190,
-      //    windowWidth: 675,
-      //    x: 0,
-      //    autoPaging: 'text',
-      //    y: 0,
-      // })
-   }
+
    return (
       <div className="app sidebar-minj rtl">
          <main className="app-content">
@@ -96,9 +74,7 @@ function Hocphi() {
                <div className="col-md-12">
                   <div className="tile">
                      <div className="tile-body">
-                        <a className="btn btn-delete btn-sm" type="button" title="PDF">
-                           <button onClick={createPDF}>PDF</button>
-                        </a>
+                        <a className="btn btn-delete btn-sm" type="button" title="PDF"></a>
                         <table
                            className="table table-hover table-bordered js-copytextarea"
                            cellPadding={0}
@@ -131,7 +107,7 @@ function Hocphi() {
                                           </td>
                                           <td>{item.monhocDK?.mshocky}</td>
 
-                                          {dshocphi.find((i) => i.mssv === item.mssv) ? (
+                                          {dshocphi.find((i) => i.mssv === item.mssv && i.mshocky === item.mshocky) ? (
                                              <>
                                                 <td>
                                                    <button
@@ -147,6 +123,13 @@ function Hocphi() {
                                              <td>
                                                 {showInput && Pay.mssv === item.mssv ? (
                                                    <>
+                                                      <input
+                                                         onChange={(e) => setNamhoc(e.target.value)}
+                                                         className="border-[1px] border-solid border-black p-2 rounded-xl"
+                                                         type="text"
+                                                         placeholder="Nhập năm học..."
+                                                         value={namhoc}
+                                                      />
                                                       <input
                                                          onChange={(e) => setPay({ ...Pay, price: e.target.value })}
                                                          className="border-[1px] border-solid border-black p-2 rounded-xl"

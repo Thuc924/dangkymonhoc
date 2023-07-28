@@ -1,6 +1,6 @@
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -10,8 +10,10 @@ import { sumHocPhi, sumSTC } from '../../ultils/func'
 import * as actions from '../../store/actions'
 import { linkRoute } from '../../ultils/Common/constant'
 import { getListHocPhi } from '../../store/actions/hocphi'
+import { hocKyContext } from '../layouts/DefaultLayout'
 
 function PhieuDKMH() {
+   const hocky = useContext(hocKyContext)
    const dispatch = useDispatch()
    const navigate = useNavigate()
 
@@ -27,7 +29,6 @@ function PhieuDKMH() {
    const [showDetail, setShowDetail] = useState(false)
 
    const [detailMH, setDetailMH] = useState()
-   const [hocky, setHocky] = useState('')
    // const listMHDK = JSON.parse(localStorage.getItem("mhdk"))
    const [listMH, setListMH] = useState()
 
@@ -51,41 +52,33 @@ function PhieuDKMH() {
          if (month >= 6 && month <= 8) {
             let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK1' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            setHocky('HK1')
          } else if (month >= 1 && month <= 3) {
             let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK2' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            setHocky('HK2')
          }
       } else if (+nienKhoa + 1 === +year) {
          if (month >= 6 && month <= 8) {
             let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK3' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            setHocky('HK3')
          } else if (month >= 1 && month <= 3) {
             let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK4' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            setHocky('HK4')
          }
       } else if (+nienKhoa + 2 === +year) {
          if (month >= 6 && month <= 8) {
             let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK5' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            setHocky('HK5')
          } else if (month >= 1 && month <= 3) {
             let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK6' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            setHocky('HK6')
          }
       } else if (+nienKhoa + 3 === +year) {
          if (month >= 6 && month <= 8) {
             let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK7' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            setHocky('HK7')
          } else if (month >= 1 && month <= 3) {
             let kq = monhoctochucs?.filter((i) => i.mshocky === 'HK8' && i.mslophoc === sinhvien?.mslop)
             setListMH(kq)
-            setHocky('HK8')
          }
       }
    }
@@ -208,7 +201,7 @@ function PhieuDKMH() {
                            </td>
                            <td>{danhsachsvdk.find((i) => i.msmh === item.msmh) ? 'Đã lưu' : 'Chưa lưu'}</td>
                            <td>
-                              {dshocphi.find((i) => i.mssv === sinhvien?.mssv) ? (
+                              {dshocphi.find((i) => i.mssv === sinhvien?.mssv && i.mshocky === hocky) ? (
                                  ''
                               ) : (
                                  <FontAwesomeIcon

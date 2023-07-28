@@ -20,6 +20,10 @@ module.exports = {
             allowNull: false,
             type: Sequelize.STRING,
          },
+         namhoc: {
+            allowNull: false,
+            type: Sequelize.STRING,
+         },
          hocphi: {
             allowNull: false,
             type: Sequelize.STRING,

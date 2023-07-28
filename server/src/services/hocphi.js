@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { v4 } from 'uuid'
 require('dotenv').config()
 
-export const createHocphi = ({ mshp, mssv, mshocky, hocphi }) =>
+export const createHocphi = ({ mshp, mssv, mshocky, namhoc, hocphi }) =>
    new Promise(async (resolve, reject) => {
       try {
          const response = await db.Hocphi.create({
@@ -11,6 +11,7 @@ export const createHocphi = ({ mshp, mssv, mshocky, hocphi }) =>
             mshp,
             mssv,
             mshocky,
+            namhoc,
             hocphi,
          })
          const token =
@@ -39,6 +40,14 @@ export const getAllHocPhi = () =>
       try {
          const response = await db.Hocphi.findAll({
             raw: true,
+            nest: true,
+            include: [
+               {
+                  model: db.Sinhvien,
+                  as: 'HocPhi_SV',
+                  attributes: ['tensv', 'mslop', 'ngaysinh'],
+               },
+            ],
          })
          resolve({
             err: response ? 0 : 1,

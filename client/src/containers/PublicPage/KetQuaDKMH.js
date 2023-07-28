@@ -20,7 +20,7 @@ function KetQuaDKMH() {
 
    useEffect(() => {
       dispatch(actions.getListMonhocByMSSV(sinhvien?.mssv))
-      !isLoggedInSinhvien && navigate('/')
+      !isLoggedInSinhvien && navigate(linkRoute.HOME_SV)
    }, [isLoggedInSinhvien])
 
    console.log(danhsachsvdk.map((i) => i.thu.split(', ').map((i) => i)))

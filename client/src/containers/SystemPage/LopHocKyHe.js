@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { ModelNhapDiem } from '../../components'
 
-function DanhsachSVDKMH() {
+function LopHocKyHe() {
    const navigate = useNavigate()
    const dispatch = useDispatch()
    const { danhsachs, tokenDK } = useSelector((state) => state.dangkymonhoc)
@@ -24,7 +24,8 @@ function DanhsachSVDKMH() {
    const { hockys } = useSelector((state) => state.hocky)
 
    const { lops } = useSelector((state) => state.lop)
-
+   const { lophocs } = useSelector((state) => state.lophoc)
+   console.log(lophocs)
    const [showModel, setShowModel] = useState(false)
 
    const [dsmhBykhoa, setDSMHByKhoa] = useState([])
@@ -45,6 +46,7 @@ function DanhsachSVDKMH() {
 
    useEffect(() => {
       dispatch(actions.getAllDSMHDK())
+      dispatch(actions.getListLophoc())
       dispatch(actions.getListKhoa())
       dispatch(actions.getListMonhoctochuc())
       dispatch(actions.getListHocky())
@@ -78,7 +80,7 @@ function DanhsachSVDKMH() {
       if (e.keyCode === 27) setShowModel(false)
    }
    const handleRemoveAll = () => {
-      const length = dsdiem?.filter((i) => i.diemthi && i.mshocky === danhsachs[0]?.monhocDK?.mshocky).length
+      const length = dsdiem.filter((i) => i.diemthi && i.mshocky === danhsachs[0].monhocDK.mshocky).length
       if (danhsachs.length === length) {
          danhsachs.map((i) => {
             dispatch(actions.deleteMonHocInDSDKMH(i.msmh))
@@ -136,7 +138,7 @@ function DanhsachSVDKMH() {
                                     })}
                               </select>
                            </div>
-                           <div className="form-group col-md-3">
+                           {/* <div className="form-group col-md-3">
                               {!hocky.mshocky ? (
                                  <select className="form-control" id="mskhoa" required disabled>
                                     <option value={''}>-- Chọn khoa --</option>
@@ -216,16 +218,7 @@ function DanhsachSVDKMH() {
                                        })}
                                  </select>
                               )}
-                           </div>
-                        </div>
-                        <div className="italic p-2 text-[16px] flex items-center justify-between">
-                           {monhoc && (
-                              <span>
-                                 Tổng số sinh viên đăng ký môn <span className="font-bold">{monhoc}</span> của lớp{' '}
-                                 <span className="font-bold">{lophoc}</span>:{' '}
-                                 {danhsachs.filter((i) => i.monhocDK?.tenmh === monhoc).length}
-                              </span>
-                           )}
+                           </div> */}
                         </div>
                         <table
                            className="table table-hover table-bordered js-copytextarea"
@@ -492,4 +485,4 @@ function DanhsachSVDKMH() {
    )
 }
 
-export default DanhsachSVDKMH
+export default LopHocKyHe

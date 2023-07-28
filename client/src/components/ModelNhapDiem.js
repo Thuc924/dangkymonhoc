@@ -17,7 +17,6 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
       giuaky: '',
       diemthi: '',
    })
-   console.log(monhoc)
    const { danhsachs } = useSelector((state) => state.dangkymonhoc)
 
    useEffect(() => {
@@ -26,12 +25,44 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
 
    const handleCreateDiemMH = () => {
       if (!diem.diemthi) {
+         toast.error('Vui lòng nhập đầy đủ điểm...!')
+         return
+      } else if (diem.quatrinh > 10 || diem.quatrinh < 0) {
+         toast.error('Điểm quá trình không hợp lệ...!')
+         return
+      } else if (diem.giuaky > 10 || diem.giuaky < 0) {
+         toast.error('Điểm giữa kỳ không hợp lệ...!')
+         return
+      } else if (diem.diemthi > 10 || diem.diemthi < 0) {
+         toast.error('Điểm thi không hợp lệ...!')
          return
       } else {
          dispatch(actions.updateDiem(diem))
          toast.success('Cập nhật điểm thành công...!')
          setShowModel(false)
          // dispatch(actions.deleteMonHocInDSDKMH(monhoc?.msmh))
+      }
+   }
+   const handleCreateDiemKeyDown = (e) => {
+      if (e.keyCode === 13) {
+         if (!diem.diemthi) {
+            toast.error('Vui lòng nhập đầy đủ điểm...!')
+            return
+         } else if (diem.quatrinh > 10 || diem.quatrinh < 0) {
+            toast.error('Điểm quá trình không hợp lệ...!')
+            return
+         } else if (diem.giuaky > 10 || diem.giuaky < 0) {
+            toast.error('Điểm giữa kỳ không hợp lệ...!')
+            return
+         } else if (diem.diemthi > 10 || diem.diemthi < 0) {
+            toast.error('Điểm thi không hợp lệ...!')
+            return
+         } else {
+            dispatch(actions.updateDiem(diem))
+            toast.success('Cập nhật điểm thành công...!')
+            setShowModel(false)
+            // dispatch(actions.deleteMonHocInDSDKMH(monhoc?.msmh))
+         }
       }
    }
    return (
@@ -105,7 +136,7 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
                                  }
                                  id="quatrinh"
                                  className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
-                                 type={'text'}
+                                 type={'number'}
                                  value={diem.quatrinh}
                               />
                            </>
@@ -121,7 +152,7 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
                                  disabled
                                  id="gk"
                                  className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
-                                 type={'text'}
+                                 type={'number'}
                                  placeholder="Không có điểm giữa kỳ"
                               />
                            </>
@@ -134,7 +165,7 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
                                  onChange={(e) => setDiem({ ...diem, giuaky: e.target.value })}
                                  id="gk"
                                  className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
-                                 type={'text'}
+                                 type={'number'}
                                  value={diem.giuaky}
                               />
                            </>
@@ -144,10 +175,11 @@ function ModelNhapDiem({ setShowModel, monhoc }) {
                            Điểm thi
                         </label>
                         <input
+                           onKeyDown={(e) => handleCreateDiemKeyDown(e)}
                            onChange={(e) => setDiem({ ...diem, diemthi: e.target.value })}
                            id="diemthi"
                            className="w-full border-[1px] border-solid rounded-sm w-[20%] p-[6px] focus:ring"
-                           type={'text'}
+                           type={'number'}
                            value={diem.diemthi}
                         />
                      </div>

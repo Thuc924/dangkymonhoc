@@ -77,7 +77,7 @@ function LoginUser() {
             <img className="w-full h-full" src={require('../../assets/images/dai-hoc-cong-nghe-sai-gon-1.webp')} />
          </div>
          <div className="fixed w-[600px] h-[550px] bg-[#dddd] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-xl py-[43px] px-[16px]">
-            <img className="w-[80px] h-[80px] flex m-auto" src={require('../../assets/images/Logo_STU.png')} />
+            <img className="w-[80px] h-[80px] flex m-auto" src={require('../../assets/images/Logo_STU.jpg')} />
             <h3 className="text-center p-2 text-[32px] uppercase">Đăng nhập vào cổng đào tạo</h3>
             <div className="flex flex-col justify-start text-[18px]">
                <label className="italic m-0 cursor-pointer hover:underline" htmlFor="mssv">

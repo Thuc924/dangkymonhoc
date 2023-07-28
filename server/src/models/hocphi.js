@@ -14,10 +14,12 @@ module.exports = (sequelize, DataTypes) => {
          // 	targetKey: "mskhoa",
          // 	as: "khoa",
          // })
-         // Hocphi.belongsToMany(models.PhieuDKMH, {
-         //    foreignKey: 'mssv',
-         //    as: 'Phieu_HocPhi',
-         // })
+         Hocphi.belongsTo(models.Sinhvien, {
+            foreignKey: 'mssv',
+            targetKey: 'mssv',
+
+            as: 'HocPhi_SV',
+         })
       }
    }
    Hocphi.init(
@@ -25,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
          mshp: DataTypes.STRING,
          mssv: DataTypes.STRING,
          mshocky: DataTypes.STRING,
+         namhoc: DataTypes.STRING,
          hocphi: DataTypes.STRING,
       },
       {

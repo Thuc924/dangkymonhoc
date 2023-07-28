@@ -10,9 +10,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { jsPDF } from 'jspdf'
-import 'jspdf/dist/polyfills.es'
-import 'jspdf/dist/jspdf.umd'
 function Monhoc() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
@@ -42,28 +39,7 @@ function Monhoc() {
       setMonhoc(mh)
       console.log('Mon hoc: ', mh)
    }
-   const createPDF = () => {
-      const doc = new jsPDF()
-      doc.text(20, 20, 'DANH SACH MON HOC.')
-      doc.text(20, 20, '123 - 321')
-      // monhocs.map((i) => {
-      //    doc.text(20, 20, `${i.msmh} - ${i.tenmh}`)
-      // })
-      doc.save('demo.pdf')
-      var elementHTML = document.querySelector('#form')
-      // console.log(elementHTML)
-      // doc.html(elementHTML, {
-      //    callback: function (doc) {
-      //       doc.save('demo.pdf')
-      //    },
-      //    margin: [10, 10, 10, 10],
-      //    width: 190,
-      //    windowWidth: 675,
-      //    x: 0,
-      //    autoPaging: 'text',
-      //    y: 0,
-      // })
-   }
+
    return (
       <div className="app sidebar-mini rtl">
          <main className="app-content">
@@ -95,9 +71,7 @@ function Monhoc() {
                               </a>
                            </div>
                            <div className="col-sm-2">
-                              <a className="btn btn-delete btn-sm" type="button" title="PDF">
-                                 <button onClick={createPDF}>PDF</button>
-                              </a>
+                              <a className="btn btn-delete btn-sm" type="button" title="PDF"></a>
                            </div>
                            <div className="col-sm-8 flex justify-end items-center">
                               <div className="form-group col-md-3">
